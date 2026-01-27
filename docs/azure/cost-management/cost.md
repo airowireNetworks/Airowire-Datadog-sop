@@ -199,6 +199,15 @@ Actions:
   <img src="/images/cost1.png" width="600"/>
 </p>
 
+<p align="center">
+  <img src="/images/cost2.png" width="600"/>
+</p>
+
+<p align="center">
+  <img src="/images/cost3.png" width="600"/>
+</p>
+
+
 Cloud Cost validation requires data availability:
 
 <h3>Step 1 — Validate Storage Export</h3>
