@@ -8,7 +8,7 @@
 
 ---
 
-<h1 style="color:#FF5722; text-align:center; margin-top:20px;">
+<h1 style="color:#FF5722; text-align:center; margin-top:20px; font-weight:bold;">
   Airowire Observability & FinOps Enablement
 </h1>
 
@@ -23,7 +23,7 @@ Powered by <strong>Datadog</strong>.
 
 ---
 
-<h2 style="color:#FF5722;">Platform Categories</h2>
+<h2 style="color:#FF5722; font-weight:bold;">Platform Categories</h2>
 
 | Category | Description | Link |
 |---|---|---|
@@ -37,9 +37,9 @@ Powered by <strong>Datadog</strong>.
 
 ---
 
-<h2 style="color:#FF5722;">Capabilities Breakdown</h2>
+<h2 style="color:#FF5722; font-weight:bold;">Capabilities Breakdown</h2>
 
-<h3 style="color:#8E43E7;">Observability</h3>
+<h3 style="color:#8E43E7; font-weight:bold;">Observability</h3>
 
 - Logs  
 - Metrics  
@@ -49,20 +49,20 @@ Powered by <strong>Datadog</strong>.
 - Dashboards & Alerts  
 - Synthetic Monitoring  
 
-<h3 style="color:#FFC100;">FinOps</h3>
+<h3 style="color:#FFC100; font-weight:bold;">FinOps</h3>
 
 - Cost Visibility  
 - Usage Insights  
 - Allocation & Tagging  
 - Optimization & Governance  
 
-<h3 style="color:#0059D6;">Kubernetes</h3>
+<h3 style="color:#0059D6; font-weight:bold;">Kubernetes</h3>
 
 - Cluster + Node + Pod Health  
 - Auto-discovery  
 - Tracing & Logs Integration  
 
-<h3 style="color:#00A57B;">SRE</h3>
+<h3 style="color:#00A57B; font-weight:bold;">SRE</h3>
 
 - Incident Playbooks  
 - Operational Runbooks  
