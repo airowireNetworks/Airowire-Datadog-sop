@@ -53,7 +53,7 @@ nav:
       - DSM:
           - Azure DSM on AKS with RabbitMQ: azure/dsm/dsm-solution.md
       - Cost Management:
-          - Azure Cost Optimization: azure/cost-management/azure_cost_management.docx
+          - Azure Cost Optimization: azure/cost-management/cost.md
       - DB Monitoring: []
 
   - AWS:
