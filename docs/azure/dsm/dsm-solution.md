@@ -46,7 +46,7 @@ DSM addresses invisibility in distributed queue pipelines:
 - Datadog Terraform deployment model
 - Admission Controller for tracer injection
 
-> RabbitMQ is not instrumented; spans captured from producers & consumers.
+> RabbitMQ is not instrumented; spans are captured from producers & consumers.
 
 ---
 
@@ -131,4 +131,151 @@ datadog:
 
   clusterAgent:
     enabled: true
+```
+
+---
+
+<h3 style="color:#FF6F3C; font-weight:bold;">Apply via Terraform</h3>
+
+```bash
+terraform apply
+```
+
+**Purpose:** Installs/updates Datadog Agent + Admission Controller + Runtime instrumentation.
+
+---
+
+<h2 style="color:#FF6F3C; font-weight:bold;">Runtime Enablement — Application Layer</h2>
+
+Terraform cannot instrument workloads directly; Kubernetes annotations enable DSM:
+
+```bash
+kubectl annotate deployment virtual-customer admission.datadoghq.com/enabled=true --overwrite
+kubectl annotate deployment order-service admission.datadoghq.com/enabled=true --overwrite
+kubectl annotate deployment makeline-service admission.datadoghq.com/enabled=true --overwrite
+kubectl annotate deployment virtual-worker admission.datadoghq.com/enabled=true --overwrite
+```
+
+Enable runtime DSM flags:
+
+```bash
+kubectl set env deployment/virtual-customer \
+DD_DATA_STREAMS_ENABLED=true \
+DD_TRACE_REMOVE_INTEGRATION_SERVICE_NAMES_ENABLED=true
+
+kubectl set env deployment/order-service \
+DD_DATA_STREAMS_ENABLED=true \
+DD_TRACE_REMOVE_INTEGRATION_SERVICE_NAMES_ENABLED=true
+
+kubectl set env deployment/makeline-service \
+DD_DATA_STREAMS_ENABLED=true \
+DD_TRACE_REMOVE_INTEGRATION_SERVICE_NAMES_ENABLED=true
+
+kubectl set env deployment/virtual-worker \
+DD_DATA_STREAMS_ENABLED=true \
+DD_TRACE_REMOVE_INTEGRATION_SERVICE_NAMES_ENABLED=true
+```
+
+---
+
+<h2 style="color:#FF6F3C; font-weight:bold;">Language Support Notes</h2>
+
+| Microservice | Role | DSM Support |
+|---|---|---|
+| virtual-customer | Producer | ✔ |
+| order-service | Producer | ✔ |
+| makeline-service | Consumer | ✔ |
+| virtual-worker | Consumer | ✔ |
+| rabbitmq | Broker | N/A |
+
+Maturity:
+- Fully supported → .NET, Java, Python, Node
+- Partial → Go
+
+---
+
+<h2 style="color:#FF6F3C; font-weight:bold;">Validation Workflow</h2>
+
+DSM validation requires strict sequence.
+
+<h3>Step 1 — Validate APM</h3>
+
+APM → Services expects:
+
+- virtual-customer
+- order-service
+- makeline-service
+- virtual-worker
+
+<p align="center">
+  <img src="/images/dsm-apm-services.png" width="600"/>
+</p>
+
+If APM is empty → DSM topology cannot build.
+
+---
+
+<h3>Step 2 — Validate DSM Topology</h3>
+
+APM → Data Streams Monitoring → Explore
+
+Topology:
+
+```
+virtual-customer → rabbitmq → virtual-worker
+```
+
+<p align="center">
+  <img src="/images/dsm-topology.png" width="650"/>
+</p>
+
+Metrics expected:
+
+- Throughput
+- Queue time
+- Processing time
+- Consumer lag
+- Retries
+- Latency
+
+<p align="center">
+  <img src="/images/dsm-metrics.png" width="650"/>
+</p>
+
+---
+
+<h2 style="color:#FF6F3C; font-weight:bold;">Troubleshooting</h2>
+
+```bash
+kubectl logs <pod> | grep -i datadog
+```
+
+Expected:
+
+```
+Datadog Tracer initialized
+Data Streams: Enabled
+```
+
+---
+
+<h2 style="color:#FF6F3C; font-weight:bold;">Operational Notes</h2>
+
+DSM requires full path:
+
+```
+Producer → Queue → Consumer
+```
+
+Missing either breaks topology reconstruction.
+
+---
+
+<h2 style="color:#FF6F3C; font-weight:bold;">Contact</h2>
+
+For more information, contact Airowire Solutions:
+
+- Patrick Schmidt — patrick@airowire.com
+- Piyush Choudhary — piyush@airowire.com
+- Dr. Shivanand Poojara — shivanand@airowire.com
 
