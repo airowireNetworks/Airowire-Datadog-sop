@@ -38,7 +38,7 @@ DSM addresses invisibility in distributed queue pipelines:
 
 <h2 style="color:#FF6F3C; font-weight:bold;">Architecture Scope</h2>
 
-<strong>In Scope</strong>
+<strong>In Scope:</strong>
 
 - AKS Cluster
 - RabbitMQ Broker
@@ -46,7 +46,7 @@ DSM addresses invisibility in distributed queue pipelines:
 - Datadog Terraform deployment model
 - Admission Controller for tracer injection
 
-> RabbitMQ is not instrumented; spans are captured from producers & consumers.
+> RabbitMQ is not instrumented; spans captured from producers & consumers.
 
 ---
 
