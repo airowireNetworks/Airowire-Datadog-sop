@@ -1,0 +1,40 @@
+site_name: My Docs
+theme:
+  name: material
+
+nav:
+  - Azure:
+      - Logs:
+          - Azure Logs Enablement: azure/logs/azure_logs_enablement.pdf
+      - APM:
+          - Azure APM Enablement: azure/apm/azure_apm_enablement.docx
+      - DSM:
+          - Azure DSM on AKS with RabbitMQ: azure/dsm/azure_dsm_enablement.pdf
+      - Cost Management:
+          - Azure Cost Optimization: azure/cost-management/azure_cost_management.docx
+      - DB Monitoring: []
+
+  - AWS:
+      - Logs: []
+      - APM: []
+      - Tracing: []
+      - Cost Management: []
+      - DB Monitoring: []
+
+  - GCP:
+      - Logs: []
+      - APM: []
+      - Metrics: []
+      - Cost Management: []
+      - DB Monitoring: []
+
+  - Kubernetes: []
+
+  - FinOps: []
+
+  - Observability:
+      - DB Monitoring: []
+
+  - SRE Practices:
+      - DB Runbooks: []
+
