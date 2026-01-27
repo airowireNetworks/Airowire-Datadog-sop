@@ -8,21 +8,24 @@
 
 ---
 
-# Solution Document for Data Streams Monitoring (DSM) Enablement on AKS with RabbitMQ  
-**(Datadog APM via Terraform)**
+<h1 style="color:#FF6F3C; font-weight:bold;">
+  Solution Document for Data Streams Monitoring (DSM) Enablement on AKS with RabbitMQ
+</h1>
+
+<p><strong>(Datadog APM via Terraform)</strong></p>
 
 ---
 
-## Purpose of the Document
+<h2 style="color:#FF6F3C; font-weight:bold;">Purpose of the Document</h2>
 
 Enable DSM visibility for queue-based microservices running on AKS using RabbitMQ as the
 message broker and Datadog APM with auto-instrumentation.
 
 ---
 
-## What DSM Solves
+<h2 style="color:#FF6F3C; font-weight:bold;">What DSM Solves</h2>
 
-Distributed message pipelines are typically blind. DSM enables visibility into:
+DSM addresses invisibility in distributed queue pipelines:
 
 - Throughput
 - Queue latency
@@ -33,21 +36,21 @@ Distributed message pipelines are typically blind. DSM enables visibility into:
 
 ---
 
-## Architecture Scope
+<h2 style="color:#FF6F3C; font-weight:bold;">Architecture Scope</h2>
 
-**In Scope**
+<strong>In Scope</strong>
 
 - AKS Cluster
 - RabbitMQ Broker
-- Multi-language microservices (.NET, Java, Python, Node, Go)
+- Multi-language services (.NET, Java, Python, Node, Go)
 - Datadog Terraform deployment model
 - Admission Controller for tracer injection
 
-> RabbitMQ itself is not instrumented. DSM instruments producer and consumer spans.
+> RabbitMQ is not instrumented; spans are captured from producers & consumers.
 
 ---
 
-## High-Level Architecture
+<h2 style="color:#FF6F3C; font-weight:bold;">High-Level Architecture</h2>
 
 <p align="center">
   <img src="/images/dsm-architecture.png" width="600"/>
@@ -55,9 +58,9 @@ Distributed message pipelines are typically blind. DSM enables visibility into:
 
 ---
 
-## Deployment Model
+<h2 style="color:#FF6F3C; font-weight:bold;">Deployment Model</h2>
 
-DSM consists of three core tiers:
+DSM involves 3 key layers:
 
 | Layer | Function |
 |---|---|
@@ -67,20 +70,19 @@ DSM consists of three core tiers:
 
 ---
 
-## Why Admission Controller?
+<h2 style="color:#FF6F3C; font-weight:bold;">Why Admission Controller?</h2>
 
 - Zero code changes
-- No rebuilds required
+- No rebuild
 - No library updates
-- Language-independent
-- Fast onboarding
-- Zero-friction enablement
+- Multi-language support
+- Fast enablement
 
 ---
 
-## Deployment — Datadog Agent via Terraform
+<h2 style="color:#FF6F3C; font-weight:bold;">Deployment — Datadog Agent via Terraform</h2>
 
-### Final Values File (YAML)
+<h3 style="color:#FF6F3C; font-weight:bold;">Final Values File (YAML)</h3>
 
 ```yaml
 datadog:
