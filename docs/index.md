@@ -41,32 +41,32 @@ Powered by <strong>Datadog</strong>.
 
 <h3 style="color:#8E43E7; font-weight:bold;">Observability</h3>
 
-- Logs  
-- Metrics  
-- APM  
-- Tracing  
-- DB Monitoring  
-- Dashboards & Alerts  
-- Synthetic Monitoring  
+- Logs
+- Metrics
+- APM
+- Tracing
+- DB Monitoring
+- Dashboards & Alerts
+- Synthetic Monitoring
 
 <h3 style="color:#FFC100; font-weight:bold;">FinOps</h3>
 
-- Cost Visibility  
-- Usage Insights  
-- Allocation & Tagging  
-- Optimization & Governance  
+- Cost Visibility
+- Usage Insights
+- Allocation & Tagging
+- Optimization & Governance
 
 <h3 style="color:#0059D6; font-weight:bold;">Kubernetes</h3>
 
-- Cluster + Node + Pod Health  
-- Auto-discovery  
-- Tracing & Logs Integration  
+- Cluster + Node + Pod Health
+- Auto-discovery
+- Tracing & Logs Integration
 
 <h3 style="color:#00A57B; font-weight:bold;">SRE</h3>
 
-- Incident Playbooks  
-- Operational Runbooks  
-- Reliability Practices  
+- Incident Playbooks
+- Operational Runbooks
+- Reliability Practices
 
 ---
 
