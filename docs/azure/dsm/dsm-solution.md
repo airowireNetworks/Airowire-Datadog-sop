@@ -1,9 +1,9 @@
 <p align="center">
-  <img src="../../images/airowire-logo.png" width="260"/>
+  <img src="/images/airowire-logo.png" width="260"/>
 </p>
 
 <p align="center">
-  <img src="../../images/datadog.png" width="150"/>
+  <img src="/images/datadog.png" width="150"/>
 </p>
 
 ---
@@ -49,7 +49,7 @@ Distributed message pipelines are typically blind. DSM provides visibility into:
 ## High-Level Architecture
 
 <p align="center">
-  <img src="images/dsm-architecture.png" width="600"/>
+  <img src="/images/dsm-architecture.png" width="600"/>
 </p>
 
 ---
