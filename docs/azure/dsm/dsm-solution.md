@@ -50,13 +50,6 @@ DSM addresses invisibility in distributed queue pipelines:
 
 ---
 
-<h2 style="color:#FF6F3C; font-weight:bold;">High-Level Architecture</h2>
-
-<p align="center">
-  <img src="/images/dsm-architecture.png" width="600"/>
-</p>
-
----
 
 <h2 style="color:#FF6F3C; font-weight:bold;">Deployment Model</h2>
 
@@ -207,9 +200,7 @@ APM → Services expects:
 - makeline-service
 - virtual-worker
 
-<p align="center">
-  <img src="/images/dsm-apm-services.png" width="600"/>
-</p>
+
 
 If APM is empty → DSM topology cannot build.
 
@@ -225,9 +216,7 @@ Topology:
 virtual-customer → rabbitmq → virtual-worker
 ```
 
-<p align="center">
-  <img src="/images/dsm-topology.png" width="650"/>
-</p>
+
 
 Metrics expected:
 
@@ -238,9 +227,7 @@ Metrics expected:
 - Retries
 - Latency
 
-<p align="center">
-  <img src="/images/dsm-metrics.png" width="650"/>
-</p>
+
 
 ---
 
