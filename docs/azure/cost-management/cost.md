@@ -49,15 +49,6 @@ Cloud Cost addresses visibility gaps in cloud financial operations:
 > Datadog ingests amortized cost data; billing remains authoritative in Azure.
 
 
-
-<h2 style="color:#FF6F3C; font-weight:bold;">High-Level Architecture</h2>
-
-<p align="center">
-  <img src="/images/cloud-cost-architecture.png" width="600"/>
-</p>
-
-
-
 <h2 style="color:#FF6F3C; font-weight:bold;">Key Capabilities</h2>
 
 | Capability | Outcome |
@@ -203,6 +194,10 @@ Actions:
 
 
 <h2 style="color:#FF6F3C; font-weight:bold;">Validation Workflow</h2>
+
+<p align="center">
+  <img src="/images/cost1.png" width="600"/>
+</p>
 
 Cloud Cost validation requires data availability:
 
