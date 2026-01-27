@@ -15,17 +15,18 @@
 
 ## Purpose of the Document
 
-Enable DSM visibility for queue-based microservices running on AKS using RabbitMQ as the 
+Enable DSM visibility for queue-based microservices running on AKS using RabbitMQ as the
 message broker and Datadog APM with auto-instrumentation.
 
 ---
 
 ## What DSM Solves
 
-Distributed message pipelines are typically blind. DSM provides visibility into:
+Distributed message pipelines are typically blind. DSM enables visibility into:
 
 - Throughput
-- Processing + queue latency
+- Queue latency
+- Processing latency
 - Consumer lag
 - Retries & failures
 - Full producer → queue → consumer correlation
@@ -34,15 +35,15 @@ Distributed message pipelines are typically blind. DSM provides visibility into:
 
 ## Architecture Scope
 
-**In Scope:**
+**In Scope**
 
 - AKS Cluster
-- RabbitMQ as broker
+- RabbitMQ Broker
 - Multi-language microservices (.NET, Java, Python, Node, Go)
 - Datadog Terraform deployment model
 - Admission Controller for tracer injection
 
-> RabbitMQ itself is not instrumented — DSM instruments producer and consumer spans.
+> RabbitMQ itself is not instrumented. DSM instruments producer and consumer spans.
 
 ---
 
@@ -56,63 +57,76 @@ Distributed message pipelines are typically blind. DSM provides visibility into:
 
 ## Deployment Model
 
-DSM consists of three core layers:
+DSM consists of three core tiers:
 
 | Layer | Function |
 |---|---|
 | Datadog Agent | Collects APM & DSM spans |
-| Admission Controller | Injects tracers automatically |
+| Admission Controller | Auto-injects tracers |
 | Application Runtime | Emits queue spans |
 
 ---
 
 ## Why Admission Controller?
 
-- No code changes
+- Zero code changes
+- No rebuilds required
 - No library updates
-- No rebuild required
-- Multi-language support
-- Zero friction onboarding
+- Language-independent
+- Fast onboarding
+- Zero-friction enablement
 
 ---
 
 ## Deployment — Datadog Agent via Terraform
 
-### Final Values File
+### Final Values File (YAML)
 
 ```yaml
 datadog:
   site: datadoghq.eu
   apiKeyExistingSecret: datadog-secret
+
   logs:
     enabled: true
     containerCollectAll: true
+
   apm:
     enabled: true
     instrumentation:
       enabled: true
+
   env:
     - name: DD_DATA_STREAMS_ENABLED
       value: "true"
     - name: DD_TRACE_REMOVE_INTEGRATION_SERVICE_NAMES_ENABLED
       value: "true"
+
   serviceMonitoring:
     enabled: true
+
   networkMonitoring:
     enabled: true
+
   processAgent:
     enabled: true
+
   containerRuntime:
     enabled: true
+
   systemProbe:
     enabled: true
+
   sysctlEnabled: true
+
   seccompProfileEnabled: false
   appArmorProfileEnabled: false
+
   admissionController:
     enabled: true
     mutateUnlabelled: true
     failurePolicy: Ignore
+
   clusterAgent:
     enabled: true
 
