@@ -9,7 +9,7 @@ nav:
       - APM:
           - Azure APM Enablement: azure/apm/azure_apm_enablement.docx
       - DSM:
-          - Azure DSM on AKS with RabbitMQ: azure/dsm/azure_dsm_enablement.pdf
+          - Azure DSM on AKS with RabbitMQ: azure/dsm/dsm-solution.md
       - Cost Management:
           - Azure Cost Optimization: azure/cost-management/azure_cost_management.docx
       - DB Monitoring: []
