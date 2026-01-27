@@ -6,7 +6,7 @@
   <img src="/images/datadog.png" width="150"/>
 </p>
 
----
+
 
 <h1 style="color:#FF6F3C; font-weight:bold;">
   Solution Document for Azure Cloud Cost Enablement via Datadog
@@ -14,13 +14,12 @@
 
 <p><strong>(Datadog Cloud Costs via Terraform)</strong></p>
 
----
 
 <h2 style="color:#FF6F3C; font-weight:bold;">Purpose of the Document</h2>
 
 Enable Azure cloud cost visibility within Datadog to support enterprise FinOps and Cloud Center of Excellence (CCoE) teams with accurate cost allocation, forecasting, anomaly detection, chargeback/showback, and workload-level optimization across Azure environments.
 
----
+
 
 <h2 style="color:#FF6F3C; font-weight:bold;">What Cloud Cost Solves</h2>
 
@@ -34,7 +33,7 @@ Cloud Cost addresses visibility gaps in cloud financial operations:
 - Waste & idle capacity identification
 - FinOps maturity alignment (Inform → Optimize → Operate)
 
----
+
 
 <h2 style="color:#FF6F3C; font-weight:bold;">Architecture Scope</h2>
 
@@ -49,7 +48,7 @@ Cloud Cost addresses visibility gaps in cloud financial operations:
 
 > Datadog ingests amortized cost data; billing remains authoritative in Azure.
 
----
+
 
 <h2 style="color:#FF6F3C; font-weight:bold;">High-Level Architecture</h2>
 
@@ -57,7 +56,7 @@ Cloud Cost addresses visibility gaps in cloud financial operations:
   <img src="/images/cloud-cost-architecture.png" width="600"/>
 </p>
 
----
+
 
 <h2 style="color:#FF6F3C; font-weight:bold;">Key Capabilities</h2>
 
@@ -70,7 +69,7 @@ Cloud Cost addresses visibility gaps in cloud financial operations:
 | Chargeback | Enables governance + showback |
 | FinOps Alignment | Inform → Optimize → Operate |
 
----
+
 
 <h2 style="color:#FF6F3C; font-weight:bold;">Prerequisites</h2>
 
@@ -86,7 +85,7 @@ Cloud Cost addresses visibility gaps in cloud financial operations:
 - Application Administrator / Cloud Application Administrator
 - Subscription Owner / Contributor
 
----
+
 
 <h2 style="color:#FF6F3C; font-weight:bold;">Deployment — Datadog Integration via Terraform</h2>
 
@@ -112,7 +111,7 @@ terraform apply \
 - Integration visible in Datadog
 - App registered in Azure AD (Entra)
 
----
+
 
 <h2 style="color:#FF6F3C; font-weight:bold;">Configure Azure Billing Export</h2>
 
@@ -138,7 +137,7 @@ az role assignment create \
   --scope /subscriptions/<SUB_ID>
 ```
 
----
+
 
 <h2 style="color:#FF6F3C; font-weight:bold;">Configure Azure Cost Export (Portal)</h2>
 
@@ -161,7 +160,7 @@ Azure Portal → Cost Management → Exports
 
 <strong>Optional:</strong> Actual Cost (not required)
 
----
+
 
 <h2 style="color:#FF6F3C; font-weight:bold;">Validation — Export Files</h2>
 
@@ -187,7 +186,6 @@ part_0_0001.csv.gz
 
 <strong>Data Availability:</strong> 6–24 hours
 
----
 
 <h2 style="color:#FF6F3C; font-weight:bold;">Datadog — Cloud Cost Configuration</h2>
 
@@ -202,7 +200,7 @@ Actions:
 3. Validate storage access
 4. Start ingestion
 
----
+
 
 <h2 style="color:#FF6F3C; font-weight:bold;">Validation Workflow</h2>
 
@@ -230,7 +228,7 @@ Metrics expected:
 - Allocation
 - Optimization insights
 
----
+
 
 <h2 style="color:#FF6F3C; font-weight:bold;">FinOps Operational Alignment</h2>
 
@@ -240,7 +238,7 @@ Metrics expected:
 | Optimize | Rightsizing + efficiency |
 | Operate | Chargeback + governance + anomaly mgmt |
 
----
+
 
 <h2 style="color:#FF6F3C; font-weight:bold;">Troubleshooting</h2>
 
@@ -258,13 +256,13 @@ Common Issues:
 | No ingestion | Verify amortized export |
 | No forecasting | Historical dataset required |
 
----
+
 
 <h2 style="color:#FF6F3C; font-weight:bold;">Final Outcome</h2>
 
 Azure cloud cost successfully integrated into Datadog via Terraform and amortized billing exports, enabling enterprise FinOps, unit economics, chargeback/showback, forecasting, anomaly detection, and AKS workload efficiency at scale.
 
----
+
 
 <h2 style="color:#FF6F3C; font-weight:bold;">Contact</h2>
 
