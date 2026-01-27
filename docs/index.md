@@ -21,23 +21,23 @@ Powered by **Datadog**.
 
 ---
 
-# 🗂 Platform Categories
+# Platform Categories
 
 | Category | Description | Link |
 |---|---|---|
-| **Azure** | Logs, APM, DSM, Cost | → Explore |
-| **AWS** | Logs, APM, Tracing, Cost | → Explore |
+| **Azure** | Logs, APM, DSM, Cost |  Explore |
+| **AWS** | Logs, APM, Tracing, Cost |  Explore |
 | **GCP** | Logs, Metrics, Cost | → Explore |
-| **Kubernetes** | K8s Observability + Tracing | → Explore |
+| **Kubernetes** | K8s Observability + Tracing |  Explore |
 | **FinOps** | Cost Governance & Usage | → Explore |
-| **Observability** | DB Monitoring & Alerts | → Explore |
-| **SRE Practices** | Runbooks + Operational SOPs | → Explore |
+| **Observability** | DB Monitoring & Alerts | Explore |
+| **SRE Practices** | Runbooks + Operational SOPs |  Explore |
 
 ---
 
-# 🚀 Capabilities Breakdown
+# Capabilities Breakdown
 
-### **🟣 Observability**
+###  Observability
 - Logs
 - Metrics
 - APM
@@ -46,18 +46,18 @@ Powered by **Datadog**.
 - Dashboards & Alerts
 - Synthetic Monitoring
 
-### **🟡 FinOps**
+###  FinOps
 - Cost Visibility
 - Usage Insights
 - Allocation & Tagging
 - Optimization & Governance
 
-### **🟦 Kubernetes**
+###  Kubernetes
 - Cluster + Node + Pod Health
 - Auto-discovery
 - Tracing & Logs Integration
 
-### **🟢 SRE**
+###  SRE
 - Incident Playbooks
 - Operational Runbooks
 - Reliability Practices
