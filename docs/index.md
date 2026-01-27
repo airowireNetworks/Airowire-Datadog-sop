@@ -8,7 +8,9 @@
 
 ---
 
-# Airowire Observability & FinOps Enablement
+<h1 style="color:#8E43E7; text-align:center; margin-top:20px;">
+  Airowire Observability & FinOps Enablement
+</h1>
 
 Enterprise-grade documentation for:
 - Cloud Monitoring
@@ -21,49 +23,52 @@ Powered by **Datadog**.
 
 ---
 
-# Platform Categories
+<h2 style="color:#0059D6;">Platform Categories</h2>
 
 | Category | Description | Link |
 |---|---|---|
-| **Azure** | Logs, APM, DSM, Cost |  Explore |
-| **AWS** | Logs, APM, Tracing, Cost |  Explore |
-| **GCP** | Logs, Metrics, Cost | → Explore |
-| **Kubernetes** | K8s Observability + Tracing |  Explore |
-| **FinOps** | Cost Governance & Usage | → Explore |
+| **Azure** | Logs, APM, DSM, Cost | Explore |
+| **AWS** | Logs, APM, Tracing, Cost | Explore |
+| **GCP** | Logs, Metrics, Cost | Explore |
+| **Kubernetes** | K8s Observability + Tracing | Explore |
+| **FinOps** | Cost Governance & Usage | Explore |
 | **Observability** | DB Monitoring & Alerts | Explore |
-| **SRE Practices** | Runbooks + Operational SOPs |  Explore |
+| **SRE Practices** | Runbooks + Operational SOPs | Explore |
 
 ---
 
-# Capabilities Breakdown
+<h2 style="color:#8E43E7;">Capabilities Breakdown</h2>
 
-###  Observability
-- Logs
-- Metrics
-- APM
-- Tracing
-- DB Monitoring
-- Dashboards & Alerts
-- Synthetic Monitoring
+<h3 style="color:#8E43E7;">Observability</h3>
 
-###  FinOps
-- Cost Visibility
-- Usage Insights
-- Allocation & Tagging
-- Optimization & Governance
+- Logs  
+- Metrics  
+- APM  
+- Tracing  
+- DB Monitoring  
+- Dashboards & Alerts  
+- Synthetic Monitoring  
 
-###  Kubernetes
-- Cluster + Node + Pod Health
-- Auto-discovery
-- Tracing & Logs Integration
+<h3 style="color:#FFC100;">FinOps</h3>
 
-###  SRE
-- Incident Playbooks
-- Operational Runbooks
-- Reliability Practices
+- Cost Visibility  
+- Usage Insights  
+- Allocation & Tagging  
+- Optimization & Governance  
+
+<h3 style="color:#0059D6;">Kubernetes</h3>
+
+- Cluster + Node + Pod Health  
+- Auto-discovery  
+- Tracing & Logs Integration  
+
+<h3 style="color:#00A57B;">SRE</h3>
+
+- Incident Playbooks  
+- Operational Runbooks  
+- Reliability Practices  
 
 ---
 
-> *Documentation under active development*
-> *Updated for 2025 Airowire Enablement*
+> *CONFIDENTIAL — FOR INTERNAL AIROWIRE CLIENTS ONLY*
 
