@@ -1,6 +1,48 @@
-site_name: My Docs
+site_name: Airowire Observability & FinOps Docs
+
 theme:
   name: material
+  features:
+    - content.code.copy
+    - content.code.select
+    - navigation.sections
+    - navigation.top
+    - toc.integrate
+
+plugins:
+  - with-pdf:
+      cover_title: "Airowire Observability & FinOps Enablement"
+      cover_subtitle: "Client Documentation — Powered by Datadog"
+      output_path: "pdf"
+      toc_title: "Contents"
+      toc_level: 3
+      enabled_if_env: ENABLE_PDF_EXPORT
+      debug_html: false
+      show_anchors: true
+      document_url_template: "{url}.pdf"
+      header_template: |
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <img src="docs/images/airowire-logo.png" width="75"/>
+          <span style="font-size:10px; font-weight:bold; color:#FF6F3C;">
+            Airowire • Datadog Observability Enablement
+          </span>
+          <img src="docs/images/datadog.png" width="60"/>
+        </div>
+      footer_template: |
+        <div style="font-size:9px; color:#888; text-align:right;">
+          Page <span class="pageNumber"></span> / <span class="totalPages"></span>
+        </div>
+
+markdown_extensions:
+  - admonition
+  - pymdownx.highlight:
+      anchor_linenums: true
+      auto_title: true
+  - pymdownx.superfences
+  - pymdownx.details
+  - pymdownx.emoji
+  - toc:
+      permalink: true
 
 nav:
   - Azure:
@@ -29,12 +71,9 @@ nav:
       - DB Monitoring: []
 
   - Kubernetes: []
-
   - FinOps: []
-
   - Observability:
       - DB Monitoring: []
-
   - SRE Practices:
       - DB Runbooks: []
 
