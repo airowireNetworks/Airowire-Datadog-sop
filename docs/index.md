@@ -8,7 +8,7 @@
 
 ---
 
-<h1 style="color:#8E43E7; text-align:center; margin-top:20px;">
+<h1 style="color:#FF5722; text-align:center; margin-top:20px;">
   Airowire Observability & FinOps Enablement
 </h1>
 
@@ -19,11 +19,11 @@ Enterprise-grade documentation for:
 - Kubernetes Visibility
 - SRE Operational Practices
 
-Powered by **Datadog**.
+Powered by <strong>Datadog</strong>.
 
 ---
 
-<h2 style="color:#0059D6;">Platform Categories</h2>
+<h2 style="color:#FF5722;">Platform Categories</h2>
 
 | Category | Description | Link |
 |---|---|---|
@@ -37,7 +37,7 @@ Powered by **Datadog**.
 
 ---
 
-<h2 style="color:#8E43E7;">Capabilities Breakdown</h2>
+<h2 style="color:#FF5722;">Capabilities Breakdown</h2>
 
 <h3 style="color:#8E43E7;">Observability</h3>
 
@@ -70,5 +70,5 @@ Powered by **Datadog**.
 
 ---
 
-> *CONFIDENTIAL — FOR INTERNAL AIROWIRE CLIENTS ONLY*
+> <em>CONFIDENTIAL — FOR INTERNAL AIROWIRE CLIENTS ONLY</em>
 
