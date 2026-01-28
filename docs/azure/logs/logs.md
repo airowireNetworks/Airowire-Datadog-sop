@@ -7,7 +7,7 @@
   Solution Document for Enabling Logs for Azure Kubernetes Services (AKS)
 </h1>
 
-<p><strong>(Datadog Logs + APM Correlation via Terraform on AKS)</strong></p>
+<p><strong>(Datadog Logs via Terraform on AKS)</strong></p>
 
 <h2 style="color:#000000; font-weight:bold;">Purpose of the Document</h2>
 
@@ -15,9 +15,9 @@ This SOP defines the standardized process for enabling platform and workload log
 
 - Container and workload log ingestion
 - Kubernetes metadata enrichment
-- Trace ↔ Log correlation
-- Log-based metrics + analytics
-- Retention + archival + rehydration options
+- Log-based analytics and filtering
+- Retention + archival workflows
+- Platform-driven enablement with no app changes
 
 Logging enablement is platform-driven and does not require modifications to application code or container images.
 
@@ -25,16 +25,15 @@ Logging enablement is platform-driven and does not require modifications to appl
 
 <strong>In Scope:</strong>
 
-- Deployment to a single AKS cluster (POC or initial onboarding)
+- Deployment to a single AKS cluster (POC or onboarding)
 - Terraform-based deployment automation
 - Workload & namespace-level logging
-- Trace-log correlation (optional)
 
 <strong>Out of Scope:</strong>
 
+- APM/Tracing
 - SIEM forwarding
-- Compliance & GRC frameworks
-- Multi-cluster federation
+- Compliance frameworks
 - Business-event parsing rules
 
 <h2 style="color:#000000; font-weight:bold;">Prerequisites</h2>
@@ -56,37 +55,57 @@ Logging enablement is platform-driven and does not require modifications to appl
 Outbound access to Datadog ingestion endpoints for:
 
 - Logs
-- Metrics
-- APM/USM
 - Metadata
+- Metrics (optional)
 
 <h2 style="color:#000000; font-weight:bold;">Overview of the Solution</h2>
 
 Logs are collected via the Datadog Agent running on AKS nodes. The agent performs:
 
-- Log collection
+- Log collection (stdout/stderr)
 - Format detection & parsing
 - Kubernetes metadata enrichment
 - Log transport via HTTPS
 
 <h3 style="color:#000000; font-weight:bold;">Architecture of Logic</h3>
 
-Workload → Datadog Agent → Pipelines → Indexing → Analytics → Optional APM Correlation
+Workload → Datadog Agent → Pipelines → Indexing → Analytics
 
 <h3 style="color:#000000; font-weight:bold;">Functional Components</h3>
 
 | Component | Role |
 |---|---|
-| Datadog Agent | Log ingestion & metadata enrichment |
-| Cluster Agent | Telemetry aggregation & workload awareness |
-| Pipelines | Parsing + normalization + routing |
-| Indexes | Real-time search & analytics |
-| Archive/Rehydration | Long-term retention workflows |
-| APM Runtime | Trace ↔ Log correlation (optional) |
+| Datadog Agent | Log ingestion & enrichment |
+| Cluster Agent | Telemetry aggregation |
+| Pipelines | Parsing + normalization |
+| Indexes | Analytics & search |
+| Archive/Rehydration | Long-term retention |
+
+<h2 style="color:#000000; font-weight:bold;">Repository Reference</h2>
+
+Deployment artifacts and Terraform implementation are maintained in the following repository:
+
+<p>
+  <a href="https://github.com/airowireNetworks/datadog-apm-azure.git" target="_blank">
+    https://github.com/airowireNetworks/datadog-apm-azure.git
+  </a>
+</p>
+
+<strong>Clone Repository:</strong>
+
+```bash
+git clone https://github.com/airowireNetworks/datadog-apm-azure.git
+cd datadog-apm-azure
+```
+
+<strong>Repository Includes:</strong>
+
+- Terraform deployment modules
+- Helm values configuration
+- tfvars examples
+- Logging enablement artifacts
 
 <h2 style="color:#000000; font-weight:bold;">Deployment Procedure</h2>
-
-This section describes the deployment steps executed to enable log ingestion into Datadog using Terraform and Helm.
 
 <h3 style="color:#000000; font-weight:bold;">Deployment Environment</h3>
 
@@ -102,12 +121,6 @@ Deployment VM configured with:
 ```bash
 terraform init
 ```
-
-Downloads providers:
-
-- azurerm
-- helm
-- kubernetes
 
 <h3 style="color:#000000; font-weight:bold;">Deployment Variables</h3>
 
@@ -140,8 +153,6 @@ This enables:
 terraform apply -var-file=cluster1.tfvars
 ```
 
-Terraform lifecycle ensures idempotent operations.
-
 <h2 style="color:#000000; font-weight:bold;">Platform Logging Capabilities</h2>
 
 Once deployed, the platform supports:
@@ -150,34 +161,16 @@ Once deployed, the platform supports:
 - Log-based metrics
 - Pipelines & processors
 - Tag-based correlation
-- Retention & archival policies
-
-<h2 style="color:#000000; font-weight:bold;">Runtime Enablement — Application Layer (Optional)</h2>
-
-To enable APM ↔ Log Correlation:
-
-```bash
-kubectl annotate deployment <app> \
-  instrumentation.datadoghq.com/enabled=true \
-  instrumentation.datadoghq.com/service=<service_name>
-```
-
-Correlation provides:
-
-- Request path + status visibility
-- Error analysis
-- Latency impact correlation
-- Unified service observability
+- Retention & archival workflows
 
 <h2 style="color:#000000; font-weight:bold;">Datadog-Side Validation</h2>
 
-Validation performed by verifying:
+Confirm:
 
 - Logs visible in Explorer
 - Metadata enrichment active
-- Workload tagging (service, pod, namespace)
+- Workload tagging (namespace, pod, container)
 - Pipelines parsing messages
-- Optional trace ↔ log correlation
 
 <p align="center"><img src="/images/logs1.png" width="600"/></p>
 <p align="center"><img src="/images/logs2.png" width="600"/></p>
@@ -189,22 +182,20 @@ Key operational findings:
 
 - Log ingestion successful via IaC
 - Automatic enrichment improved troubleshooting
-- Trace ↔ log correlation beneficial for diagnostics
 - Workload-level transparency improved
+- Minimal platform dependencies
 
-<h2 style="color:#000000; font-weight:bold;">Optional Future Enhancements</h2>
-
-Recommended enhancements:
+<h2 style="color:#000000; font-weight:bold;">Optional Enhancements</h2>
 
 - SIEM forwarding (optional)
 - Security event-driven analysis
-- Business-event log parsing
-- OTel alignment for multi-vendor pipelines
-- Archival rehydration workflows
+- Business log normalization
+- Archive + Rehydration pipelines
+- FinOps alignment for log retention tiers
 
 <h2 style="color:#000000; font-weight:bold;">Final Outcome</h2>
 
-AKS logs successfully integrated into Datadog via Terraform and Helm, enabling operational observability, enriched analytics, and optional trace-log correlation for improved debugging and platform visibility.
+AKS logs successfully integrated into Datadog via Terraform and Helm, enabling operational observability and improved debugging for workloads and platform infrastructure.
 
 <h2 style="color:#000000; font-weight:bold;">Contact</h2>
 
