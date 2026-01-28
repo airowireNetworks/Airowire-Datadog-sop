@@ -1,6 +1,6 @@
-<div style="display: flex; justify-content: space-between; align-items: center;">
-  <img src="/images/airowire-logo.png" width="260" />
-  <img src="/images/datadog.png" width="150" />
+<div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:40px;">
+  <img src="/images/airowire-logo.png" width="260">
+  <img src="/images/datadog.png" width="150">
 </div>
 
 
