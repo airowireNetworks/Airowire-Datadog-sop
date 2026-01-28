@@ -5,13 +5,12 @@ theme:
   logo: images/airowire-logo.png
   favicon: images/airowire-logo.png
   features:
+    - content.code.copy
+    - content.code.select
     - navigation.top
+    - toc.integrate
+    - navigation.collapse
     - navigation.expand
-    - navigation.sections
-    - header.sticky
-    - search.suggest
-    - search.highlight
-    - toc.follow
 
 plugins:
   - search:
@@ -49,7 +48,6 @@ markdown_extensions:
   - pymdownx.emoji
   - toc:
       permalink: true
-      toc_depth: 4
 
 nav:
   - Azure:
