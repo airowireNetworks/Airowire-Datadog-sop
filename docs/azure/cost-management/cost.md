@@ -1,10 +1,7 @@
-<p align="center">
-  <img src="/images/airowire-logo.png" width="260"/>
-</p>
-
-<p align="center">
-  <img src="/images/datadog.png" width="150"/>
-</p>
+<div style="display: flex; justify-content: space-between; align-items: center;">
+  <img src="/images/airowire-logo.png" width="260" />
+  <img src="/images/datadog.png" width="150" />
+</div>
 
 
 
