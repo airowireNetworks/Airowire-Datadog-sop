@@ -172,9 +172,9 @@ Confirm:
 - Workload tagging (namespace, pod, container)
 - Pipelines parsing messages
 
-<p align="center"><img src="/images/logs1.png" width="600"/></p>
-<p align="center"><img src="/images/logs2.png" width="600"/></p>
-<p align="center"><img src="/images/logs3.png" width="600"/></p>
+<p align="center"><img src="/images/aks7.png" width="600"/></p>
+<p align="center"><img src="/images/aks3.png" width="600"/></p>
+
 
 <h2 style="color:#000000; font-weight:bold;">Observations & Findings</h2>
 
