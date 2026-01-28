@@ -1,0 +1,18 @@
+nohup: ignoring input
+WARNING -  Config value 'plugins': Plugin 'with-pdf' option 'header_template': Unrecognised configuration name: header_template
+WARNING -  Config value 'plugins': Plugin 'with-pdf' option 'footer_template': Unrecognised configuration name: footer_template
+WARNING -  Config value 'plugins': Plugin 'with-pdf' option 'document_url_template': Unrecognised configuration name: document_url_template
+INFO    -  Building documentation...
+WARNING -  without generate PDF(set environment variable ENABLE_PDF_EXPORT to 1 to enable)
+WARNING -  A 'dirty' build is being performed, this will likely lead to inaccurate navigation and other links within your site. This option is designed for site development purposes only.
+INFO    -  The following pages exist in the docs directory, but are not included in the "nav" configuration:
+  - index.md
+WARNING -  A reference to 'azure/logs/azure_logs_enablement.pdf' is included in the 'nav' configuration, which is not found in the documentation files.
+WARNING -  A reference to 'azure/apm/azure_apm_enablement.docx' is included in the 'nav' configuration, which is not found in the documentation files.
+INFO    -  Documentation built in 0.36 seconds
+INFO    -  [13:29:08] Serving on http://0.0.0.0:8000/
+WARNING -  [13:31:11] "GET /azure HTTP/1.1" code 404
+WARNING -  [04:43:10] "GET /azure/logs/azure_logs_enablement.pdf HTTP/1.1" code 404
+WARNING -  [04:49:59] "GET /azure/ HTTP/1.1" code 404
+WARNING -  [04:50:03] "GET /azure HTTP/1.1" code 404
+WARNING -  [04:53:31] "GET /azure/logs/azure_logs_enablement.pdf HTTP/1.1" code 404

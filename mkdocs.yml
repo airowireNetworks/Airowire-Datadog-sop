@@ -46,14 +46,10 @@ markdown_extensions:
 
 nav:
   - Azure:
-      - Logs:
-          - Azure Logs Enablement: azure/logs/azure_logs_enablement.pdf
-      - APM:
-          - Azure APM Enablement: azure/apm/azure_apm_enablement.docx
-      - DSM:
-          - Azure DSM on AKS with RabbitMQ: azure/dsm/dsm-solution.md
-      - Cost Management:
-          - Azure Cost Optimization: azure/cost-management/cost.md
+      - Azure Logs Enablement: azure/logs/azure_logs_enablement.pdf
+      - Azure APM Enablement: azure/apm/azure_apm_enablement.docx
+      - Azure DSM on AKS with RabbitMQ: azure/dsm/dsm-solution.md
+      - Azure Cost Optimization: azure/cost-management/cost.md
       - DB Monitoring: []
 
   - AWS:
