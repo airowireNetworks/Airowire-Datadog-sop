@@ -8,6 +8,8 @@ theme:
     - navigation.sections
     - navigation.top
     - toc.integrate
+    - navigation.collapse
+    - navigation.expand
 
 plugins:
   - with-pdf:
