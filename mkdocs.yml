@@ -2,6 +2,8 @@ site_name: Airowire Observability & FinOps Docs
 
 theme:
   name: material
+  logo: images/airowire-logo.png
+  favicon: images/airowire-logo.png
   features:
     - content.code.copy
     - content.code.select
