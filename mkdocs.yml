@@ -5,7 +5,6 @@ theme:
   features:
     - content.code.copy
     - content.code.select
-    - navigation.sections
     - navigation.top
     - toc.integrate
     - navigation.collapse
