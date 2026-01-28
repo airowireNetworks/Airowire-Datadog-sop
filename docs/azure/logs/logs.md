@@ -4,7 +4,7 @@
 </div>
 
 <h1 style="color:#000000; font-weight:bold;">
-  Solution Document for Instrumenting Logs for Azure Kubernetes Services
+  Solution Document for Instrumenting APM for Azure Kubernetes Services
 </h1>
 
 <p><strong>(Datadog APM + USM via Terraform on AKS)</strong></p>
@@ -98,26 +98,26 @@ Deployment VM configured with:
 
 Manual login:
 
-\`\`\`bash
+```bash
 az login
-\`\`\`
+```
 
 Service principal login:
 
-\`\`\`bash
+```bash
 az login --service-principal \
- --username <APP_ID> \
- --password <PASSWORD> \
- --tenant <TENANT_ID>
-\`\`\`
+  --username <APP_ID> \
+  --password <PASSWORD> \
+  --tenant <TENANT_ID>
+```
 
 Purpose: Enables Terraform to retrieve AKS cluster configuration using the AzureRM provider.
 
 <h3 style="color:#000000; font-weight:bold;">Terraform Initialization</h3>
 
-\`\`\`bash
+```bash
 terraform init
-\`\`\`
+```
 
 Downloads providers:
 
@@ -129,21 +129,21 @@ Downloads providers:
 
 Example `.tfvars`:
 
-\`\`\`hcl
-aks_cluster_name = "aks1"
+```hcl
+aks_cluster_name   = "aks1"
 aks_resource_group = "saqlain"
-datadog_api_key = "xxxxxxxx"
-env = "dev"
-\`\`\`
+datadog_api_key    = "xxxxxxxx"
+env                = "dev"
+```
 
 <h3 style="color:#000000; font-weight:bold;">Retrieve AKS Credentials</h3>
 
-\`\`\`hcl
+```hcl
 data "azurerm_kubernetes_cluster" "aks" {
   name                = var.aks_cluster_name
   resource_group_name = var.aks_resource_group
 }
-\`\`\`
+```
 
 Terraform extracts:
 
@@ -154,43 +154,45 @@ Terraform extracts:
 
 <h3 style="color:#000000; font-weight:bold;">Namespace Provisioning</h3>
 
-\`\`\`hcl
+```hcl
 resource "kubernetes_namespace" "datadog" {
- metadata { name = "datadog" }
+  metadata {
+    name = "datadog"
+  }
 }
-\`\`\`
+```
 
 <h3 style="color:#000000; font-weight:bold;">Datadog Secret Creation</h3>
 
-\`\`\`hcl
+```hcl
 resource "kubernetes_secret" "datadog" {
- metadata {
-   name      = "datadog-secret"
-   namespace = "datadog"
- }
- data = {
-   api-key = var.datadog_api_key
- }
+  metadata {
+    name      = "datadog-secret"
+    namespace = "datadog"
+  }
+  data = {
+    api-key = var.datadog_api_key
+  }
 }
-\`\`\`
+```
 
 <h3 style="color:#000000; font-weight:bold;">Helm Deployment via Terraform</h3>
 
-\`\`\`hcl
+```hcl
 resource "helm_release" "datadog" {
- name       = "datadog"
- namespace  = "datadog"
- repository = "https://helm.datadoghq.com"
- chart      = "datadog"
- values     = [ file("${path.module}/datadog-values.yaml") ]
+  name       = "datadog"
+  namespace  = "datadog"
+  repository = "https://helm.datadoghq.com"
+  chart      = "datadog"
+  values     = [ file("${path.module}/datadog-values.yaml") ]
 }
-\`\`\`
+```
 
 <h3 style="color:#000000; font-weight:bold;">Execution of Deployment</h3>
 
-\`\`\`bash
+```bash
 terraform apply -var-file=cluster1.tfvars
-\`\`\`
+```
 
 Terraform lifecycle ensures idempotent operations.
 
