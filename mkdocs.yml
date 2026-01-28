@@ -13,6 +13,8 @@ theme:
     - navigation.expand
 
 plugins:
+  - search:
+      lang: en
   - with-pdf:
       cover_title: "Airowire Observability & FinOps Enablement"
       cover_subtitle: "Client Documentation — Powered by Datadog"
