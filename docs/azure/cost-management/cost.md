@@ -1,27 +1,23 @@
-<p align="center">
-  <img src="/images/airowire-logo.png" width="260"/>
-</p>
-
-<p align="center">
-  <img src="/images/datadog.png" width="150"/>
-</p>
+<div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:40px;">
+  <img src="/images/airowire-logo.png" width="260">
+  <img src="/images/datadog.png" width="150">
+</div>
 
 
-
-<h1 style="color:#FF6F3C; font-weight:bold;">
+<h1 style="color:#000000; font-weight:bold;">
   Solution Document for Azure Cloud Cost Enablement via Datadog
 </h1>
 
 <p><strong>(Datadog Cloud Costs via Terraform)</strong></p>
 
 
-<h2 style="color:#FF6F3C; font-weight:bold;">Purpose of the Document</h2>
+<h2 style="color:#000000; font-weight:bold;">Purpose of the Document</h2>
 
 Enable Azure cloud cost visibility within Datadog to support enterprise FinOps and Cloud Center of Excellence (CCoE) teams with accurate cost allocation, forecasting, anomaly detection, chargeback/showback, and workload-level optimization across Azure environments.
 
 
 
-<h2 style="color:#FF6F3C; font-weight:bold;">What Cloud Cost Solves</h2>
+<h2 style="color:#000000; font-weight:bold;">What Cloud Cost Solves</h2>
 
 Cloud Cost addresses visibility gaps in cloud financial operations:
 
@@ -35,7 +31,7 @@ Cloud Cost addresses visibility gaps in cloud financial operations:
 
 
 
-<h2 style="color:#FF6F3C; font-weight:bold;">Architecture Scope</h2>
+<h2 style="color:#000000; font-weight:bold;">Architecture Scope</h2>
 
 <strong>In Scope:</strong>
 
@@ -49,7 +45,7 @@ Cloud Cost addresses visibility gaps in cloud financial operations:
 > Datadog ingests amortized cost data; billing remains authoritative in Azure.
 
 
-<h2 style="color:#FF6F3C; font-weight:bold;">Key Capabilities</h2>
+<h2 style="color:#000000; font-weight:bold;">Key Capabilities</h2>
 
 | Capability | Outcome |
 |---|---|
@@ -62,7 +58,7 @@ Cloud Cost addresses visibility gaps in cloud financial operations:
 
 
 
-<h2 style="color:#FF6F3C; font-weight:bold;">Prerequisites</h2>
+<h2 style="color:#000000; font-weight:bold;">Prerequisites</h2>
 
 <strong>Accounts & Tools:</strong>
 
@@ -78,7 +74,7 @@ Cloud Cost addresses visibility gaps in cloud financial operations:
 
 
 
-<h2 style="color:#FF6F3C; font-weight:bold;">Deployment — Datadog Integration via Terraform</h2>
+<h2 style="color:#000000; font-weight:bold;">Deployment — Datadog Integration via Terraform</h2>
 
 Terraform provisions:
 
@@ -88,7 +84,7 @@ Terraform provisions:
 - Monitoring Reader role
 - Datadog → Azure integration handshake
 
-<h3 style="color:#FF6F3C; font-weight:bold;">Apply via Terraform</h3>
+<h3 style="color:#000000; font-weight:bold;">Apply via Terraform</h3>
 
 ```bash
 terraform init
@@ -104,7 +100,7 @@ terraform apply \
 
 
 
-<h2 style="color:#FF6F3C; font-weight:bold;">Configure Azure Billing Export</h2>
+<h2 style="color:#000000; font-weight:bold;">Configure Azure Billing Export</h2>
 
 Provision Storage:
 
@@ -114,7 +110,7 @@ Provision Storage:
 - Location: `East US`
 - Type: `StorageV2`
 
-<h3 style="color:#FF6F3C; font-weight:bold;">Assign Service Principal Permissions</h3>
+<h3 style="color:#000000; font-weight:bold;">Assign Service Principal Permissions</h3>
 
 ```bash
 az role assignment create \
@@ -130,7 +126,7 @@ az role assignment create \
 
 
 
-<h2 style="color:#FF6F3C; font-weight:bold;">Configure Azure Cost Export (Portal)</h2>
+<h2 style="color:#000000; font-weight:bold;">Configure Azure Cost Export (Portal)</h2>
 
 Navigate:
 
@@ -153,7 +149,7 @@ Azure Portal → Cost Management → Exports
 
 
 
-<h2 style="color:#FF6F3C; font-weight:bold;">Validation — Export Files</h2>
+<h2 style="color:#000000; font-weight:bold;">Validation — Export Files</h2>
 
 ```bash
 STORAGE_KEY=$(az storage account keys list \
@@ -178,7 +174,7 @@ part_0_0001.csv.gz
 <strong>Data Availability:</strong> 6–24 hours
 
 
-<h2 style="color:#FF6F3C; font-weight:bold;">Datadog — Cloud Cost Configuration</h2>
+<h2 style="color:#000000; font-weight:bold;">Datadog — Cloud Cost Configuration</h2>
 
 Navigate:
 
@@ -193,7 +189,7 @@ Actions:
 
 
 
-<h2 style="color:#FF6F3C; font-weight:bold;">Validation Workflow</h2>
+<h2 style="color:#000000; font-weight:bold;">Validation Workflow</h2>
 
 <p align="center">
   <img src="/images/cost1.png" width="600"/>
@@ -234,7 +230,7 @@ Metrics expected:
 
 
 
-<h2 style="color:#FF6F3C; font-weight:bold;">FinOps Operational Alignment</h2>
+<h2 style="color:#000000; font-weight:bold;">FinOps Operational Alignment</h2>
 
 | Phase | Value |
 |---|---|
@@ -244,7 +240,7 @@ Metrics expected:
 
 
 
-<h2 style="color:#FF6F3C; font-weight:bold;">Troubleshooting</h2>
+<h2 style="color:#000000; font-weight:bold;">Troubleshooting</h2>
 
 ```bash
 az monitor activity-log list --subscription <SUB_ID>
@@ -262,13 +258,13 @@ Common Issues:
 
 
 
-<h2 style="color:#FF6F3C; font-weight:bold;">Final Outcome</h2>
+<h2 style="color:#000000; font-weight:bold;">Final Outcome</h2>
 
 Azure cloud cost successfully integrated into Datadog via Terraform and amortized billing exports, enabling enterprise FinOps, unit economics, chargeback/showback, forecasting, anomaly detection, and AKS workload efficiency at scale.
 
 
 
-<h2 style="color:#FF6F3C; font-weight:bold;">Contact</h2>
+<h2 style="color:#000000; font-weight:bold;">Contact</h2>
 
 For more information, contact Airowire Solutions:
 
