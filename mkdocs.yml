@@ -48,7 +48,7 @@ markdown_extensions:
 nav:
   - Azure:
       - Azure Logs Enablement: azure/logs/logs.md
-      - Azure APM Enablement: azure/apm/azure_apm_enablement.docx
+      - Azure APM Enablement: azure/apm/apm.md
       - Azure DSM on AKS with RabbitMQ: azure/dsm/dsm-solution.md
       - Azure Cost Optimization: azure/cost-management/cost.md
       - DB Monitoring: []
