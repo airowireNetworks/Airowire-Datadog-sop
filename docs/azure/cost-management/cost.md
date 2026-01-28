@@ -72,7 +72,7 @@
   <img src="/images/datadog.png" width="150">
 </div>
 
-<h1>Solution Document for Azure Cloud Cost Enablement via Datadog</h1>
+<h2>Solution Document for Azure Cloud Cost Enablement via Datadog</h2>
 <p style="text-align:center;"><strong>(Datadog Cloud Costs via Terraform)</strong></p>
 
 <h2>Purpose of the Document</h2>
