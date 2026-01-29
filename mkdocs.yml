@@ -8,23 +8,26 @@ theme:
     - content.code.copy
     - content.code.select
     - navigation.top
-    - toc.integrate
-    - navigation.collapse
     - navigation.expand
+    - navigation.sections
+    - search.suggest
+    - search.highlight
+    - header.sticky
+    - toc.follow
+    - toc.sidebar
 
 plugins:
   - search:
       lang: en
   - with-pdf:
+      output_path: pdf
       cover_title: "Airowire Observability & FinOps Enablement"
       cover_subtitle: "Client Documentation — Powered by Datadog"
-      output_path: "pdf"
       toc_title: "Contents"
       toc_level: 3
+      show_anchors: true
       enabled_if_env: ENABLE_PDF_EXPORT
       debug_html: false
-      show_anchors: true
-      document_url_template: "{url}.pdf"
       header_template: |
         <div style="display:flex; justify-content:space-between; align-items:center;">
           <img src="docs/images/airowire-logo.png" width="75"/>
@@ -48,6 +51,10 @@ markdown_extensions:
   - pymdownx.emoji
   - toc:
       permalink: true
+      toc_depth: 4
+
+extra_javascript:
+  - javascripts/page-pdf-download.js
 
 nav:
   - Azure:
