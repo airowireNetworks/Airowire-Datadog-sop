@@ -2,12 +2,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const header = document.querySelector(".md-header__inner");
   if (!header) return;
 
-  let path = window.location.pathname remember; 
+  // Get current page path
+  let path = window.location.pathname;
 
+  // Remove trailing slash
   if (path.endsWith("/")) {
     path = path.slice(0, -1);
   }
 
+  // Build PDF path
   const pdfPath = "/pdf" + path + ".pdf";
 
   const btn = document.createElement("a");
@@ -22,3 +25,4 @@ document.addEventListener("DOMContentLoaded", function () {
     search.parentNode.insertBefore(btn, search);
   }
 });
+
