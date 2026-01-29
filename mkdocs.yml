@@ -61,7 +61,7 @@ nav:
       - Logs: []
       - APM: []
       - Tracing: []
-      - Cost Management: []
+      - Cost Management: aws/cost-management/aws-ccm.md
       - DB Monitoring: []
 
   - GCP:
