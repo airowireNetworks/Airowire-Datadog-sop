@@ -19,27 +19,10 @@ theme:
 plugins:
   - search:
       lang: en
-  - with-pdf:
-      output_path: pdf
-      cover_title: "Airowire Observability & FinOps Enablement"
-      cover_subtitle: "Client Documentation — Powered by Datadog"
-      toc_title: "Contents"
-      toc_level: 3
-      show_anchors: true
+  - pdf-export:
+      verbose: true
+      combined: false
       enabled_if_env: ENABLE_PDF_EXPORT
-      debug_html: false
-      header_template: |
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <img src="docs/images/airowire-logo.png" width="75"/>
-          <span style="font-size:10px; font-weight:bold; color:#FF6F3C;">
-            Airowire • Datadog Observability Enablement
-          </span>
-          <img src="docs/images/datadog.png" width="60"/>
-        </div>
-      footer_template: |
-        <div style="font-size:9px; color:#888; text-align:right;">
-          Page <span class="pageNumber"></span> / <span class="totalPages"></span>
-        </div>
 
 markdown_extensions:
   - admonition

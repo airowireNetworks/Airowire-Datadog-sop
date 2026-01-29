@@ -2,22 +2,17 @@ document.addEventListener("DOMContentLoaded", function () {
   const search = document.querySelector(".md-search");
   if (!search || !search.parentNode) return;
 
-  let path = window.location.pathname;
+  // Build PDF name from URL path
+  // /azure/logs/logs/ -> azure-logs-logs.pdf
+  let parts = window.location.pathname
+    .split("/")
+    .filter(Boolean);
 
-  // Remove index.html if present
-  if (path.endsWith("index.html")) {
-    path = path.replace("index.html", "");
-  }
+  // Skip homepage
+  if (parts.length === 0) return;
 
-  // Remove trailing slash
-  if (path.endsWith("/")) {
-    path = path.slice(0, -1);
-  }
-
-  // Build correct PDF path
-  // Example:
-  // /azure/logs/logs -> /pdf/azure/logs/logs.pdf
-  const pdfPath = "/pdf" + path + ".pdf";
+  const pdfName = parts.join("-") + ".pdf";
+  const pdfPath = "/pdf/" + pdfName;
 
   const btn = document.createElement("a");
   btn.href = pdfPath;
