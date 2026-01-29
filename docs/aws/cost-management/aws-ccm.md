@@ -94,6 +94,14 @@ Actions:
 - Copy generated Terraform HCL
 - **Do NOT click Confirm yet**
 
+<p align="center">
+  <img src="/images/cost4.png" width="600"/>
+</p>
+
+<p align="center">
+  <img src="/images/cost5.png" width="600"/>
+</p>
+
 <h3 style="color:#000000; font-weight:bold;">Step 2 — Run Terraform (AWS Side)</h3>
 
 AWS Admin executes the Terraform code provided by Datadog.
@@ -125,6 +133,11 @@ Datadog → Cloud Cost → Settings
 
 Begin AWS Cost & Usage Report (CUR) setup.
 
+<p align="center">
+  <img src="/images/cost6.png" width="600"/>
+</p>
+
+
 <h3 style="color:#000000; font-weight:bold;">Step 5 — Create Cost & Usage Report (CUR)</h3>
 
 AWS Admin deploys CloudFormation stack using the Datadog CCM template.
@@ -152,6 +165,11 @@ Both validations must succeed.
 - Datadog processes CUR data
 - Cost data appears within **24–48 hours**
 
+<p align="center">
+  <img src="/images/cost7.png" width="600"/>
+</p>
+
+
 <h2 style="color:#000000; font-weight:bold;">Datadog-Side Validation</h2>
 
 Validate the following in Datadog:
@@ -160,6 +178,11 @@ Validate the following in Datadog:
 - AWS services visible
 - Account-level spend trends
 - Cost breakdown by service and account
+
+<p align="center">
+  <img src="/images/cost9.png" width="600"/>
+</p>
+
 
 <h2 style="color:#000000; font-weight:bold;">Observations & Findings</h2>
 
