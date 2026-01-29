@@ -2,17 +2,14 @@ document.addEventListener("DOMContentLoaded", function () {
   const search = document.querySelector(".md-search");
   if (!search || !search.parentNode) return;
 
-  // Build PDF name from URL path
-  // /azure/logs/logs/ -> azure-logs-logs.pdf
-  let parts = window.location.pathname
-    .split("/")
-    .filter(Boolean);
+  // Material for MkDocs exposes the page slug here
+  const slug = document.documentElement.getAttribute("data-md-page-slug");
 
-  // Skip homepage
-  if (parts.length === 0) return;
+  // No PDF on homepage
+  if (!slug) return;
 
-  const pdfName = parts.join("-") + ".pdf";
-  const pdfPath = "/pdf/" + pdfName;
+  // pdf-export-plugin uses slug-based filenames
+  const pdfPath = `/pdf/${slug}.pdf`;
 
   const btn = document.createElement("a");
   btn.href = pdfPath;
@@ -23,4 +20,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
   search.parentNode.insertBefore(btn, search);
 });
+
 
