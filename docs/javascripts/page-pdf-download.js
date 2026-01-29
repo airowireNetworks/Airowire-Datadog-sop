@@ -5,14 +5,15 @@ document.addEventListener("DOMContentLoaded", function () {
   const slug = document.documentElement.getAttribute("data-md-page-slug");
   if (!slug) return;
 
-  const pdfPath = `/pdf/${slug}.pdf`;
+  // plugin creates pdf using slug path
+  const pdfUrl = `/pdf/${slug}.pdf`;
 
   const btn = document.createElement("a");
-  btn.href = pdfPath;
-  btn.textContent = "⬇ Download PDF";
-  btn.className = "md-header__button md-button md-button--primary";
-  btn.style.marginLeft = "12px";
-  btn.setAttribute("download", "");
+  btn.href = pdfUrl;
+  btn.innerHTML = "⬇ Download Full PDF";
+  btn.className = "md-header__button md-icon";
+  btn.target = "_blank";
+  btn.title = "Download Full Document PDF";
 
   header.appendChild(btn);
 });
