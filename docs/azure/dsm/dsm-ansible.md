@@ -11,12 +11,12 @@
 
 <h2 style="color:#000000; font-weight:bold;">1. Purpose</h2>
 
-This SOP defines a standard, automated, and repeatable process to install and configure the Datadog Agent with Data Streams Monitoring (DSM) across multiple Linux servers using Ansible.
+This SOP defines a standard, automated, and repeatable process to install and configure the Datadog Agent with Data Streams Monitoring (DSM) across multiple Linux servers using **Ansible automation**.
 
 This enables:
 
-- End-to-end message flow visibility  
-- Stream and queue latency analysis  
+- End-to-end visibility of message flows  
+- Queue and stream latency analysis  
 - Producer → Broker → Consumer pathway tracking  
 - Faster root cause analysis in distributed systems  
 
@@ -24,9 +24,9 @@ This enables:
 
 <strong>In Scope:</strong>
 
-- Datadog Agent v7 installation  
+- Installation of Datadog Agent v7  
 - Enablement of APM, SSI, and DSM  
-- Ansible-based automation  
+- Ansible automation  
 - Linux virtual machines  
 - Application-level instrumentation  
 
@@ -46,22 +46,22 @@ This enables:
 
 <h2 style="color:#000000; font-weight:bold;">4. Assumptions & Prerequisites</h2>
 
-<h3 style="color:#000000; font-weight:bold;">Infrastructure</h3>
+<strong>Infrastructure:</strong>
 
-- Linux OS  
+- Linux OS (Ubuntu / RHEL / Debian)  
 - SSH access from Ansible control node  
 - Internet access to Datadog endpoints  
 
-<h3 style="color:#000000; font-weight:bold;">Tools</h3>
+<strong>Tools:</strong>
 
 - Ansible ≥ 2.14  
-- Python ≥ 3.9 on hosts  
+- Python ≥ 3.9 on target hosts  
 - Git (optional)
 
-<h3 style="color:#000000; font-weight:bold;">Datadog</h3>
+<strong>Datadog:</strong>
 
 - Valid Datadog API key  
-- DSM feature enabled  
+- DSM enabled in Datadog account  
 
 <h2 style="color:#000000; font-weight:bold;">5. Roles & Responsibilities</h2>
 
@@ -69,12 +69,12 @@ This enables:
 |---|---|
 | DevOps | Execute Ansible playbooks |
 | Platform | Maintain inventory & vars |
-| Application | Producer/Consumer instrumentation |
+| Application | Instrument producers & consumers |
 | SRE | Validate DSM in Datadog |
 
 <h2 style="color:#000000; font-weight:bold;">6. High-Level Architecture</h2>
 
-Ansible Control Node  
+**Ansible Control Node**  
 ↓ SSH  
 Linux VMs  
 ↓  
@@ -82,7 +82,7 @@ Datadog Agent (APM + DSM)
 ↓  
 Datadog Platform
 
-<h2 style="color:#000000; font-weight:bold;">7. Directory Structure</h2>
+<h2 style="color:#000000; font-weight:bold;">7. File & Directory Structure</h2>
 
 ```text
 datadog-dsm-ansible/
@@ -94,15 +94,38 @@ datadog-dsm-ansible/
 └── README.md
 ```
 
-<strong>Why this structure:</strong>
+<strong>Why this structure:</strong>  
+Adheres to Ansible best practices, separates inventory, variables, and playbooks for clarity and maintainability.
 
-- Follows Ansible best practices  
-- Separates inventory, variables, and playbooks  
-- Easy to scale and maintain  
+<h2 style="color:#000000; font-weight:bold;">8. Repository Reference</h2>
 
-<h2 style="color:#000000; font-weight:bold;">8. File-Level Explanation</h2>
+The full implementation for this SOP, including inventory, playbooks, and variable files, is available in the official repository:
 
-<h3 style="color:#000000; font-weight:bold;">8.1 inventory</h3>
+<p>
+  <a href="https://github.com/airowireNetworks/Datadog-Agent-Data-Streams-Monitoring-DSM-Installation-using-Ansible.git" target="_blank">
+    https://github.com/airowireNetworks/Datadog-Agent-Data-Streams-Monitoring-Installation-using-Ansible.git
+  </a>
+</p>
+
+<strong>Clone Repository:</strong>
+
+```bash
+git clone https://github.com/airowireNetworks/Datadog-Agent-Data-Streams-Monitoring-DSM-Installation-using-Ansible.git
+cd Datadog-Agent-Data-Streams-Monitoring-DSM-Installation-using-Ansible
+```
+
+<strong>Repository Includes:</strong>
+
+- Ansible inventory and playbooks  
+- `group_vars` with DSM configuration  
+- `requirements.yml` for Datadog role  
+- README with usage examples  
+
+This repository serves as the **living implementation** of this SOP and should be referenced for updates and environment-specific configurations.
+
+<h2 style="color:#000000; font-weight:bold;">9. File-Level Explanation</h2>
+
+<h3 style="color:#000000; font-weight:bold;">9.1 inventory</h3>
 
 ```ini
 [datadog_hosts]
@@ -111,14 +134,10 @@ host2 ansible_host=10.0.0.5 ansible_user=as
 host3 ansible_host=10.0.0.6 ansible_user=as
 ```
 
-<strong>Why this is used:</strong>
+<strong>Why it’s used:</strong>  
+Defines the target servers to which Ansible should apply the DSM configuration, grouping them under `datadog_hosts` for role application.
 
-- Defines which servers Ansible will manage  
-- Groups hosts logically (`datadog_hosts`)  
-- Enables parallel configuration across servers  
-- Keeps SSH details outside playbooks  
-
-<h3 style="color:#000000; font-weight:bold;">8.2 requirements.yml</h3>
+<h3 style="color:#000000; font-weight:bold;">9.2 requirements.yml</h3>
 
 ```yaml
 - name: datadog.datadog
@@ -126,12 +145,8 @@ host3 ansible_host=10.0.0.6 ansible_user=as
   version: 5.5.0
 ```
 
-<strong>Why this is used:</strong>
-
-- Uses Datadog’s official, maintained role  
-- Ensures compatibility with Agent v7, APM, DSM  
-- Avoids custom scripts and manual installs  
-- Version pinning ensures stability  
+<strong>Why it’s used:</strong>  
+This ensures the official Datadog Ansible role — which includes DSM support — is downloaded and version-locked, preventing breaking changes.
 
 Install the role:
 
@@ -139,7 +154,9 @@ Install the role:
 ansible-galaxy install -r requirements.yml
 ```
 
-<h3 style="color:#000000; font-weight:bold;">8.3 group_vars/datadog_hosts.yml</h3>
+This command pulls the required role into Ansible’s roles path.
+
+<h3 style="color:#000000; font-weight:bold;">9.3 group_vars/datadog_hosts.yml</h3>
 
 ```yaml
 datadog_api_key: "{{ lookup('env', 'DD_API_KEY') }}"
@@ -147,31 +164,16 @@ datadog_site: "datadoghq.com"
 datadog_agent_major_version: 7
 ```
 
-<strong>Why:</strong>
-
-- API key pulled from environment (no secrets in repo)  
-- Centralized configuration for all hosts  
-- Easy to rotate keys  
+<strong>Why:</strong>  
+Centralizes configuration and avoids hardcoding secrets. API key is pulled from environment.
 
 ```yaml
 datadog_apm_enabled: true
-```
-
-<strong>Why:</strong>
-
-- Enables trace collection  
-- Required for DSM correlation  
-- Allows service-level visibility  
-
-```yaml
 datadog_apm_instrumentation_enabled: "host"
 ```
 
-<strong>Why:</strong>
-
-- Enables Single Step Instrumentation (SSI)  
-- Auto-instruments supported runtimes  
-- No application rebuilds required  
+<strong>Why:</strong>  
+Enables APM and auto-instrumentation, which is required by DSM for trace correlations.
 
 ```yaml
 datadog_apm_instrumentation_libraries:
@@ -183,24 +185,18 @@ datadog_apm_instrumentation_libraries:
   - "ruby:2"
 ```
 
-<strong>Why:</strong>
-
-- Specifies runtime libraries for auto-instrumentation  
-- Controls language versions explicitly  
-- Prevents unexpected upgrades  
+<strong>Why:</strong>  
+Selects supported language libraries for automatic instrumentation.
 
 ```yaml
 datadog_env_vars:
   DD_DATA_STREAMS_ENABLED: "true"
 ```
 
-<strong>Why:</strong>
+<strong>Why:</strong>  
+Explicitly enables Data Streams Monitoring on each host.
 
-- Explicitly enables DSM  
-- Required for pathway & latency tracking  
-- Applies consistently across all hosts  
-
-<h3 style="color:#000000; font-weight:bold;">8.4 datadog.yml (Main Playbook)</h3>
+<h3 style="color:#000000; font-weight:bold;">9.4 datadog.yml (Main Playbook)</h3>
 
 ```yaml
 ---
@@ -213,106 +209,91 @@ datadog_env_vars:
     - datadog.datadog
 ```
 
-<strong>Why this playbook design:</strong>
+<strong>Why it’s used:</strong>  
+This playbook applies the Datadog role to all hosts in the inventory, performing installation and configuration in a repeatable and idempotent manner.
 
-- Uses role-based automation  
-- `become: true` ensures root-level install  
-- Idempotent (safe to re-run)  
-- Minimal custom logic → lower risk  
-
-<h2 style="color:#000000; font-weight:bold;">9. Execution Steps</h2>
+<h2 style="color:#000000; font-weight:bold;">10. Execution Steps</h2>
 
 ```bash
 export DD_API_KEY=<DATADOG_API_KEY>
 ```
 
-<strong>Why:</strong>
-
-- Keeps secrets out of code  
-- Supports CI/CD and Ansible Vault  
+<strong>Why:</strong>  
+Loads API key into environment securely for use by Ansible.
 
 ```bash
 ansible-playbook -i inventory datadog.yml
 ```
 
-<strong>Why:</strong>
+<strong>Why:</strong>  
+Runs the playbook against all hosts defined in inventory.
 
-- Applies configuration consistently  
-- Installs and configures agent in one run  
-
-<h2 style="color:#000000; font-weight:bold;">10. Post-Installation Validation</h2>
+<h2 style="color:#000000; font-weight:bold;">11. Post-Installation Validation</h2>
 
 ```bash
 sudo datadog-agent status
 ```
 
-<strong>Why:</strong>
+<strong>Why:</strong>  
+Verifies Agent is running, API key is valid, APM & DSM are enabled, and trace agent ports are active.
 
-- Confirms agent health  
-- Verifies APM & DSM enabled  
-- Confirms trace agent port (5012)  
+<h2 style="color:#000000; font-weight:bold;">12. Application Instrumentation (Client Action Required)</h2>
 
-<h2 style="color:#000000; font-weight:bold;">11. Application Instrumentation</h2>
+<strong>Why this is required:</strong>  
+DSM tracks logical application pathways — without producer & consumer instrumentation, correlation graphs cannot be created.
 
-<strong>Why application changes are required:</strong>
-
-- DSM tracks logical message flow  
-- Both producer and consumer must participate  
-
-<h3>Producer</h3>
+Producer:
 
 - Creates DSM checkpoint  
 - Injects `x-datadog-pathway` header  
 
-<h3>Consumer</h3>
+Consumer:
 
 - Extracts pathway header  
 - Creates downstream checkpoint  
 
-<h2 style="color:#000000; font-weight:bold;">12. Restart Applications</h2>
+<h2 style="color:#000000; font-weight:bold;">13. Restart Applications</h2>
 
 ```bash
 sudo systemctl restart <application>
 ```
 
-<strong>Why:</strong>
+<strong>Why:</strong>  
+Auto-instrumentation hooks attach at start, enabling DSM capture.
 
-- Auto-instrumentation hooks attach at startup  
-- Required for SSI & DSM activation  
-
-<h2 style="color:#000000; font-weight:bold;">13. Datadog UI Validation</h2>
+<h2 style="color:#000000; font-weight:bold;">14. Datadog UI Validation</h2>
 
 Navigate to:
 
-Datadog → APM → Data Streams Monitoring
+**Datadog → APM → Data Streams Monitoring**
 
-<strong>Validate:</strong>
+Expected:
 
 - Producer visible  
 - Consumer visible  
-- Pathway graph created  
-- Latency populated  
+- Pathway graph  
 
-<h2 style="color:#000000; font-weight:bold;">14. Security & Best Practices</h2>
+Note:
 
-- Use Ansible Vault in production  
-- Never hardcode API keys  
+Message counts may not show; DSM emphasizes flow & latency.
+
+<h2 style="color:#000000; font-weight:bold;">15. Security & Best Practices</h2>
+
+- Use Ansible Vault for API keys  
+- Avoid hardcoding secrets  
 - Restrict outbound traffic  
-- Restart apps after upgrades  
 - Combine DSM with broker metrics  
 
-<h2 style="color:#000000; font-weight:bold;">15. Limitations</h2>
+<h2 style="color:#000000; font-weight:bold;">16. Limitations</h2>
 
 - DSM does not replace broker metrics  
-- Message counts depend on integrations  
-- Latency is primary KPI  
+- Message count visibility varies by integration  
 
-<h2 style="color:#000000; font-weight:bold;">16. Conclusion</h2>
+<h2 style="color:#000000; font-weight:bold;">17. Conclusion</h2>
 
-This SOP delivers:
+This SOP provides:
 
-- Automated, repeatable agent deployment  
-- Consistent DSM enablement  
-- Scalable architecture  
+- Automated, repeatable Datadog Agent deployment  
+- Reliable DSM enablement  
 - Minimal operational overhead  
 
