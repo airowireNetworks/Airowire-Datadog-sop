@@ -237,7 +237,7 @@ sudo datadog-agent status
 <strong>Why:</strong>  
 Verifies Agent is running, API key is valid, APM & DSM are enabled, and trace agent ports are active.
 
-<h2 style="color:#000000; font-weight:bold;">12. Application Instrumentation (Client Action Required)</h2>
+<h2 style="color:#000000; font-weight:bold;">12. Application Instrumentation </h2>
 
 <strong>Why this is required:</strong>  
 DSM tracks logical application pathways — without producer & consumer instrumentation, correlation graphs cannot be created.
