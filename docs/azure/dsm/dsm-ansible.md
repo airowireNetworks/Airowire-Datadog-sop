@@ -261,11 +261,28 @@ sudo systemctl restart <application>
 <strong>Why:</strong>  
 Auto-instrumentation hooks attach at start, enabling DSM capture.
 
-<h2 style="color:#000000; font-weight:bold;">14. Datadog UI Validation</h2>
+<h2 style="color:#000000; font-weight:bold;">14. Rabbitmq UI Validation</h2>
+
+
+
+<p align="center">
+  <img src="/images/dsm2.png" width="600"/>
+</p>
+
+<p align="center">
+  <img src="/images/dsm3.png" width="600"/>
+</p>
+
+
+<h2 style="color:#000000; font-weight:bold;">15. Datadog UI Validation</h2>
 
 Navigate to:
 
 **Datadog → APM → Data Streams Monitoring**
+
+<p align="center">
+  <img src="/images/dsm1.png" width="600"/>
+</p>
 
 Expected:
 
@@ -277,19 +294,19 @@ Note:
 
 Message counts may not show; DSM emphasizes flow & latency.
 
-<h2 style="color:#000000; font-weight:bold;">15. Security & Best Practices</h2>
+<h2 style="color:#000000; font-weight:bold;">16. Security & Best Practices</h2>
 
 - Use Ansible Vault for API keys  
 - Avoid hardcoding secrets  
 - Restrict outbound traffic  
 - Combine DSM with broker metrics  
 
-<h2 style="color:#000000; font-weight:bold;">16. Limitations</h2>
+<h2 style="color:#000000; font-weight:bold;">17. Limitations</h2>
 
 - DSM does not replace broker metrics  
 - Message count visibility varies by integration  
 
-<h2 style="color:#000000; font-weight:bold;">17. Conclusion</h2>
+<h2 style="color:#000000; font-weight:bold;">18. Conclusion</h2>
 
 This SOP provides:
 
