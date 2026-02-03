@@ -270,7 +270,7 @@ Auto-instrumentation hooks attach at start, enabling DSM capture.
 </p>
 
 <p align="center">
-  <img src="/images/dsm3.png" width="600"/>
+  <img src="/images/dms3.png" width="600"/>
 </p>
 
 
