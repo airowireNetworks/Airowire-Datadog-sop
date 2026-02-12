@@ -46,7 +46,7 @@ nav:
       - Azure DSM on AKS with RabbitMQ: azure/dsm/dsm-solution.md
       - Azure DSM on HA Vms with RabbitMQ: azure/dsm/dsm-ansible.md
       - Azure Cost Optimization: azure/cost-management/cost.md
-      - AKS SLA Monitoring: azur/sla/sla.md 
+      - AKS SLA Monitoring: azure/sla/sla.md 
       - DB Monitoring: []
 
   - AWS:
