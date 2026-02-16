@@ -1,4 +1,4 @@
-<div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:40px;"> 
+<div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:40px;">
   <img src="/images/airowire-logo.png" width="260">
   <img src="/images/datadog.png" width="150">
 </div>
@@ -9,79 +9,199 @@
 
 <p><strong>(AKS + .NET High Availability VM Environment)</strong></p>
 
-<h2 style="color:#000000; font-weight:bold;">Purpose of the Document</h2>
+<h2 style="color:#000000; font-weight:bold;">1. Purpose of the Document</h2>
 
-This SOP defines the standardized troubleshooting process when:
+This SOP defines the standardized troubleshooting procedure when:
 
-- Data Streams Monitoring (DSM) stops updating
-- APM traces disappear
-- Logs stop flowing
-- Datadog monitoring degrades
-- Trace-agent crashes or span ingestion drops
+<ul>
+  <li>Data Streams Monitoring (DSM) stops updating</li>
+  <li>APM traces disappear</li>
+  <li>Logs stop flowing</li>
+  <li>Datadog monitoring degrades</li>
+  <li>Trace-agent crashes</li>
+</ul>
 
-This document ensures rapid diagnosis and recovery across AKS and .NET HA VM environments.
+This ensures fast, structured recovery across AKS and .NET HA VM environments.
 
-<h2 style="color:#000000; font-weight:bold;">Scope</h2>
+---
 
-<strong>In Scope:</strong>
-
-- AKS-based Datadog agent troubleshooting
-- .NET HA VM DSM diagnostics
-- APM trace validation
-- SaaS connectivity validation
-- Rapid service recovery procedures
-
-<strong>Out of Scope:</strong>
-
-- Application code debugging
-- Business transaction modeling
-- Commercial impact analysis
-- Datadog billing diagnostics
-
-<h2 style="color:#000000; font-weight:bold;">AKS Troubleshooting Procedure</h2>
+<h2 style="color:#000000; font-weight:bold;">2. AKS Troubleshooting Procedure</h2>
 
 <h3 style="color:#000000; font-weight:bold;">Step 1 – Run AKS Validation Script</h3>
 
-<strong>AKS Audit Script:</strong>
-
-```bash
+<pre><code>
 #!/bin/bash
 
 DD_NAMESPACE="datadog"
 DD_SITE="datadoghq.com"
 
-echo "=============================================================="
-echo "🛡️ DATADOG AKS COMPLIANCE AUDIT"
-echo "Date: $(date)"
-echo "=============================================================="
+echo "==============================="
+echo "DATADOG AKS COMPLIANCE AUDIT"
+echo "==============================="
 
-echo -ne "[1/5] Locating Node Agent... "
+echo "[1/5] Checking Agent Pod..."
 DD_POD=$(kubectl get pods -n $DD_NAMESPACE \
 -l app.kubernetes.io/component=agent \
 --field-selector=status.phase=Running \
 -o jsonpath="{.items[0].metadata.name}")
 
 if [ -z "$DD_POD" ]; then
-  echo "❌ NOT FOUND"
+  echo "Agent NOT FOUND"
   exit 1
 else
-  echo "✅ FOUND ($DD_POD)"
+  echo "Agent Found: $DD_POD"
 fi
 
 STATUS=$(kubectl exec -n $DD_NAMESPACE $DD_POD -- agent status)
 
-echo -ne "[2/5] API Key... "
-echo "$STATUS" | grep -Eiq "API key valid|Passing" && echo "✅ VALID" || echo "❌ FAIL"
+echo "[2/5] API Key Check..."
+echo "$STATUS" | grep -Eiq "API key valid|Passing" && echo "VALID" || echo "FAIL"
 
-echo -ne "[3/5] Logs Agent... "
-echo "$STATUS" | grep -iq "logs agent" && echo "✅ ACTIVE" || echo "❌ NOT ACTIVE"
+echo "[3/5] Logs Agent..."
+echo "$STATUS" | grep -iq "logs agent" && echo "ACTIVE" || echo "NOT ACTIVE"
 
-echo -ne "[4/5] APM Container... "
-kubectl get pod -n $DD_NAMESPACE $DD_POD -o jsonpath='{.spec.containers[*].name}' | grep -q trace-agent && echo "✅ PRESENT" || echo "❌ MISSING"
+echo "[4/5] APM Container..."
+kubectl get pod -n $DD_NAMESPACE $DD_POD -o jsonpath='{.spec.containers[*].name}' | grep -q trace-agent && echo "PRESENT" || echo "MISSING"
 
-echo -ne "[5/5] SaaS Connectivity... "
+echo "[5/5] SaaS Connectivity..."
 kubectl exec -n $DD_NAMESPACE $DD_POD -- curl -s https://api.$DD_SITE > /dev/null \
-&& echo "✅ REACHABLE" || echo "❌ BLOCKED"
+&& echo "REACHABLE" || echo "BLOCKED"
+</code></pre>
 
-echo "=============================================================="
+<h3 style="color:#000000; font-weight:bold;">If AKS Audit Fails</h3>
+
+<table border="1" cellpadding="6">
+<tr><th>Failure</th><th>Action</th></tr>
+<tr><td>Agent not found</td><td>Restart Datadog DaemonSet</td></tr>
+<tr><td>API failure</td><td>Check Kubernetes secret</td></tr>
+<tr><td>Logs inactive</td><td>Check container runtime</td></tr>
+<tr><td>APM missing</td><td>Re-enable in Helm</td></tr>
+<tr><td>SaaS blocked</td><td>Check outbound NSG / firewall</td></tr>
+</table>
+
+---
+
+<h2 style="color:#000000; font-weight:bold;">3. .NET HA VM Troubleshooting Procedure</h2>
+
+<h3 style="color:#000000; font-weight:bold;">Step 1 – Run DSM Incident Script</h3>
+
+<pre><code>
+#!/bin/bash
+
+DD_SITE="datadoghq.com"
+ISSUE_FOUND=0
+
+echo "DSM INCIDENT TROUBLESHOOT"
+
+echo "[1/10] Agent Service..."
+systemctl is-active --quiet datadog-agent || ISSUE_FOUND=1
+
+echo "[2/10] API Key..."
+STATUS=$(sudo datadog-agent status 2>/dev/null)
+echo "$STATUS" | grep -Eiq "Passing|API key valid" || ISSUE_FOUND=1
+
+echo "[3/10] APM Enabled..."
+echo "$STATUS" | grep -iq "APM Agent" || ISSUE_FOUND=1
+
+echo "[4/10] Port 8126..."
+ss -tulnp | grep -q 8126 || ISSUE_FOUND=1
+
+echo "[5/10] .NET Running..."
+DOTNET_PID=$(pgrep -f dotnet | head -1)
+[ -z "$DOTNET_PID" ] && ISSUE_FOUND=1
+
+if [ ! -z "$DOTNET_PID" ]; then
+  echo "[6/10] Profiler Attached..."
+  cat /proc/$DOTNET_PID/environ | tr '\0' '\n' | grep -q CORECLR_PROFILER || ISSUE_FOUND=1
+
+  echo "[7/10] DSM Enabled..."
+  cat /proc/$DOTNET_PID/environ | tr '\0' '\n' | grep -q DD_DATA_STREAMS_ENABLED || ISSUE_FOUND=1
+fi
+
+echo "[8/10] RabbitMQ Traffic..."
+ss -an | grep -q 5672
+
+echo "[9/10] SaaS Connectivity..."
+curl -s https://api.$DD_SITE > /dev/null || ISSUE_FOUND=1
+
+echo "[10/10] OOM Check..."
+dmesg | grep -i kill | tail -3
+
+if [ $ISSUE_FOUND -eq 0 ]; then
+  echo "Infrastructure Healthy"
+else
+  echo "Fix Required"
+fi
+</code></pre>
+
+---
+
+<h2 style="color:#000000; font-weight:bold;">4. Most Common Root Causes</h2>
+
+<table border="1" cellpadding="6">
+<tr><th>Root Cause</th><th>Fix</th></tr>
+<tr><td>Application restarted</td><td>Restart with profiler</td></tr>
+<tr><td>Profiler missing</td><td>Reattach tracer</td></tr>
+<tr><td>DSM flag missing</td><td>Re-run Ansible</td></tr>
+<tr><td>Trace-agent crash</td><td>Restart datadog-agent</td></tr>
+<tr><td>No traffic</td><td>Generate test message</td></tr>
+<tr><td>Memory OOM</td><td>Increase RAM</td></tr>
+</table>
+
+---
+
+<h2 style="color:#000000; font-weight:bold;">5. Fast Recovery Command</h2>
+
+<pre><code>
+sudo systemctl restart datadog-agent
+sudo systemctl restart &lt;dotnet-app&gt;
+</code></pre>
+
+Then generate a test RabbitMQ message.
+
+DSM rebuilds within 2–5 minutes.
+
+---
+
+<h2 style="color:#000000; font-weight:bold;">6. Preventive Monitoring</h2>
+
+Add monitors for:
+
+<ul>
+  <li>APM spans drop to zero</li>
+  <li>Trace-agent not running</li>
+  <li>Log silence</li>
+  <li>High memory</li>
+  <li>RabbitMQ idle</li>
+</ul>
+
+---
+
+<h2 style="color:#000000; font-weight:bold;">7. Important Note</h2>
+
+DSM is:
+
+<ul>
+  <li>Real-time</li>
+  <li>Traffic dependent</li>
+  <li>Span dependent</li>
+</ul>
+
+If no spans are generated → DSM will show blank topology.
+
+This is expected behavior.
+
+---
+
+<h2 style="color:#000000; font-weight:bold;">Final Outcome</h2>
+
+This SOP provides a structured, repeatable troubleshooting process for restoring Datadog DSM and APM across AKS and .NET HA VM environments.
+
+---
+
+<h2 style="color:#000000; font-weight:bold;">Contact</h2>
+
+Patrick Schmidt — patrick@airowire.com<br>
+Piyush Choudhary — piyush@airowire.com<br>
+Dr. Shivanand Poojara — shivanand@airowire.com
 
