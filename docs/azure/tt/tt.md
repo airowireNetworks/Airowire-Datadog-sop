@@ -9,6 +9,14 @@
 
 <p><strong>(AKS + .NET High Availability VM Environment)</strong></p>
 
+<p>
+<strong>Version:</strong> 2.1<br>
+<strong>Owner:</strong> Platform Engineering Team<br>
+<strong>Status:</strong> Production SOP
+</p>
+
+<hr>
+
 <h2 style="color:#000000; font-weight:bold;">1. Purpose of the Document</h2>
 
 This SOP defines the standardized troubleshooting procedure when:
@@ -23,7 +31,7 @@ This SOP defines the standardized troubleshooting procedure when:
 
 This ensures fast, structured recovery across AKS and .NET HA VM environments.
 
----
+<hr>
 
 <h2 style="color:#000000; font-weight:bold;">2. AKS Troubleshooting Procedure</h2>
 
@@ -68,18 +76,36 @@ kubectl exec -n $DD_NAMESPACE $DD_POD -- curl -s https://api.$DD_SITE > /dev/nul
 && echo "REACHABLE" || echo "BLOCKED"
 </code></pre>
 
-<h3 style="color:#000000; font-weight:bold;">If AKS Audit Fails</h3>
+<h3>If AKS Audit Fails</h3>
 
-<table border="1" cellpadding="6">
-<tr><th>Failure</th><th>Action</th></tr>
-<tr><td>Agent not found</td><td>Restart Datadog DaemonSet</td></tr>
-<tr><td>API failure</td><td>Check Kubernetes secret</td></tr>
-<tr><td>Logs inactive</td><td>Check container runtime</td></tr>
-<tr><td>APM missing</td><td>Re-enable in Helm</td></tr>
-<tr><td>SaaS blocked</td><td>Check outbound NSG / firewall</td></tr>
+<table border="1" cellpadding="6" cellspacing="0">
+<tr>
+<th>Failure</th>
+<th>Action</th>
+</tr>
+<tr>
+<td>Agent not found</td>
+<td>Restart Datadog DaemonSet</td>
+</tr>
+<tr>
+<td>API failure</td>
+<td>Check Kubernetes secret</td>
+</tr>
+<tr>
+<td>Logs inactive</td>
+<td>Check container runtime</td>
+</tr>
+<tr>
+<td>APM missing</td>
+<td>Re-enable in Helm values</td>
+</tr>
+<tr>
+<td>SaaS blocked</td>
+<td>Check outbound NSG / firewall rules</td>
+</tr>
 </table>
 
----
+<hr>
 
 <h2 style="color:#000000; font-weight:bold;">3. .NET HA VM Troubleshooting Procedure</h2>
 
@@ -134,21 +160,42 @@ else
 fi
 </code></pre>
 
----
+<hr>
 
 <h2 style="color:#000000; font-weight:bold;">4. Most Common Root Causes</h2>
 
-<table border="1" cellpadding="6">
-<tr><th>Root Cause</th><th>Fix</th></tr>
-<tr><td>Application restarted</td><td>Restart with profiler</td></tr>
-<tr><td>Profiler missing</td><td>Reattach tracer</td></tr>
-<tr><td>DSM flag missing</td><td>Re-run Ansible</td></tr>
-<tr><td>Trace-agent crash</td><td>Restart datadog-agent</td></tr>
-<tr><td>No traffic</td><td>Generate test message</td></tr>
-<tr><td>Memory OOM</td><td>Increase RAM</td></tr>
+<table border="1" cellpadding="6" cellspacing="0">
+<tr>
+<th>Root Cause</th>
+<th>Fix</th>
+</tr>
+<tr>
+<td>Application restarted</td>
+<td>Restart application with profiler enabled</td>
+</tr>
+<tr>
+<td>Profiler missing</td>
+<td>Reattach Datadog tracer</td>
+</tr>
+<tr>
+<td>DSM flag missing</td>
+<td>Re-run Ansible configuration</td>
+</tr>
+<tr>
+<td>Trace-agent crash</td>
+<td>Restart datadog-agent service</td>
+</tr>
+<tr>
+<td>No traffic</td>
+<td>Generate test message to rebuild topology</td>
+</tr>
+<tr>
+<td>Memory OOM</td>
+<td>Increase VM memory allocation</td>
+</tr>
 </table>
 
----
+<hr>
 
 <h2 style="color:#000000; font-weight:bold;">5. Fast Recovery Command</h2>
 
@@ -157,29 +204,32 @@ sudo systemctl restart datadog-agent
 sudo systemctl restart &lt;dotnet-app&gt;
 </code></pre>
 
-Then generate a test RabbitMQ message.
+After restart:
 
-DSM rebuilds within 2–5 minutes.
+<ul>
+  <li>Generate a test RabbitMQ message</li>
+  <li>Wait 2–5 minutes for DSM rebuild</li>
+</ul>
 
----
+<hr>
 
 <h2 style="color:#000000; font-weight:bold;">6. Preventive Monitoring</h2>
 
-Add monitors for:
+Recommended Datadog monitors:
 
 <ul>
   <li>APM spans drop to zero</li>
   <li>Trace-agent not running</li>
-  <li>Log silence</li>
-  <li>High memory</li>
-  <li>RabbitMQ idle</li>
+  <li>Log ingestion silence</li>
+  <li>High memory utilization</li>
+  <li>RabbitMQ idle detection</li>
 </ul>
 
----
+<hr>
 
-<h2 style="color:#000000; font-weight:bold;">7. Important Note</h2>
+<h2 style="color:#000000; font-weight:bold;">7. Important Behavioral Note</h2>
 
-DSM is:
+Data Streams Monitoring (DSM) is:
 
 <ul>
   <li>Real-time</li>
@@ -187,17 +237,17 @@ DSM is:
   <li>Span dependent</li>
 </ul>
 
-If no spans are generated → DSM will show blank topology.
+If no spans are generated, DSM will display no topology.
 
-This is expected behavior.
+This is expected behavior and not a system fault.
 
----
+<hr>
 
 <h2 style="color:#000000; font-weight:bold;">Final Outcome</h2>
 
-This SOP provides a structured, repeatable troubleshooting process for restoring Datadog DSM and APM across AKS and .NET HA VM environments.
+This SOP provides a structured and repeatable troubleshooting process for restoring Datadog DSM and APM functionality across AKS and .NET HA VM environments, ensuring minimal downtime and rapid observability restoration.
 
----
+<hr>
 
 <h2 style="color:#000000; font-weight:bold;">Contact</h2>
 
