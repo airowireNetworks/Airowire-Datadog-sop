@@ -42,11 +42,13 @@ extra_javascript:
 nav:
   - Azure:
       - Azure Logs Enablement: azure/logs/logs.md
+      - Azure Logs Enablement: azure/logs/lr.md  
       - Azure APM Enablement: azure/apm/apm.md
       - Azure DSM on AKS with RabbitMQ: azure/dsm/dsm-solution.md
       - Azure DSM on HA Vms with RabbitMQ: azure/dsm/dsm-ansible.md
       - Azure Cost Optimization: azure/cost-management/cost.md
-      - AKS SLA Monitoring: azure/sla/sla.md 
+      - AKS SLA Monitoring: azure/sla/sla.md
+      - Azure DSM on HA Vms with RabbitMQ1: azure/tt/tt.md 
       - DB Monitoring: []
 
   - AWS:
