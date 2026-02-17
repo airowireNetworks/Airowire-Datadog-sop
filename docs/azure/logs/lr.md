@@ -4,18 +4,10 @@
 </div>
 
 <h1 style="color:#000000; font-weight:bold;">
-  Log Optimization & Long-Term Archival on AKS
+  Solution Document for Log Optimization & Long-Term Archival on Azure Kubernetes Services (AKS)
 </h1>
 
-<p><strong>(Datadog + Azure Blob via Terraform)</strong></p>
-
-<p>
-<strong>Version:</strong> 1.0<br>
-<strong>Owner:</strong> Platform Engineering Team<br>
-<strong>Status:</strong> Production Implementation
-</p>
-
-<hr>
+<p><strong>(Datadog Logs + Azure Blob via Terraform)</strong></p>
 
 <h2 style="color:#000000; font-weight:bold;">1. Purpose</h2>
 
@@ -29,7 +21,7 @@ The solution integrates:
   <li>Terraform for Infrastructure-as-Code automation</li>
 </ul>
 
-<strong>Objectives:</strong>
+The objectives are:
 
 <ul>
   <li>Reduce log ingestion cost</li>
@@ -38,8 +30,6 @@ The solution integrates:
   <li>Ensure secure authentication</li>
   <li>Provide scalable enterprise architecture</li>
 </ul>
-
-<hr>
 
 <h2 style="color:#000000; font-weight:bold;">2. Scope</h2>
 
@@ -53,40 +43,36 @@ This SOP applies to:
   <li>Terraform-based infrastructure provisioning</li>
 </ul>
 
-<hr>
-
 <h2 style="color:#000000; font-weight:bold;">3. Architecture Overview</h2>
 
-<h3>Phase 1 – Optimized Real-Time Monitoring</h3>
+<h3 style="color:#000000; font-weight:bold;">Phase 1 – Optimized Real-Time Monitoring</h3>
 
 AKS → Datadog (Optimized 15-Day Indexed Logs)
 
-<h3>Phase 2 – Long-Term Retention</h3>
+<h3 style="color:#000000; font-weight:bold;">Phase 2 – Long-Term Retention</h3>
 
 AKS → Datadog (Real-Time Monitoring – 15 Days)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;↓<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Azure Blob (Long-Term Archive – 6–12+ Months)
 
-<hr>
-
 <h2 style="color:#000000; font-weight:bold;">4. Phase 1 – Log Ingestion Optimization</h2>
 
-<h3>4.1 Objective</h3>
+<h3 style="color:#000000; font-weight:bold;">4.1 Objective</h3>
 
 Reduce indexed log volume while retaining full visibility of critical logs required for monitoring and incident response.
 
-<h3>4.2 Log Analysis Summary</h3>
+<h3 style="color:#000000; font-weight:bold;">4.2 Log Analysis Summary</h3>
 
-Observed distribution:
+Observed log distribution:
 
 <ul>
-  <li><strong>High Volume:</strong> info, debug</li>
-  <li><strong>Low Volume but Critical:</strong> error, warn</li>
+  <li>High volume: info, debug</li>
+  <li>Low volume but critical: error, warn</li>
 </ul>
 
-Optimization focused on ingestion-level control since retention (15 days) is contractually fixed.
+Optimization focused on ingestion-level control since retention (15 days) is fixed under contract.
 
-<h3>4.3 Index Configuration</h3>
+<h3 style="color:#000000; font-weight:bold;">4.3 Index Configuration</h3>
 
 <strong>Step 1 – Create Critical Logs Index</strong>
 
@@ -100,7 +86,7 @@ Purpose:
 
 <ul>
   <li>Retain 100% of actionable logs</li>
-  <li>Maintain alerting & incident response integrity</li>
+  <li>Maintain alerting and incident response integrity</li>
 </ul>
 
 <strong>Step 2 – Modify Main Index</strong>
@@ -114,9 +100,7 @@ Purpose:
 
 Separate non-critical logs from critical logs.
 
-<h3>4.4 Exclusion Policies</h3>
-
-Configured under <strong>main</strong> index:
+<h3 style="color:#000000; font-weight:bold;">4.4 Exclusion Policies</h3>
 
 <table border="1" cellpadding="6" cellspacing="0">
 <tr>
@@ -141,32 +125,30 @@ Effect:
   <li>All critical logs preserved</li>
 </ul>
 
-<h3>4.5 Validation Procedure</h3>
+<h3 style="color:#000000; font-weight:bold;">4.5 Validation Procedure</h3>
 
 Navigate to:
 
 <ul>
-  <li>Logs → Explorer</li>
-  <li>Logs → Usage → Indexed Logs Volume</li>
+  <li>Logs → Explorer (Confirm correct index separation)</li>
+  <li>Logs → Usage → Indexed Logs Volume (Compare before and after optimization)</li>
 </ul>
 
 Expected Result:
 
 <strong>~70–80% reduction in indexed log ingestion.</strong>
 
-<hr>
-
 <h2 style="color:#000000; font-weight:bold;">5. Phase 2 – Azure Blob Long-Term Archival</h2>
 
-<h3>5.1 Objective</h3>
+<h3 style="color:#000000; font-weight:bold;">5.1 Objective</h3>
 
 Enable cost-efficient long-term log retention beyond Datadog’s 15-day indexed retention.
 
-<h3>5.2 Infrastructure Provisioning (Terraform)</h3>
+<h3 style="color:#000000; font-weight:bold;">5.2 Infrastructure Provisioning (Terraform)</h3>
 
 Provisioned using Infrastructure-as-Code.
 
-<strong>Repository:</strong><br>
+<strong>Repository Reference:</strong><br>
 https://github.com/airowireNetworks/logs.git
 
 Terraform provisions:
@@ -179,7 +161,7 @@ Terraform provisions:
   <li>Secure authentication configuration</li>
 </ul>
 
-<h3>5.3 Secure Authentication Model</h3>
+<h3 style="color:#000000; font-weight:bold;">5.3 Secure Authentication Model</h3>
 
 Authentication implemented using:
 
@@ -193,7 +175,7 @@ Created:
   <li>Client Secret</li>
 </ul>
 
-Advantages over SAS Tokens:
+Advantages:
 
 <ul>
   <li>Enterprise-grade security</li>
@@ -202,28 +184,26 @@ Advantages over SAS Tokens:
   <li>Least-privilege RBAC enforcement</li>
 </ul>
 
-<h3>5.4 RBAC Configuration</h3>
+<h3 style="color:#000000; font-weight:bold;">5.4 RBAC Configuration</h3>
 
-<table border="1" cellpadding="6" cellspacing="0">
-<tr>
-<th>Layer</th>
-<th>Role</th>
-</tr>
-<tr>
-<td>Control Plane (Subscription)</td>
-<td>Reader, Monitoring Reader</td>
-</tr>
-<tr>
-<td>Data Plane (Container)</td>
-<td>Storage Blob Data Contributor</td>
-</tr>
-</table>
+<strong>Control Plane Roles (Subscription Level)</strong>
 
-Resolved prior authorization errors (e.g., 403).
+<ul>
+  <li>Reader</li>
+  <li>Monitoring Reader</li>
+</ul>
 
-<h3>5.5 Datadog Azure Integration</h3>
+<strong>Data Plane Role (Container Level)</strong>
 
-Configured in Datadog:
+<ul>
+  <li>Storage Blob Data Contributor</li>
+</ul>
+
+Resolved prior authorization issues (e.g., 403 errors) and ensured secure log write access.
+
+<h3 style="color:#000000; font-weight:bold;">5.5 Datadog Azure Integration</h3>
+
+Configured within Datadog:
 
 <ul>
   <li>Installed Azure Integration</li>
@@ -233,7 +213,7 @@ Configured in Datadog:
   <li>Subscription ID</li>
 </ul>
 
-<h3>5.6 Archive Configuration</h3>
+<h3 style="color:#000000; font-weight:bold;">5.6 Archive Configuration</h3>
 
 Location:
 
@@ -248,17 +228,15 @@ Configured:
   <li>Archive status: Active</li>
 </ul>
 
-<h3>5.7 Archive Validation</h3>
+<h3 style="color:#000000; font-weight:bold;">5.7 Archive Validation</h3>
 
-Validation Steps:
+Validation steps:
 
 <ul>
   <li>Confirm archive status is Active in Datadog</li>
   <li>Verify log objects appear in Azure Blob container</li>
-  <li>Monitor storage growth</li>
+  <li>Monitor storage growth and access logs</li>
 </ul>
-
-<hr>
 
 <h2 style="color:#000000; font-weight:bold;">6. Security Controls</h2>
 
@@ -289,8 +267,6 @@ Validation Steps:
 </tr>
 </table>
 
-<hr>
-
 <h2 style="color:#000000; font-weight:bold;">7. Operational Responsibilities</h2>
 
 <table border="1" cellpadding="6" cellspacing="0">
@@ -316,23 +292,19 @@ Validation Steps:
 </tr>
 </table>
 
-<hr>
-
 <h2 style="color:#000000; font-weight:bold;">8. Outcomes Achieved</h2>
 
 <ul>
-  <li>✔ ~70–80% ingestion reduction</li>
-  <li>✔ 100% retention of critical logs</li>
-  <li>✔ Secure Azure AD authentication</li>
-  <li>✔ Long-term archival capability</li>
-  <li>✔ Compliance readiness</li>
-  <li>✔ Infrastructure-as-Code governance</li>
-  <li>✔ Scalable enterprise architecture</li>
+  <li> 70–80% ingestion reduction</li>
+  <li> 100% retention of critical logs</li>
+  <li> Secure Azure AD authentication</li>
+  <li> Long-term archival capability</li>
+  <li> Compliance readiness</li>
+  <li> Infrastructure-as-Code governance</li>
+  <li> Scalable enterprise architecture</li>
 </ul>
 
-<hr>
-
-<h2 style="color:#000000; font-weight:bold;">9. Future Enhancement (Optional Phase 3)</h2>
+<h2 style="color:#000000; font-weight:bold;">9. Future Enhancement (Phase 3 – Optional)</h2>
 
 Vector-based log routing may be introduced if:
 
@@ -343,7 +315,7 @@ Vector-based log routing may be introduced if:
   <li>Advanced transformation is needed</li>
 </ul>
 
-<hr>
+Phase 3 is optional and will be evaluated based on scaling needs.
 
 <h2 style="color:#000000; font-weight:bold;">10. Conclusion</h2>
 
