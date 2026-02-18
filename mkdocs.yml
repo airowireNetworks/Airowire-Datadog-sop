@@ -42,7 +42,8 @@ extra_javascript:
 nav:
   - Azure:
       - Azure Logs Enablement: azure/logs/logs.md
-      - Azure Logs Enablement: azure/logs/lr.md  
+      - Azure Logs Enablement: azure/logs/lr.md
+      - Azure Logs Enablement: azure/logs/lrr.md  
       - Azure APM Enablement: azure/apm/apm.md
       - Azure DSM on AKS with RabbitMQ: azure/dsm/dsm-solution.md
       - Azure DSM on HA Vms with RabbitMQ: azure/dsm/dsm-ansible.md

@@ -75,7 +75,7 @@ Optimization focused on ingestion-level control since retention (15 days) is fix
 <h3 style="color:#000000; font-weight:bold;">4.3 Index Configuration</h3>
 
 <strong>Step 1 – Create Critical Logs Index</strong>
-
+<p align="center"><img src="/images/l1.png" width="600"/></p>
 <ul>
   <li><strong>Index Name:</strong> critical-logs</li>
   <li><strong>Filter:</strong> status:error OR status:warn</li>
@@ -95,6 +95,8 @@ Purpose:
   <li><strong>Index Name:</strong> main</li>
   <li><strong>Filter:</strong> -status:error -status:warn</li>
 </ul>
+
+<p align="center"><img src="/images/l2.png" width="600"/></p>
 
 Purpose:
 
@@ -237,6 +239,8 @@ Validation steps:
   <li>Verify log objects appear in Azure Blob container</li>
   <li>Monitor storage growth and access logs</li>
 </ul>
+
+<p align="center"><img src="/images/l3.png" width="600"/></p>
 
 <h2 style="color:#000000; font-weight:bold;">6. Security Controls</h2>
 
