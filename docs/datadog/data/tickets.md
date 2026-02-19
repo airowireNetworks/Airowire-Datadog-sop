@@ -66,7 +66,7 @@ Use this method for issues related to a specific host or Datadog Agent.
 
 Access:
 <br>
-https://app.datadoghq.com
+https://app.datadoghq.com or eu
 
 Login using your organization credentials.
 
@@ -75,6 +75,8 @@ Login using your organization credentials.
 Go to:
 
 Integrations → Fleet Automation → View Agents
+ 
+<p align="center"><img src="/images/rt1.png" width="600"/></p>
 
 <h4>Step 3: Select the Affected Agent</h4>
 
@@ -83,6 +85,8 @@ Integrations → Fleet Automation → View Agents
   <li>Click the hostname to open agent details</li>
 </ul>
 
+<p align="center"><img src="/images/rt4.png" width="600"/></p>
+
 <h4>Step 4: Open the “Support” Tab</h4>
 
 <ul>
@@ -90,6 +94,9 @@ Integrations → Fleet Automation → View Agents
   <li>Click <strong>Send Support Ticket</strong></li>
 </ul>
 
+<p align="center"><img src="/images/rt2.png" width="600"/></p>
+
+<p align="center"><img src="/images/rt3.png" width="600"/></p>
 <h4>Step 5: Submit the Ticket</h4>
 
 Provide:
