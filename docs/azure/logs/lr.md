@@ -335,3 +335,9 @@ The implemented two-phase logging strategy delivers:
 
 This approach balances operational simplicity with scalability and financial efficiency.
 
+<h2 style="color:#000000; font-weight:bold;">Contact</h2>
+
+Patrick Schmidt — patrick@airowire.com<br>
+Piyush Choudhary — piyush@airowire.com<br>
+Dr. Shivanand Poojara — shivanand@airowire.com
+

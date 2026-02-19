@@ -173,6 +173,27 @@ Ensure status shows:
 
 <hr>
 
+<h2 style="color:#000000; font-weight:bold;">8. Outcomes Achieved</h2>
+
+<ul>
+  <li><strong>70–80% reduction in indexed log ingestion volume</strong>, achieved through index separation and exclusion policies, lowering overall Datadog logging costs.</li>
+
+  <li><strong>100% retention of critical logs (error & warn)</strong>, ensuring uninterrupted monitoring, alert accuracy, and incident response reliability.</li>
+
+  <li><strong>Effective log segregation</strong> by configuring dedicated critical and main indexes directly within Datadog.</li>
+
+  <li><strong>Cost-efficient long-term archival</strong> implemented using Azure Blob Storage with manual configuration and lifecycle tiering (Hot → Cool → Archive).</li>
+
+  <li><strong>Secure authentication setup</strong> using Azure AD Service Principal with properly assigned RBAC roles.</li>
+
+  <li><strong>Controlled access management</strong> through least-privilege role assignments and private storage container configuration.</li>
+
+  <li><strong>Operational visibility and validation</strong> through manual archive status verification and ingestion monitoring.</li>
+
+  <li><strong>Enterprise-ready logging architecture</strong> supporting scalability and compliance requirements without automation dependencies.</li>
+</ul>
+
+
 <h2 style="color:#000000; font-weight:bold;">Contact</h2>
 
 Patrick Schmidt — patrick@airowire.com<br>
