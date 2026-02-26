@@ -1,15 +1,9 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <meta charset="UTF-8">
-  <title>Code Security & DevSecOps Scanning Implementation</title>
-</head>
-<body style="font-family:Arial, sans-serif; margin:40px; line-height:1.6;">
-
 <div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:40px;">
-  <div style="font-size:22px; font-weight:bold;">DevSecOps Security Framework</div>
-  <div style="font-size:16px;">SAST | SCA | Secrets | IaC</div>
+  <img src="/images/airowire-logo.png" width="260">
+  <img src="/images/datadog.png" width="150">
 </div>
+
+<h1 style="color:#000000; font-weight:bold;">
 
 <h1 style="color:#000000;">Solution Document for Code Security & DevSecOps Scanning Implementation</h1>
 <p><strong>(SAST + SCA + Secrets + IaC Scanning Integration)</strong></p>
