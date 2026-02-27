@@ -88,11 +88,9 @@ Datadog Code Security Implementation
 </div>
 
 <div class="section-title">1. Purpose</div>
-
 <p>
 This SOP defines a standard, automated, and repeatable process to configure Datadog Code Security for GitHub repositories.
 </p>
-
 <ul>
 <li>Static code vulnerability detection (SAST)</li>
 <li>Dependency risk analysis (SCA)</li>
@@ -103,7 +101,6 @@ This SOP defines a standard, automated, and repeatable process to configure Data
 </ul>
 
 <div class="section-title">2. Scope</div>
-
 <p><strong>In Scope:</strong></p>
 <ul>
 <li>GitHub repository integration</li>
@@ -113,7 +110,6 @@ This SOP defines a standard, automated, and repeatable process to configure Data
 <li>Security policy enforcement</li>
 <li>Vulnerability review workflow</li>
 </ul>
-
 <p><strong>Out of Scope:</strong></p>
 <ul>
 <li>GitHub account creation</li>
@@ -123,7 +119,6 @@ This SOP defines a standard, automated, and repeatable process to configure Data
 </ul>
 
 <div class="section-title">3. Target Audience</div>
-
 <ul>
 <li>DevOps Engineers</li>
 <li>DevSecOps Engineers</li>
@@ -132,14 +127,12 @@ This SOP defines a standard, automated, and repeatable process to configure Data
 </ul>
 
 <div class="section-title">4. Assumptions & Prerequisites</div>
-
 <p><strong>Infrastructure:</strong></p>
 <ul>
 <li>GitHub repository available</li>
 <li>Datadog account active</li>
 <li>Repository contains application code, dependency files, and IaC files</li>
 </ul>
-
 <p><strong>Access:</strong></p>
 <ul>
 <li>Admin access to GitHub repository</li>
@@ -147,7 +140,6 @@ This SOP defines a standard, automated, and repeatable process to configure Data
 </ul>
 
 <div class="section-title">5. High-Level Architecture</div>
-
 <div class="code-block">
 Developer  
 ↓ Push / PR  
@@ -164,39 +156,37 @@ Deployment Pipeline
 
 <div class="section-title">6. Implementation Steps (With Navigation)</div>
 
-<p><strong>PHASE 1 — Navigate to Code Security</strong></p>
+<div class="section-title">7. PHASE 1 — Navigate to Code Security</div>
 <p>Datadog → Software Delivery → Code Security</p>
 
-<p><strong>PHASE 2 — Enable Code Security Setup</strong></p>
+<div class="section-title">8. PHASE 2 — Enable Code Security Setup</div>
 <p>Datadog → Security → Code Security → Setup</p>
 
-<p><strong>PHASE 3 — Select Source Code Provider</strong></p>
+<div class="section-title">9. PHASE 3 — Select Source Code Provider</div>
 <p>Select GitHub as source control provider.</p>
 
-<p><strong>PHASE 4 — Select Scan Execution Mode</strong></p>
+<div class="section-title">10. PHASE 4 — Select Where Scans Should Run</div>
 <ul>
 <li>Datadog (AI-enhanced) — Recommended</li>
 <li>CI Pipelines</li>
 </ul>
 
-<p><strong>PHASE 5 — Connect GitHub Account</strong></p>
+<div class="section-title">11. PHASE 5 — Connect GitHub Account</div>
 <ul>
 <li>Add GitHub Account</li>
 <li>Authorize Datadog GitHub App</li>
-<li>Select repositories</li>
+<li>Select required repositories</li>
 <li>Grant permissions</li>
 </ul>
 
-<p><strong>PHASE 6 — Repository Configuration</strong></p>
+<div class="section-title">12. PHASE 6 — Repository Configuration</div>
 <p>Select repository: <strong>mohammedsaqlain23/devsecops</strong></p>
-
 <ul>
 <li>PR Comments → ENABLED</li>
 <li>Branch scanned → main</li>
 </ul>
 
-<p><strong>PHASE 7 — Enable Scanning Modules</strong></p>
-
+<div class="section-title">13. PHASE 7 — Enable Scanning Modules</div>
 <table>
 <tr>
 <th>Module</th>
@@ -220,35 +210,26 @@ Deployment Pipeline
 </tr>
 </table>
 
-<p><strong>PHASE 8 — Trigger First Scan</strong></p>
-
+<div class="section-title">14. PHASE 8 — Trigger First Scan</div>
 <div class="code-block">
 git add .
 git commit -m "Initial commit"
 git push origin main
 </div>
 
-<div class="section-title">15. Review Findings</div>
-
+<div class="section-title">15. PHASE 9 — Review Findings</div>
 <ul>
-<li>Code Vulnerabilities → 48</li>
-<li>Code Violations → 9764</li>
-<li>Libraries → 0</li>
-<li>Secrets → 0</li>
-<li>IaC Violations → 54</li>
+<li>Code Vulnerabilities</li>
+<li>Code Violations</li>
+<li>Libraries</li>
+<li>Secrets</li>
+<li>IaC Violations</li>
 </ul>
 
-<p>Each finding includes:</p>
-<ul>
-<li>File path</li>
-<li>Line number</li>
-<li>Severity</li>
-<li>Description</li>
-<li>Fix recommendation</li>
-</ul>
+<div class="section-title">16. PHASE 10 — Enable PR Security (Shift-Left)</div>
+<p>Ensure PR Comments are enabled to enforce early remediation.</p>
 
-<div class="section-title">17. Security Policy Configuration</div>
-
+<div class="section-title">17. PHASE 11 — Security Policy Configuration</div>
 <table>
 <tr>
 <th>Severity</th>
@@ -272,32 +253,19 @@ git push origin main
 </tr>
 </table>
 
-<div class="section-title">18. Remediation Workflow</div>
-
+<div class="section-title">18. PHASE 12 — Remediation Workflow</div>
 <div class="code-block">
 git checkout -b fix/security-issue
 </div>
 
-<ul>
-<li>Remove hardcoded credentials</li>
-<li>Add input validation</li>
-<li>Restrict 0.0.0.0/0 in IaC</li>
-<li>Add Kubernetes resource limits</li>
-<li>Upgrade vulnerable libraries</li>
-</ul>
-
-<div class="section-title">19. Merge Gate Enforcement</div>
-
+<div class="section-title">19. PHASE 13 — Merge Gate Enforcement</div>
 <ul>
 <li>No Critical vulnerabilities</li>
 <li>No exposed secrets</li>
 <li>No High-risk IaC violations</li>
 </ul>
 
-<p><strong>If issues exist → Merge is blocked automatically.</strong></p>
-
 <div class="section-title">20. Post-Implementation Validation</div>
-
 <ul>
 <li>Scan status → Green</li>
 <li>Reduced vulnerability count</li>
@@ -306,18 +274,15 @@ git checkout -b fix/security-issue
 </ul>
 
 <div class="section-title">21. Security & Best Practices</div>
-
 <ul>
-<li>Enable branch protection in GitHub</li>
+<li>Enable branch protection</li>
 <li>Require PR approvals</li>
 <li>Use environment variables for secrets</li>
 <li>Update dependencies regularly</li>
-<li>Review weekly scan reports</li>
-<li>Track vulnerability trends</li>
+<li>Review weekly reports</li>
 </ul>
 
 <div class="section-title">22. Limitations</div>
-
 <ul>
 <li>SAST does not detect runtime issues</li>
 <li>False positives may occur</li>
@@ -325,23 +290,14 @@ git checkout -b fix/security-issue
 </ul>
 
 <div class="section-title">23. Conclusion</div>
-
 <ul>
 <li>Automated repository scanning</li>
 <li>Multi-layer security detection</li>
 <li>AI-enhanced vulnerability analysis</li>
 <li>Shift-left PR enforcement</li>
-<li>Enterprise-level merge gating</li>
+<li>Enterprise-grade merge gating</li>
 <li>Continuous security governance</li>
 </ul>
-
-<div class="section-title">Contact</div>
-
-<p>
-Patrick Schmidt — patrick@airowire.com<br>
-Piyush Choudhary — piyush@airowire.com<br>
-Dr. Shivanand Poojara — shivanand@airowire.com
-</p>
 
 </body>
 </html>
