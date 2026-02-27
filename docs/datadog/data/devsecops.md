@@ -79,6 +79,12 @@ th {
 
 <body>
 
+<div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:40px;">
+  <img src="/images/airowire-logo.png" width="260">
+  <img src="/images/datadog.png" width="150">
+</div>
+
+
 <div class="main-title">
 Datadog Code Security Implementation
 </div>
@@ -298,6 +304,13 @@ git checkout -b fix/security-issue
 <li>Enterprise-grade merge gating</li>
 <li>Continuous security governance</li>
 </ul>
+
+<h2 style="color:#000000; font-weight:bold;">Contact</h2>
+
+Patrick Schmidt — patrick@airowire.com<br>
+Piyush Choudhary — piyush@airowire.com<br>
+Dr. Shivanand Poojara — shivanand@airowire.com
+
 
 </body>
 </html>
