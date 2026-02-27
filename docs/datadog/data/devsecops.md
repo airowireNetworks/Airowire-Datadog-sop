@@ -6,69 +6,100 @@
 
 <style>
 body {
-    font-family: Arial, sans-serif;
-    margin: 50px;
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 80px;
     line-height: 1.8;
-    color: #000;
+    color: #111;
+    background-color: #ffffff;
 }
 
-h1 {
-    font-size: 30px;
-    font-weight: bold;
-}
-
-h2 {
-    margin-top: 40px;
-    border-bottom: 2px solid #000;
-    padding-bottom: 5px;
-}
-
-h3 {
-    margin-top: 25px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-top: 15px;
+/* Main Title */
+.main-title {
+    font-size: 40px;
+    font-weight: 700;
     margin-bottom: 15px;
 }
 
-table, th, td {
-    border: 1px solid #000;
+/* Subtitle */
+.subtitle {
+    font-size: 20px;
+    font-weight: 500;
+    margin-bottom: 60px;
+    color: #333;
+}
+
+/* Section Titles */
+.section-title {
+    font-size: 28px;
+    font-weight: 700;
+    margin-top: 60px;
+    margin-bottom: 20px;
+}
+
+/* Paragraph */
+p {
+    font-size: 18px;
+    margin-bottom: 15px;
+}
+
+/* Lists */
+ul {
+    font-size: 18px;
+    margin-left: 25px;
+}
+
+li {
+    margin-bottom: 10px;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    margin-bottom: 20px;
 }
 
 th, td {
-    padding: 10px;
+    border: 1px solid #ccc;
+    padding: 12px;
     text-align: left;
 }
 
-pre {
-    background: #f4f4f4;
-    padding: 15px;
-    border: 1px solid #ccc;
+th {
+    background-color: #f4f4f4;
+    font-weight: bold;
 }
 
-hr {
-    margin-top: 40px;
-    margin-bottom: 40px;
+/* Code blocks */
+.code-block {
+    background-color: #f5f5f5;
+    padding: 15px;
+    border-left: 4px solid #632ca6;
+    font-family: "Courier New", monospace;
+    font-size: 16px;
+    margin-top: 15px;
+    margin-bottom: 15px;
 }
 </style>
 </head>
 
 <body>
 
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
+<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:60px;">
   <img src="/images/airowire-logo.png" width="260">
   <img src="/images/datadog.png" width="150">
 </div>
 
-<h1>Solution Document for Datadog Code Security Implementation</h1>
-<p><strong>(SAST + SCA + Secrets + IaC Scanning using GitHub Integration)</strong></p>
+<div class="main-title">
+Solution Document for Datadog Code Security Implementation
+</div>
 
-<hr>
+<div class="subtitle">
+(SAST + SCA + Secrets + IaC Scanning using GitHub Integration)
+</div>
 
-<h2>1. Purpose</h2>
+<div class="section-title">1. Purpose</div>
 
 <p>
 This SOP defines a standardized, automated, and repeatable process to configure 
@@ -84,11 +115,9 @@ Datadog Code Security for GitHub repositories.
 <li>Centralized vulnerability visibility inside Datadog</li>
 </ul>
 
-<hr>
+<div class="section-title">2. Scope</div>
 
-<h2>2. Scope</h2>
-
-<h3>In Scope</h3>
+<p><strong>In Scope:</strong></p>
 <ul>
 <li>GitHub repository integration</li>
 <li>Datadog Code Security activation</li>
@@ -98,7 +127,7 @@ Datadog Code Security for GitHub repositories.
 <li>Vulnerability review workflow</li>
 </ul>
 
-<h3>Out of Scope</h3>
+<p><strong>Out of Scope:</strong></p>
 <ul>
 <li>GitHub account creation</li>
 <li>Datadog account creation</li>
@@ -106,9 +135,7 @@ Datadog Code Security for GitHub repositories.
 <li>Application deployment configuration</li>
 </ul>
 
-<hr>
-
-<h2>3. Prerequisites</h2>
+<div class="section-title">3. Prerequisites</div>
 
 <ul>
 <li>Active GitHub repository</li>
@@ -118,27 +145,23 @@ Datadog Code Security for GitHub repositories.
 <li>Repository contains application code, dependency files, and IaC files</li>
 </ul>
 
-<hr>
+<div class="section-title">4. High-Level Architecture</div>
 
-<h2>4. High-Level Architecture</h2>
+<div class="code-block">
+Developer  
+↓ Push / PR  
+GitHub Repository  
+↓  
+Datadog Code Security Engine  
+↓  
+Security Dashboard  
+↓  
+PR Comments + Merge Gate  
+↓  
+Deployment Pipeline  
+</div>
 
-<pre>
-Developer
-    ↓ Push / PR
-GitHub Repository
-    ↓
-Datadog Code Security Engine
-    ↓
-Security Dashboard
-    ↓
-PR Comments + Merge Gate
-    ↓
-Deployment Pipeline
-</pre>
-
-<hr>
-
-<h2>5. Functional Components</h2>
+<div class="section-title">5. Functional Components</div>
 
 <table>
 <tr>
@@ -167,54 +190,39 @@ Deployment Pipeline
 </tr>
 </table>
 
-<hr>
+<div class="section-title">6. Implementation Procedure</div>
 
-<h2>6. Implementation Procedure</h2>
+<p><strong>Step 1 — Navigate to Code Security</strong></p>
+<p>Datadog → Software Delivery → Code Security</p>
 
-<h3>Step 1 — Navigate to Code Security</h3>
-Datadog → Software Delivery → Code Security
+<p><strong>Step 2 — Connect GitHub Account</strong></p>
+<p>Datadog → Security → Code Security → Setup → Add GitHub Account</p>
 
-<h3>Step 2 — Connect GitHub Account</h3>
-Datadog → Security → Code Security → Setup → Add GitHub Account  
-Authorize Datadog GitHub App and select repositories.
+<p><strong>Step 3 — Select Repository</strong></p>
+<p><strong>mohammedsaqlain23/devsecops</strong></p>
 
-<h3>Step 3 — Select Repository</h3>
-Choose:
-<strong>mohammedsaqlain23/devsecops</strong>
-
-Verify:
 <ul>
 <li>PR Comments → ENABLED</li>
 <li>Main branch scanning → Enabled</li>
 </ul>
 
-<h3>Step 4 — Enable Security Modules</h3>
+<p><strong>Step 4 — Enable Security Modules</strong></p>
+<ul>
+<li>SAST</li>
+<li>SCA</li>
+<li>Secret Scanning</li>
+<li>IaC Security</li>
+</ul>
 
-✔ SAST  
-✔ SCA  
-✔ Secret Scanning  
-✔ IaC Security  
+<p><strong>Step 5 — Trigger Initial Scan</strong></p>
 
-<h3>Step 5 — Trigger Initial Scan</h3>
-
-<pre>
+<div class="code-block">
 git add .
 git commit -m "Initial commit"
 git push origin main
-</pre>
+</div>
 
-This triggers:
-
-<ul>
-<li>Code scan</li>
-<li>Dependency scan</li>
-<li>Secret scan</li>
-<li>IaC scan</li>
-</ul>
-
-<hr>
-
-<h2>7. Security Policy Configuration</h2>
+<div class="section-title">7. Security Policy Configuration</div>
 
 <table>
 <tr>
@@ -239,42 +247,11 @@ This triggers:
 </tr>
 </table>
 
-<hr>
+<div class="section-title">8. Remediation Workflow</div>
 
-<h2>8. Dashboard Review</h2>
-
-Navigation:
-Datadog → Code Security → Repositories
-
-Example Output:
-
-<ul>
-<li>Code Vulnerabilities → 48</li>
-<li>Code Violations → 9764</li>
-<li>Libraries → 0</li>
-<li>Secrets → 0</li>
-<li>IaC Violations → 54</li>
-</ul>
-
-Each finding includes:
-
-<ul>
-<li>File path</li>
-<li>Line number</li>
-<li>Severity</li>
-<li>Description</li>
-<li>Fix recommendation</li>
-</ul>
-
-<hr>
-
-<h2>9. Remediation Workflow</h2>
-
-<pre>
+<div class="code-block">
 git checkout -b fix/security-issue
-</pre>
-
-Common Fixes:
+</div>
 
 <ul>
 <li>Remove hardcoded credentials</li>
@@ -284,13 +261,7 @@ Common Fixes:
 <li>Add Kubernetes resource limits</li>
 </ul>
 
-Push → PR → Automatic Re-Scan
-
-<hr>
-
-<h2>10. Merge Gate Enforcement</h2>
-
-Before merging:
+<div class="section-title">9. Merge Gate Enforcement</div>
 
 <ul>
 <li>No Critical vulnerabilities</li>
@@ -298,49 +269,9 @@ Before merging:
 <li>No High-risk IaC violations</li>
 </ul>
 
-If violations exist → Merge is blocked automatically.
+<p><strong>If violations exist → Merge is blocked automatically.</strong></p>
 
-<hr>
-
-<h2>11. Post-Implementation Validation</h2>
-
-Verify:
-
-<ul>
-<li>Scan status → Green</li>
-<li>PR comments functioning</li>
-<li>No secret exposures</li>
-<li>Reduced vulnerability count</li>
-</ul>
-
-<hr>
-
-<h2>12. Security Best Practices</h2>
-
-<ul>
-<li>Enable GitHub branch protection rules</li>
-<li>Require PR approvals</li>
-<li>Use environment variables for secrets</li>
-<li>Update dependencies regularly</li>
-<li>Review weekly scan reports</li>
-<li>Track vulnerability trends</li>
-</ul>
-
-<hr>
-
-<h2>13. Limitations</h2>
-
-<ul>
-<li>SAST does not detect runtime vulnerabilities</li>
-<li>False positives may occur</li>
-<li>IaC scanning does not replace CSPM tools</li>
-</ul>
-
-<hr>
-
-<h2>14. Final Outcome</h2>
-
-Datadog Code Security provides:
+<div class="section-title">10. Final Outcome</div>
 
 <ul>
 <li>Automated multi-layer repository scanning</li>
@@ -350,13 +281,13 @@ Datadog Code Security provides:
 <li>Centralized security governance</li>
 </ul>
 
-<hr>
+<div class="section-title">Contact</div>
 
-<h2>Contact</h2>
-
-Patrick Schmidt — patrick@airowire.com  
-Piyush Choudhary — piyush@airowire.com  
-Dr. Shivanand Poojara — shivanand@airowire.com  
+<p>
+Patrick Schmidt — patrick@airowire.com<br>
+Piyush Choudhary — piyush@airowire.com<br>
+Dr. Shivanand Poojara — shivanand@airowire.com
+</p>
 
 </body>
 </html>
