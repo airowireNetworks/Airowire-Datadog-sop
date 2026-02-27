@@ -13,14 +13,12 @@ body {
     background-color: #ffffff;
 }
 
-/* Main Title */
 .main-title {
     font-size: 40px;
     font-weight: 700;
     margin-bottom: 15px;
 }
 
-/* Subtitle */
 .subtitle {
     font-size: 20px;
     font-weight: 500;
@@ -28,7 +26,6 @@ body {
     color: #333;
 }
 
-/* Section Titles */
 .section-title {
     font-size: 28px;
     font-weight: 700;
@@ -36,13 +33,11 @@ body {
     margin-bottom: 20px;
 }
 
-/* Paragraph */
 p {
     font-size: 18px;
     margin-bottom: 15px;
 }
 
-/* Lists */
 ul {
     font-size: 18px;
     margin-left: 25px;
@@ -52,7 +47,6 @@ li {
     margin-bottom: 10px;
 }
 
-/* Tables */
 table {
     width: 100%;
     border-collapse: collapse;
@@ -71,7 +65,6 @@ th {
     font-weight: bold;
 }
 
-/* Code blocks */
 .code-block {
     background-color: #f5f5f5;
     padding: 15px;
@@ -86,13 +79,8 @@ th {
 
 <body>
 
-<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:60px;">
-  <img src="/images/airowire-logo.png" width="260">
-  <img src="/images/datadog.png" width="150">
-</div>
-
 <div class="main-title">
-Solution Document for Datadog Code Security Implementation
+Datadog Code Security Implementation
 </div>
 
 <div class="subtitle">
@@ -102,16 +90,15 @@ Solution Document for Datadog Code Security Implementation
 <div class="section-title">1. Purpose</div>
 
 <p>
-This SOP defines a standardized, automated, and repeatable process to configure 
-Datadog Code Security for GitHub repositories.
+This SOP defines a standard, automated, and repeatable process to configure Datadog Code Security for GitHub repositories.
 </p>
 
 <ul>
-<li>Static Application Security Testing (SAST)</li>
-<li>Software Composition Analysis (SCA)</li>
+<li>Static code vulnerability detection (SAST)</li>
+<li>Dependency risk analysis (SCA)</li>
 <li>Secret exposure detection</li>
 <li>Infrastructure as Code (IaC) misconfiguration detection</li>
-<li>Pull Request-based security enforcement</li>
+<li>PR-based security enforcement</li>
 <li>Centralized vulnerability visibility inside Datadog</li>
 </ul>
 
@@ -135,17 +122,31 @@ Datadog Code Security for GitHub repositories.
 <li>Application deployment configuration</li>
 </ul>
 
-<div class="section-title">3. Prerequisites</div>
+<div class="section-title">3. Target Audience</div>
 
 <ul>
-<li>Active GitHub repository</li>
-<li>Admin access to GitHub repository</li>
-<li>Active Datadog account</li>
-<li>Admin access to Datadog Code Security</li>
+<li>DevOps Engineers</li>
+<li>DevSecOps Engineers</li>
+<li>SRE Teams</li>
+<li>Platform Engineering Teams</li>
+</ul>
+
+<div class="section-title">4. Assumptions & Prerequisites</div>
+
+<p><strong>Infrastructure:</strong></p>
+<ul>
+<li>GitHub repository available</li>
+<li>Datadog account active</li>
 <li>Repository contains application code, dependency files, and IaC files</li>
 </ul>
 
-<div class="section-title">4. High-Level Architecture</div>
+<p><strong>Access:</strong></p>
+<ul>
+<li>Admin access to GitHub repository</li>
+<li>Admin access to Datadog Code Security</li>
+</ul>
+
+<div class="section-title">5. High-Level Architecture</div>
 
 <div class="code-block">
 Developer  
@@ -161,60 +162,65 @@ PR Comments + Merge Gate
 Deployment Pipeline  
 </div>
 
-<div class="section-title">5. Functional Components</div>
+<div class="section-title">6. Implementation Steps (With Navigation)</div>
 
-<table>
-<tr>
-<th>Component</th>
-<th>Role</th>
-</tr>
-<tr>
-<td>SAST Engine</td>
-<td>Detects code-level vulnerabilities</td>
-</tr>
-<tr>
-<td>SCA Engine</td>
-<td>Identifies vulnerable dependencies</td>
-</tr>
-<tr>
-<td>Secret Scanner</td>
-<td>Detects hardcoded credentials</td>
-</tr>
-<tr>
-<td>IaC Security</td>
-<td>Detects infrastructure misconfigurations</td>
-</tr>
-<tr>
-<td>Policy Engine</td>
-<td>Blocks merge based on severity rules</td>
-</tr>
-</table>
-
-<div class="section-title">6. Implementation Procedure</div>
-
-<p><strong>Step 1 — Navigate to Code Security</strong></p>
+<p><strong>PHASE 1 — Navigate to Code Security</strong></p>
 <p>Datadog → Software Delivery → Code Security</p>
 
-<p><strong>Step 2 — Connect GitHub Account</strong></p>
-<p>Datadog → Security → Code Security → Setup → Add GitHub Account</p>
+<p><strong>PHASE 2 — Enable Code Security Setup</strong></p>
+<p>Datadog → Security → Code Security → Setup</p>
 
-<p><strong>Step 3 — Select Repository</strong></p>
-<p><strong>mohammedsaqlain23/devsecops</strong></p>
+<p><strong>PHASE 3 — Select Source Code Provider</strong></p>
+<p>Select GitHub as source control provider.</p>
+
+<p><strong>PHASE 4 — Select Scan Execution Mode</strong></p>
+<ul>
+<li>Datadog (AI-enhanced) — Recommended</li>
+<li>CI Pipelines</li>
+</ul>
+
+<p><strong>PHASE 5 — Connect GitHub Account</strong></p>
+<ul>
+<li>Add GitHub Account</li>
+<li>Authorize Datadog GitHub App</li>
+<li>Select repositories</li>
+<li>Grant permissions</li>
+</ul>
+
+<p><strong>PHASE 6 — Repository Configuration</strong></p>
+<p>Select repository: <strong>mohammedsaqlain23/devsecops</strong></p>
 
 <ul>
 <li>PR Comments → ENABLED</li>
-<li>Main branch scanning → Enabled</li>
+<li>Branch scanned → main</li>
 </ul>
 
-<p><strong>Step 4 — Enable Security Modules</strong></p>
-<ul>
-<li>SAST</li>
-<li>SCA</li>
-<li>Secret Scanning</li>
-<li>IaC Security</li>
-</ul>
+<p><strong>PHASE 7 — Enable Scanning Modules</strong></p>
 
-<p><strong>Step 5 — Trigger Initial Scan</strong></p>
+<table>
+<tr>
+<th>Module</th>
+<th>Detects</th>
+</tr>
+<tr>
+<td>SAST</td>
+<td>Code-level vulnerabilities</td>
+</tr>
+<tr>
+<td>SCA</td>
+<td>Vulnerable dependencies</td>
+</tr>
+<tr>
+<td>Secrets</td>
+<td>Hardcoded credentials</td>
+</tr>
+<tr>
+<td>IaC</td>
+<td>Misconfigured infrastructure</td>
+</tr>
+</table>
+
+<p><strong>PHASE 8 — Trigger First Scan</strong></p>
 
 <div class="code-block">
 git add .
@@ -222,7 +228,26 @@ git commit -m "Initial commit"
 git push origin main
 </div>
 
-<div class="section-title">7. Security Policy Configuration</div>
+<div class="section-title">15. Review Findings</div>
+
+<ul>
+<li>Code Vulnerabilities → 48</li>
+<li>Code Violations → 9764</li>
+<li>Libraries → 0</li>
+<li>Secrets → 0</li>
+<li>IaC Violations → 54</li>
+</ul>
+
+<p>Each finding includes:</p>
+<ul>
+<li>File path</li>
+<li>Line number</li>
+<li>Severity</li>
+<li>Description</li>
+<li>Fix recommendation</li>
+</ul>
+
+<div class="section-title">17. Security Policy Configuration</div>
 
 <table>
 <tr>
@@ -247,7 +272,7 @@ git push origin main
 </tr>
 </table>
 
-<div class="section-title">8. Remediation Workflow</div>
+<div class="section-title">18. Remediation Workflow</div>
 
 <div class="code-block">
 git checkout -b fix/security-issue
@@ -256,12 +281,12 @@ git checkout -b fix/security-issue
 <ul>
 <li>Remove hardcoded credentials</li>
 <li>Add input validation</li>
-<li>Upgrade vulnerable dependencies</li>
 <li>Restrict 0.0.0.0/0 in IaC</li>
 <li>Add Kubernetes resource limits</li>
+<li>Upgrade vulnerable libraries</li>
 </ul>
 
-<div class="section-title">9. Merge Gate Enforcement</div>
+<div class="section-title">19. Merge Gate Enforcement</div>
 
 <ul>
 <li>No Critical vulnerabilities</li>
@@ -269,16 +294,45 @@ git checkout -b fix/security-issue
 <li>No High-risk IaC violations</li>
 </ul>
 
-<p><strong>If violations exist → Merge is blocked automatically.</strong></p>
+<p><strong>If issues exist → Merge is blocked automatically.</strong></p>
 
-<div class="section-title">10. Final Outcome</div>
+<div class="section-title">20. Post-Implementation Validation</div>
 
 <ul>
-<li>Automated multi-layer repository scanning</li>
-<li>AI-enhanced vulnerability detection</li>
+<li>Scan status → Green</li>
+<li>Reduced vulnerability count</li>
+<li>PR comments functioning</li>
+<li>No secret exposures</li>
+</ul>
+
+<div class="section-title">21. Security & Best Practices</div>
+
+<ul>
+<li>Enable branch protection in GitHub</li>
+<li>Require PR approvals</li>
+<li>Use environment variables for secrets</li>
+<li>Update dependencies regularly</li>
+<li>Review weekly scan reports</li>
+<li>Track vulnerability trends</li>
+</ul>
+
+<div class="section-title">22. Limitations</div>
+
+<ul>
+<li>SAST does not detect runtime issues</li>
+<li>False positives may occur</li>
+<li>IaC scanning does not replace CSPM tools</li>
+</ul>
+
+<div class="section-title">23. Conclusion</div>
+
+<ul>
+<li>Automated repository scanning</li>
+<li>Multi-layer security detection</li>
+<li>AI-enhanced vulnerability analysis</li>
 <li>Shift-left PR enforcement</li>
-<li>Policy-driven merge gating</li>
-<li>Centralized security governance</li>
+<li>Enterprise-level merge gating</li>
+<li>Continuous security governance</li>
 </ul>
 
 <div class="section-title">Contact</div>
