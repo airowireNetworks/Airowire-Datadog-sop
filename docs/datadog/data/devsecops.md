@@ -164,12 +164,17 @@ Deployment Pipeline
 
 <div class="section-title">7. PHASE 1 — Navigate to Code Security</div>
 <p>Datadog → Software Delivery → Code Security</p>
+<p align="center"><img src="/images/dv1.png" width="600"/></p>
 
 <div class="section-title">8. PHASE 2 — Enable Code Security Setup</div>
 <p>Datadog → Security → Code Security → Setup</p>
+<p align="center"><img src="/images/dv2.png" width="600"/></p>
+
 
 <div class="section-title">9. PHASE 3 — Select Source Code Provider</div>
 <p>Select GitHub as source control provider.</p>
+<p align="center"><img src="/images/dv3.png" width="600"/></p>
+
 
 <div class="section-title">10. PHASE 4 — Select Where Scans Should Run</div>
 <ul>
@@ -192,7 +197,7 @@ Deployment Pipeline
 <li>Branch scanned → main</li>
 </ul>
 
-<div class="section-title">13. PHASE 7 — Enable Scanning Modules</div>
+
 <table>
 <tr>
 <th>Module</th>
@@ -215,6 +220,9 @@ Deployment Pipeline
 <td>Misconfigured infrastructure</td>
 </tr>
 </table>
+<p align="center"><img src="/images/dv4.png" width="600"/></p>
+<p align="center"><img src="/images/dv5.png" width="600"/></p>
+<p align="center"><img src="/images/dv6.png" width="600"/></p>
 
 <div class="section-title">14. PHASE 8 — Trigger First Scan</div>
 <div class="code-block">
@@ -306,10 +314,10 @@ git checkout -b fix/security-issue
 </ul>
 
 <h2 style="color:#000000; font-weight:bold;">Contact</h2>
-
-Patrick Schmidt — patrick@airowire.com<br>
-Piyush Choudhary — piyush@airowire.com<br>
-Dr. Shivanand Poojara — shivanand@airowire.com
+<ul>
+<li>Patrick Schmidt — patrick@airowire.com</li>
+<li>Piyush Choudhary — piyush@airowire.com</li>
+<li>Dr. Shivanand Poojara — shivanand@airowire.com</li>
 
 
 </body>
