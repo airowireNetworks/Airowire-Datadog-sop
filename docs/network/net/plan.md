@@ -125,6 +125,7 @@ These devices will be monitored using SNMP telemetry integrated with Datadog.
 </ul>
 
 <div class="section-title">4. Architecture Overview</div>
+<p align="center"><img src="/images/na.png" width="600"/></p>
 
 <div class="code-block">
 Network Devices
