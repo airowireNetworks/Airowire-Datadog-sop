@@ -74,4 +74,7 @@ nav:
       - DB Runbooks: []
   - Datadog :
       - Datadog Support Tickets: datadog/data/tickets.md
-      - Datadog Devsecops : datadog/data/devsecops.md 
+      - Datadog Devsecops : datadog/data/devsecops.md
+
+  - Network_devices : 
+      - Network : network/net/plan.md 
