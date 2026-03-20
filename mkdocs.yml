@@ -40,6 +40,8 @@ extra_javascript:
   - javascripts/page-pdf-download.js
 
 nav:
+  - Home: index.md
+
   - Azure:
       - Logs:
           - Logs Enablement (Main): azure/logs/logs.md
