@@ -41,22 +41,33 @@ extra_javascript:
 
 nav:
   - Azure:
-      - Azure Logs Enablement: azure/logs/logs.md
-      - Azure Logs Enablement: azure/logs/lr.md
-      - Azure Logs Enablement: azure/logs/lrr.md  
-      - Azure APM Enablement: azure/apm/apm.md
-      - Azure DSM on AKS with RabbitMQ: azure/dsm/dsm-solution.md
-      - Azure DSM on HA Vms with RabbitMQ: azure/dsm/dsm-ansible.md
-      - Azure Cost Optimization: azure/cost-management/cost.md
-      - AKS SLA Monitoring: azure/sla/sla.md
-      - Azure DSM on HA Vms with RabbitMQ1: azure/tt/tt.md 
+      - Logs:
+          - Logs Enablement (Main): azure/logs/logs.md
+          - Logs Enablement (LR): azure/logs/lr.md
+          - Logs Enablement (LRR): azure/logs/lrr.md
+
+      - APM:
+          - Azure APM Enablement: azure/apm/apm.md
+
+      - DSM:
+          - AKS with RabbitMQ: azure/dsm/dsm-solution.md
+          - HA VMs with RabbitMQ: azure/dsm/dsm-ansible.md
+          - HA VMs with RabbitMQ1: azure/tt/tt.md
+
+      - Cost Optimization:
+          - Azure Cost Optimization: azure/cost-management/cost.md
+
+      - SLA:
+          - AKS SLA Monitoring: azure/sla/sla.md
+
       - DB Monitoring: []
 
   - AWS:
       - Logs: []
       - APM: []
       - Tracing: []
-      - Cost Management: aws/cost-management/aws-ccm.md
+      - Cost Management:
+          - AWS Cost Management: aws/cost-management/aws-ccm.md
       - DB Monitoring: []
 
   - GCP:
@@ -67,14 +78,18 @@ nav:
       - DB Monitoring: []
 
   - Kubernetes: []
+
   - FinOps: []
+
   - Observability:
       - DB Monitoring: []
+
   - SRE Practices:
       - DB Runbooks: []
-  - Datadog :
-      - Datadog Support Tickets: datadog/data/tickets.md
-      - Datadog Devsecops : datadog/data/devsecops.md
 
-  - Network_devices : 
-      - Network : network/net/plan.md 
+  - Datadog:
+      - Datadog Support Tickets: datadog/data/tickets.md
+      - Datadog DevSecOps: datadog/data/devsecops.md
+
+  - Network Devices:
+      - Network Plan: network/net/plan.md
