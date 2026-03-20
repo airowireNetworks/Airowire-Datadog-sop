@@ -1,0 +1,268 @@
+/* Custom styling for Airowire Datadog SOP */
+
+:root {
+  /* Custom color variables */
+  --md-primary-fg-color: #1976d2;
+  --md-primary-fg-color--light: #42a5f5;
+  --md-primary-fg-color--dark: #1565c0;
+  --md-accent-fg-color: #00bcd4;
+}
+
+/* Typography enhancements */
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: 500;
+}
+
+/* Improve headings */
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+
+h1 {
+  font-size: 2.2rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: 1.8rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.8rem;
+  border-bottom: 2px solid var(--md-primary-fg-color);
+  padding-bottom: 0.5rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+  margin-top: 1.2rem;
+  margin-bottom: 0.6rem;
+  color: var(--md-primary-fg-color);
+}
+
+/* Card-like boxes for better visual hierarchy */
+.md-content {
+  line-height: 1.7;
+}
+
+/* Admonition styling with icons */
+.admonition {
+  border-left: 4px solid var(--md-primary-fg-color);
+  border-radius: 2px;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+
+.admonition.note {
+  border-left-color: #2196f3;
+  background-color: rgba(33, 150, 243, 0.1);
+}
+
+.admonition.warning {
+  border-left-color: #ff9800;
+  background-color: rgba(255, 152, 0, 0.1);
+}
+
+.admonition.danger {
+  border-left-color: #f44336;
+  background-color: rgba(244, 67, 54, 0.1);
+}
+
+.admonition.success {
+  border-left-color: #4caf50;
+  background-color: rgba(76, 175, 80, 0.1);
+}
+
+/* Code block styling */
+.md-code__block {
+  border-radius: 4px;
+  padding: 1rem;
+  line-height: 1.5;
+  font-size: 0.9rem;
+}
+
+code {
+  padding: 0.2em 0.4em;
+  border-radius: 3px;
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.md-typeset pre {
+  background-color: #263238 !important;
+  border-radius: 4px;
+}
+
+/* Table styling */
+.md-typeset table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.md-typeset table thead {
+  background-color: var(--md-primary-fg-color);
+  color: white;
+}
+
+.md-typeset table tbody tr:hover {
+  background-color: rgba(0, 0, 0, 0.02);
+}
+
+.md-typeset table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+}
+
+.md-typeset table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid #e0e0e0;
+}
+
+/* List styling */
+.md-typeset ul, .md-typeset ol {
+  margin-bottom: 1rem;
+}
+
+.md-typeset li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+/* Link styling */
+.md-typeset a {
+  color: var(--md-accent-fg-color);
+  text-decoration: underline;
+  transition: all 0.2s ease;
+}
+
+.md-typeset a:hover {
+  color: var(--md-primary-fg-color);
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+/* Blockquote styling */
+.md-typeset blockquote {
+  border-left: 4px solid var(--md-accent-fg-color);
+  padding: 1rem;
+  margin: 1rem 0;
+  background-color: rgba(0, 188, 212, 0.1);
+  font-style: italic;
+}
+
+/* Navigation improvements */
+.md-nav {
+  font-weight: 500;
+}
+
+.md-nav__item--nested > .md-nav__link {
+  color: var(--md-primary-fg-color);
+  font-weight: 600;
+}
+
+.md-nav__link--active {
+  color: var(--md-accent-fg-color);
+  border-right: 3px solid var(--md-accent-fg-color);
+}
+
+/* Sidebar improvements */
+.md-sidebar {
+  padding-top: 1rem;
+}
+
+/* Button-like elements */
+.md-button {
+  padding: 0.8rem 1.6rem;
+  border-radius: 4px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  display: inline-block;
+  text-decoration: none;
+  border: 1px solid transparent;
+}
+
+.md-button--primary {
+  background-color: var(--md-primary-fg-color);
+  color: white;
+}
+
+.md-button--primary:hover {
+  background-color: var(--md-primary-fg-color--dark);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+/* Footer improvements */
+.md-footer {
+  background-color: #f5f5f5;
+  border-top: 2px solid var(--md-primary-fg-color);
+}
+
+/* Search box styling */
+.md-search__input {
+  border-radius: 4px;
+  font-weight: 500;
+}
+
+.md-search__input:focus {
+  border-color: var(--md-primary-fg-color);
+  box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1);
+}
+
+/* Task list styling */
+.task-list-item {
+  list-style-type: none;
+}
+
+.task-list-item input[type="checkbox"] {
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}
+
+/* Content container improvements */
+.md-content {
+  background-color: #fafafa;
+}
+
+@media (prefers-color-scheme: dark) {
+  .md-content {
+    background-color: transparent;
+  }
+  
+  code {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .md-typeset table tbody tr:hover {
+    background-color: rgba(255, 255, 255, 0.02);
+  }
+}
+
+/* Responsive improvements */
+@media (max-width: 768px) {
+  h1 { font-size: 1.8rem; }
+  h2 { font-size: 1.5rem; }
+  h3 { font-size: 1.2rem; }
+  
+  .md-content {
+    padding: 1rem;
+  }
+}
+
+/* Animation for loading */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.md-content {
+  animation: fadeIn 0.3s ease-out;
+}

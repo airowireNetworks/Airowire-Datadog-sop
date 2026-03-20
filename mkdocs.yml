@@ -4,40 +4,145 @@ theme:
   name: material
   logo: images/airowire-logo.png
   favicon: images/airowire-logo.png
+  language: en
+  direction: ltr
+  
+  palette:
+    # Light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: blue
+      accent: light blue
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    
+    # Dark mode
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep blue
+      accent: cyan
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  
+  font:
+    text: Roboto
+    code: Roboto Mono
+  
   features:
+    # Code features
     - content.code.copy
     - content.code.select
+    - content.code.annotate
+    
+    # Navigation features
     - navigation.top
     - navigation.expand
     - navigation.sections
+    - navigation.instant
+    - navigation.instant.prefetch
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.tabs.sticky
+    
+    # Table of contents
+    - toc.follow
+    - toc.sticky
+    - toc.sidebar
+    
+    # Search
     - search.suggest
     - search.highlight
+    - search.share
+    
+    # Header
     - header.sticky
-    - toc.follow
-    - toc.sidebar
 
 plugins:
   - search:
       lang: en
+      separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|&#?\w+;'
   - pdf-export:
       verbose: true
       combined: false
       enabled_if_env: ENABLE_PDF_EXPORT
+  - minify:
+      minify_html: true
+      minify_css: true
+      minify_js: true
 
 markdown_extensions:
+  # Formatting
   - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - tables
+  
+  # Code highlighting
   - pymdownx.highlight:
       anchor_linenums: true
       auto_title: true
-  - pymdownx.superfences
+      line_spans: __span
+      use_pygments: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  
+  # Details & tabs
   - pymdownx.details
-  - pymdownx.emoji
+  - pymdownx.tabbed:
+      alternate_style: true
+  
+  # Formatting options
+  - pymdownx.arithmatex:
+      block_tag: 'div'
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.emoji:
+      emoji_index: !!python/name:pymdownx.emoji.twemoji
+      emoji_generator: !!python/name:pymdownx.emoji.to_svg
+  
+  # Lists and content
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.magiclink:
+      repo_url_shortener: true
+      repo_url_shorthand: true
+  
+  # TOC
   - toc:
       permalink: true
       toc_depth: 4
 
 extra_javascript:
   - javascripts/page-pdf-download.js
+  - https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js
+
+extra_css:
+  - stylesheets/extra.css
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/airowireNetworks
+    - icon: fontawesome/brands/linkedin
+      link: https://www.linkedin.com
+  
+  generator: false
+  
+  analytics:
+    provider: google
+    property: 'XXXXXXXXXX'  # Replace with your Google Analytics ID
+
+copyright: '&copy; 2026 Airowire Networks. All rights reserved.'
 
 nav:
   - Home: index.md
