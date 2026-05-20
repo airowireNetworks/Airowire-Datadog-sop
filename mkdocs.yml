@@ -176,7 +176,9 @@ nav:
       - Cost Management:
           - AWS Cost Management: aws/cost-management/aws-ccm.md
       - DB Monitoring: []
-      - sime: aws/sime/sime.md
+      - SIEM:
+           - Infrastructure DevSecOps SOP: aws/sime/sime.md
+
   - GCP:
       - Logs: []
       - APM: []
