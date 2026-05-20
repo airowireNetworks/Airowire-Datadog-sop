@@ -6,7 +6,7 @@ theme:
   favicon: images/airowire-logo.png
   language: en
   direction: ltr
-  
+
   palette:
     # Light mode
     - media: "(prefers-color-scheme: light)"
@@ -16,7 +16,7 @@ theme:
       toggle:
         icon: material/brightness-7
         name: Switch to dark mode
-    
+
     # Dark mode
     - media: "(prefers-color-scheme: dark)"
       scheme: slate
@@ -25,17 +25,17 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to light mode
-  
+
   font:
     text: Roboto
     code: Roboto Mono
-  
+
   features:
     # Code features
     - content.code.copy
     - content.code.select
     - content.code.annotate
-    
+
     # Navigation features
     - navigation.top
     - navigation.expand
@@ -45,28 +45,25 @@ theme:
     - navigation.tracking
     - navigation.tabs
     - navigation.tabs.sticky
-    
-    # Table of contents
+
+    # TOC
     - toc.follow
-    - toc.sticky
-    - toc.sidebar
-    
+
     # Search
     - search.suggest
     - search.highlight
     - search.share
-    
-    # Header
-    - header.sticky
 
 plugins:
   - search:
       lang: en
       separator: '[\s\-,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|&#?\w+;'
+
   - pdf-export:
       verbose: true
       combined: false
       enabled_if_env: ENABLE_PDF_EXPORT
+
   - minify:
       minify_html: true
       minify_css: true
@@ -80,43 +77,49 @@ markdown_extensions:
   - footnotes
   - md_in_html
   - tables
-  
+
   # Code highlighting
   - pymdownx.highlight:
       anchor_linenums: true
       auto_title: true
       line_spans: __span
       use_pygments: true
+
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
           class: mermaid
           format: !!python/name:pymdownx.superfences.fence_code_format
+
   - pymdownx.inlinehilite
   - pymdownx.snippets
-  
+
   # Details & tabs
   - pymdownx.details
+
   - pymdownx.tabbed:
       alternate_style: true
-  
+
   # Formatting options
   - pymdownx.arithmatex:
       block_tag: 'div'
+
   - pymdownx.caret
   - pymdownx.mark
   - pymdownx.tilde
+
   - pymdownx.emoji:
       emoji_index: !!python/name:pymdownx.emoji.twemoji
       emoji_generator: !!python/name:pymdownx.emoji.to_svg
-  
+
   # Lists and content
   - pymdownx.tasklist:
       custom_checkbox: true
+
   - pymdownx.magiclink:
       repo_url_shortener: true
       repo_url_shorthand: true
-  
+
   # TOC
   - toc:
       permalink: true
@@ -133,14 +136,15 @@ extra:
   social:
     - icon: fontawesome/brands/github
       link: https://github.com/airowireNetworks
+
     - icon: fontawesome/brands/linkedin
       link: https://www.linkedin.com
-  
+
   generator: false
-  
+
   analytics:
     provider: google
-    property: 'XXXXXXXXXX'  # Replace with your Google Analytics ID
+    property: 'XXXXXXXXXX'
 
 copyright: '&copy; 2026 Airowire Networks. All rights reserved.'
 
@@ -171,19 +175,28 @@ nav:
 
   - AWS:
       - Logs: []
+
       - APM: []
+
       - Tracing: []
+
       - Cost Management:
           - AWS Cost Management: aws/cost-management/aws-ccm.md
+
       - DB Monitoring: []
+
       - SIEM:
-           - Infrastructure DevSecOps SOP: aws/sime/sime.md
+          - Infrastructure DevSecOps SOP: aws/sime/sime.md
 
   - GCP:
       - Logs: []
+
       - APM: []
+
       - Metrics: []
+
       - Cost Management: []
+
       - DB Monitoring: []
 
   - Kubernetes: []
