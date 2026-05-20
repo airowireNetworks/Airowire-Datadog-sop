@@ -1,2 +1,32 @@
-- name: Deployment Disabled
-  run: echo "Cloudflare deployment temporarily disabled"
+name: Build MkDocs
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install mkdocs-material
+          pip install mkdocs-minify-plugin
+          pip install mkdocs-pdf-export-plugin
+          pip install pymdown-extensions
+
+      - name: Build site with MkDocs
+        run: mkdocs build
+
+      - name: Deployment Disabled
+        run: echo "Cloudflare deployment temporarily disabled"
