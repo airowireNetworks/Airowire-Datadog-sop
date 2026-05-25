@@ -3,110 +3,87 @@
   <img src="/images/datadog.png" width="150">
 </div>
 
-# Solution Document for Enabling Datadog Observability on AWS EKS Fargate
+# Standard Operating Procedure (SOP)
 
-**(Datadog Monitoring via Sidecar Instrumentation on EKS Fargate)**
+# Datadog Instrumentation on AWS EKS Fargate
 
----
+## Enterprise Observability Implementation Guide
 
-# Purpose of the Document
-
-This SOP defines the standardized process for enabling observability for workloads running on AWS EKS Fargate using Datadog.
-
-The deployment introduces:
-
-- Kubernetes workload monitoring
-- Container log collection
-- Metrics collection
-- Process visibility
-- Kubernetes metadata enrichment
-- Fargate sidecar instrumentation
-- Cluster-level observability
-
-Monitoring enablement is platform-driven and does not require modifications to application source code.
+**Based on official Datadog EKS Fargate documentation and enterprise implementation practices**
 
 ---
 
-# Scope
+# 1. Purpose
 
-## In Scope
+This SOP explains how to implement:
 
-- Deployment to AWS EKS Fargate clusters
-- Datadog Cluster Agent deployment
-- Sidecar-based instrumentation
-- Kubernetes visibility
-- Logs and metrics collection
-- Namespace and workload observability
-
-## Out of Scope
-
-- Application code modifications
-- Custom application tracing logic
-- Business-event parsing
-- Compliance frameworks
-- SIEM integrations
-- Security runtime policies
-
----
-
-# Prerequisites
-
-## Access Requirements
-
-- AWS account access
-- EKS administrative access
-- kubectl access
-- Datadog account access
-
-## Tooling Requirements
-
-- kubectl
-- Helm v3+
-- AWS CLI
-- Datadog API Key
-
-## Networking Requirements
-
-Outbound HTTPS access to Datadog ingestion endpoints for:
-
-- Logs
-- Metrics
-- Kubernetes metadata
-- Processes
-- Traces (optional)
-
----
-
-# Overview of the Solution
-
-AWS EKS Fargate differs from traditional Kubernetes environments.
-
-EKS Fargate:
-
-- does NOT expose worker nodes
-- does NOT support DaemonSet-based monitoring
-- runs workloads on serverless AWS-managed infrastructure
-
-Because of this, Datadog monitoring is implemented using:
-
-# Datadog Agent Sidecar Architecture
-
-Each monitored application pod contains:
-
-- Application container
-- Datadog Agent sidecar container
-
-The sidecar is responsible for:
-
+- Datadog monitoring
 - Logs collection
 - Metrics collection
-- Process visibility
-- Container monitoring
-- Kubernetes metadata communication
+- Process monitoring
+- Kubernetes visibility
+- Sidecar instrumentation
+
+for applications running on:
+
+- AWS EKS Fargate
 
 ---
 
-# Architecture of Logic
+# 2. Scope
+
+This SOP is intended for:
+
+| Team | Purpose |
+|---|---|
+| Observability Team | Datadog implementation |
+| Platform Engineering | Kubernetes monitoring |
+| DevOps Team | Monitoring enablement |
+| Cloud Team | EKS integration |
+| Support Team | Troubleshooting |
+
+---
+
+# 3. Important Architecture Understanding
+
+## Traditional Kubernetes (EC2 Worker Nodes)
+
+Traditional Kubernetes clusters use:
+
+- Datadog DaemonSet Agents
+
+One agent runs per node.
+
+---
+
+# EKS Fargate Architecture
+
+EKS Fargate is DIFFERENT.
+
+In Fargate:
+
+- There are NO worker nodes
+- AWS manages hidden serverless infrastructure
+
+Because of this:
+
+- ❌ No DaemonSets
+- ❌ No node SSH
+- ❌ No direct node access
+
+---
+
+# Official Datadog Architecture for Fargate
+
+Datadog recommends:
+
+> Running the Datadog Agent as a sidecar container inside each application pod
+
+This is the MOST important concept.
+
+---
+
+# 4. High-Level Architecture
 
 ```text
 Application Pod
@@ -114,98 +91,100 @@ Application Pod
 ├── Application Container
 │
 └── Datadog Agent Sidecar
-    │
-    ├── Logs
-    ├── Metrics
-    ├── Processes
-    ├── Kubernetes Metadata
-    └── Container Visibility
-            ↓
-     Datadog Cluster Agent
-            ↓
-        Datadog SaaS
+        │
+        ├── Logs
+        ├── Metrics
+        ├── Processes
+        ├── Traces
+        └── Kubernetes Metadata
+                ↓
+        Datadog Cluster Agent
+                ↓
+            Datadog SaaS
 ```
 
 ---
 
-# Functional Components
+# 5. Responsibilities
 
-| Component | Role |
+# Client Responsibilities
+
+Client provides:
+
+| Item |
+|---|
+| AWS Account |
+| EKS Cluster |
+| Fargate Profiles |
+| Running Applications |
+| Namespace Details |
+| Security Policies |
+
+---
+
+# Observability Team Responsibilities
+
+Our team provides:
+
+| Capability |
+|---|
+| Datadog Installation |
+| Instrumentation |
+| Monitoring Setup |
+| Logs Collection |
+| Kubernetes Monitoring |
+| Dashboards |
+| Alerts |
+| Troubleshooting |
+| End-to-End Support |
+
+---
+
+# 6. Prerequisites
+
+Before implementation ensure:
+
+| Requirement | Status |
 |---|---|
-| Datadog Sidecar Agent | Pod-level observability |
-| Datadog Cluster Agent | Kubernetes metadata aggregation |
-| Kubernetes RBAC | API access permissions |
-| Datadog SaaS | Monitoring & analytics |
-| Fargate Profile | Serverless pod scheduling |
+| EKS Cluster exists | Required |
+| Fargate Profile exists | Required |
+| kubectl access available | Required |
+| Helm installed | Required |
+| Datadog API Key available | Required |
+| Internet access from Fargate | Required |
 
 ---
 
-# Important Architectural Difference
+# 7. Implementation Workflow
 
-## Traditional Kubernetes (EC2 Worker Nodes)
+# PHASE 1 — Environment Assessment
 
-Traditional EKS clusters use:
+## Step 1 — Identify Client Environment
 
-- Datadog DaemonSet Agents
-- One agent per worker node
+Gather:
 
-## EKS Fargate Architecture
-
-EKS Fargate uses:
-
-- Datadog Sidecar Agents
-- One agent sidecar per application pod
-
-> This is the MOST important architectural difference for EKS Fargate monitoring.
-
----
-
-# Deployment Procedure
-
-# Deployment Environment
-
-Deployment system configured with:
-
-- kubectl
-- AWS CLI
-- Helm
-- EKS access permissions
-
----
-
-# Phase 1 — EKS Environment Validation
-
-## Step 1 — Validate EKS Cluster Access
-
-```bash
-aws eks update-kubeconfig \
---region us-east-1 \
---name <CLUSTER_NAME>
-```
+| Information |
+|---|
+| Cluster Name |
+| AWS Region |
+| Namespaces |
+| Existing Applications |
+| Service Accounts |
+| Security Restrictions |
+| Logging Requirements |
+| APM Requirements |
 
 ### Purpose
 
-- Configures kubectl authentication
-- Connects local environment to EKS cluster
+Understand customer Kubernetes architecture.
 
 ---
 
-## Step 2 — Verify Cluster Connectivity
+# PHASE 2 — Datadog Core Installation
 
-```bash
-kubectl get pods -A
-```
+## Step 2 — Create Datadog Namespace
 
-### Purpose
-
-- Validate Kubernetes API access
-- Confirm cluster connectivity
-
----
-
-# Phase 2 — Datadog Namespace Setup
-
-## Step 3 — Create Datadog Namespace
+Run:
 
 ```bash
 kubectl create namespace datadog
@@ -214,13 +193,12 @@ kubectl create namespace datadog
 ### Purpose
 
 - Stores Datadog core components
-- Separates observability workloads
 
 ---
 
-# Phase 3 — Datadog Secret Configuration
+## Step 3 — Create Datadog Secret
 
-## Step 4 — Create Datadog Secret
+Run:
 
 ```bash
 kubectl create secret generic datadog-secret -n datadog \
@@ -228,34 +206,49 @@ kubectl create secret generic datadog-secret -n datadog \
 --from-literal token=<32_CHARACTER_TOKEN>
 ```
 
-### Important
+### Purpose
 
-The same secret MUST exist inside application namespaces.
+| Secret | Purpose |
+|---|---|
+| api-key | Authenticate to Datadog |
+| token | Cluster Agent communication |
+
+---
+
+# IMPORTANT
+
+If applications run in different namespaces:
+
+Create the SAME secret in application namespaces.
 
 Example:
 
 ```bash
-kubectl create secret generic datadog-secret -n <APPLICATION_NAMESPACE> \
+kubectl create secret generic datadog-secret -n <APP_NAMESPACE> \
 --from-literal api-key=<DATADOG_API_KEY> \
 --from-literal token=<32_CHARACTER_TOKEN>
 ```
 
 ---
 
-# Phase 4 — Helm Repository Configuration
+## Step 4 — Add Datadog Helm Repository
 
-## Step 5 — Add Datadog Helm Repository
+Run:
 
 ```bash
 helm repo add datadog https://helm.datadoghq.com
 helm repo update
 ```
 
+### Purpose
+
+Downloads Datadog Kubernetes charts.
+
 ---
 
-# Phase 5 — Datadog Operator Installation
+## Step 5 — Install Datadog Operator
 
-## Step 6 — Install Datadog Operator
+Run:
 
 ```bash
 helm install datadog-operator \
@@ -265,18 +258,19 @@ datadog/datadog-operator \
 
 ### Purpose
 
-- Automates Datadog Kubernetes management
-- Manages DatadogAgent CRDs
+Manages Datadog resources automatically.
 
 ---
 
-## Step 7 — Verify Operator Status
+## Step 6 — Verify Operator
+
+Run:
 
 ```bash
 kubectl get pods -n datadog
 ```
 
-Expected Output:
+Expected:
 
 ```text
 Running
@@ -284,20 +278,9 @@ Running
 
 ---
 
-# Phase 6 — Fargate Profile Configuration
+# PHASE 3 — RBAC Configuration
 
-## Step 8 — Create Fargate Profile
-
-Create Fargate profiles for:
-
-- Application namespace
-- Datadog namespace
-
----
-
-# Phase 7 — Kubernetes RBAC Configuration
-
-## Step 9 — Create Datadog RBAC
+## Step 7 — Configure Fargate RBAC
 
 Create:
 
@@ -310,10 +293,12 @@ Paste:
 ```yaml
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
+
 metadata:
   name: datadog-agent-fargate
 
 rules:
+
 - apiGroups: [""]
   resources:
     - nodes
@@ -322,6 +307,60 @@ rules:
   verbs:
     - get
     - list
+
+- apiGroups: [""]
+  resources:
+    - nodes/metrics
+    - nodes/spec
+    - nodes/stats
+    - nodes/proxy
+    - nodes/pods
+    - nodes/healthz
+  verbs:
+    - get
+```
+
+### Purpose
+
+Allows Datadog sidecars to access Kubernetes APIs.
+
+---
+
+## Step 8 — Bind RBAC to Service Account
+
+Example:
+
+```yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+
+metadata:
+  name: datadog-agent-fargate
+
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: datadog-agent-fargate
+
+subjects:
+- kind: ServiceAccount
+  name: datadog-agent
+  namespace: <APPLICATION_NAMESPACE>
+```
+
+---
+
+## Step 9 — Create Service Account
+
+Example:
+
+```yaml
+apiVersion: v1
+kind: ServiceAccount
+
+metadata:
+  name: datadog-agent
+  namespace: <APPLICATION_NAMESPACE>
 ```
 
 Apply:
@@ -332,7 +371,7 @@ kubectl apply -f datadog-rbac.yaml
 
 ---
 
-# Phase 8 — Datadog Cluster Agent Configuration
+# PHASE 4 — Datadog Cluster Agent Configuration
 
 ## Step 10 — Create DatadogAgent Configuration
 
@@ -342,7 +381,65 @@ Create:
 vi datadog-agent.yaml
 ```
 
-Apply:
+Paste:
+
+```yaml
+apiVersion: datadoghq.com/v2alpha1
+kind: DatadogAgent
+
+metadata:
+  name: datadog
+  namespace: datadog
+
+spec:
+
+  global:
+    clusterName: <CLUSTER_NAME>
+
+    credentials:
+      apiSecret:
+        secretName: datadog-secret
+        keyName: api-key
+
+  features:
+
+    logCollection:
+      enabled: true
+
+    liveContainerCollection:
+      enabled: true
+
+    orchestratorExplorer:
+      enabled: true
+
+    kubeStateMetricsCore:
+      enabled: true
+
+    processDiscovery:
+      enabled: true
+
+  override:
+    clusterAgent:
+      replicas: 1
+```
+
+---
+
+# Purpose of Features
+
+| Feature | Purpose |
+|---|---|
+| logCollection | Collect container logs |
+| liveContainerCollection | Container visibility |
+| orchestratorExplorer | Kubernetes inventory |
+| kubeStateMetricsCore | Pod/namespace visibility |
+| processDiscovery | Process monitoring |
+
+---
+
+## Step 11 — Apply Configuration
+
+Run:
 
 ```bash
 kubectl apply -f datadog-agent.yaml -n datadog
@@ -350,42 +447,98 @@ kubectl apply -f datadog-agent.yaml -n datadog
 
 ---
 
-# Phase 9 — Application Instrumentation
+# PHASE 5 — Application Instrumentation
 
-## Important Concept
+# IMPORTANT CONCEPT
 
 In EKS Fargate:
 
-> Datadog Agent MUST run as a sidecar container inside each application pod.
+> Datadog Agent MUST run as a sidecar container inside each application pod
 
 ---
 
-## Step 11 — Instrument Application Workloads
+## Step 12 — Instrument Application Pods
 
 Example deployment:
 
 ```yaml
-containers:
-- name: application
-  image: <APPLICATION_IMAGE>
+apiVersion: apps/v1
+kind: Deployment
 
-- name: datadog-agent
-  image: gcr.io/datadoghq/agent:7
+metadata:
+  name: sample-app
+  namespace: <APPLICATION_NAMESPACE>
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: sample-app
+
+  template:
+    metadata:
+      labels:
+        app: sample-app
+
+    spec:
+
+      serviceAccountName: datadog-agent
+
+      shareProcessNamespace: true
+
+      containers:
+
+      - name: application
+        image: <APPLICATION_IMAGE>
+
+      - name: datadog-agent
+        image: gcr.io/datadoghq/agent:7
+
+        env:
+
+        - name: DD_API_KEY
+          valueFrom:
+            secretKeyRef:
+              name: datadog-secret
+              key: api-key
+
+        - name: DD_SITE
+          value: datadoghq.com
+
+        - name: DD_EKS_FARGATE
+          value: "true"
+
+        - name: DD_LOGS_ENABLED
+          value: "true"
+
+        - name: DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL
+          value: "true"
+
+        - name: DD_PROCESS_CONFIG_PROCESS_COLLECTION_ENABLED
+          value: "true"
+
+        - name: DD_CLUSTER_NAME
+          value: <CLUSTER_NAME>
 ```
 
-### Important Variables
+---
+
+# Purpose of Sidecar Variables
 
 | Variable | Purpose |
 |---|---|
-| DD_EKS_FARGATE | Enables Fargate mode |
-| DD_LOGS_ENABLED | Enables logs |
-| DD_PROCESS_CONFIG_PROCESS_COLLECTION_ENABLED | Enables processes |
+| DD_EKS_FARGATE | Enable Fargate mode |
+| DD_LOGS_ENABLED | Enable logs |
+| DD_PROCESS_CONFIG_PROCESS_COLLECTION_ENABLED | Enable processes |
 | DD_LOGS_CONFIG_CONTAINER_COLLECT_ALL | Collect all logs |
 | DD_CLUSTER_NAME | Cluster identification |
 
 ---
 
-## Step 12 — Deploy Instrumented Workload
+## Step 13 — Deploy Instrumented Application
+
+Run:
 
 ```bash
 kubectl apply -f application.yaml
@@ -393,13 +546,15 @@ kubectl apply -f application.yaml
 
 ---
 
-## Step 13 — Verify Pod Status
+## Step 14 — Verify Pods
+
+Run:
 
 ```bash
 kubectl get pods -n <APPLICATION_NAMESPACE>
 ```
 
-Expected Output:
+Expected:
 
 ```text
 2/2 Running
@@ -414,27 +569,26 @@ Meaning:
 
 ---
 
-# Phase 10 — Validation
+# PHASE 6 — Verification
 
-## Step 14 — Generate Application Traffic
+## Step 15 — Generate Application Traffic
 
-Generate:
+Use:
 
-- browser traffic
-- API requests
-- application activity
+- browser
+- API calls
+- curl
+- application traffic
 
-Purpose:
+### Purpose
 
-- Generate logs
-- Generate metrics
-- Generate process activity
+Generate logs and metrics.
 
 ---
 
-# Datadog UI Validation
+## Step 16 — Verify in Datadog
 
-## Containers
+# Containers
 
 Go to:
 
@@ -450,7 +604,7 @@ cluster_name:<CLUSTER_NAME>
 
 ---
 
-## Kubernetes Explorer
+# Kubernetes Explorer
 
 Go to:
 
@@ -462,12 +616,12 @@ Verify:
 
 - clusters
 - namespaces
-- workloads
 - pods
+- workloads
 
 ---
 
-## Logs Explorer
+# Logs
 
 Go to:
 
@@ -483,7 +637,7 @@ kube_namespace:<APPLICATION_NAMESPACE>
 
 ---
 
-## Process Explorer
+# Processes
 
 Go to:
 
@@ -498,22 +652,39 @@ Verify:
 
 ---
 
-# Common Operational Findings
+# PHASE 7 — Troubleshooting
 
-| Observation | Description |
+## Issue 1 — Pods Pending
+
+| Cause | Fix |
 |---|---|
-| Fargate does not expose nodes | Expected behavior |
-| kubectl logs may intermittently fail | Fargate kubelet limitation |
-| Sidecar monitoring works independently | Expected |
-| Kubernetes inventory sync may take time | Expected |
+| Missing Fargate profile | Create correct profile |
+| Namespace mismatch | Verify namespace |
+| Resource limits | Increase Fargate resources |
 
 ---
 
-# Known Limitations
+## Issue 2 — CreateContainerConfigError
 
-## kubectl logs / exec
+### Cause
 
-Possible error:
+Missing Kubernetes Secret.
+
+### Fix
+
+Create:
+
+```text
+datadog-secret
+```
+
+inside application namespace.
+
+---
+
+## Issue 3 — kubectl logs Fails
+
+### Error
 
 ```text
 no preferred addresses found
@@ -521,62 +692,54 @@ no preferred addresses found
 
 ### Reason
 
-AWS Fargate kubelet communication limitation.
+AWS Fargate kubelet limitation.
 
-This is expected behavior in some Fargate environments and does NOT impact Datadog telemetry collection.
+This is expected in Fargate environments.
 
----
-
-# Platform Monitoring Capabilities
-
-Once deployed, the platform supports:
-
-- Kubernetes monitoring
-- Namespace visibility
-- Pod visibility
-- Container metrics
-- Process monitoring
-- Log ingestion
-- Workload analytics
-- Dashboards and alerting
+Monitoring still works.
 
 ---
 
-# Optional Enhancements
+## Issue 4 — No Data in Datadog UI
 
-- Application Performance Monitoring (APM)
-- OpenTelemetry integration
-- SIEM integration
-- Synthetic monitoring
-- SLO dashboards
-- Security monitoring
-- FinOps visibility
-
----
-
-# Final Outcome
-
-AWS EKS Fargate workloads successfully integrated with Datadog using sidecar-based instrumentation, enabling:
-
-- Enterprise observability
-- Container monitoring
-- Kubernetes visibility
-- Logs collection
-- Metrics collection
-- Process monitoring
-
-for cloud-native serverless Kubernetes environments.
+| Cause | Fix |
+|---|---|
+| UI filters enabled | Remove filters |
+| No application traffic | Generate requests |
+| Sync delay | Wait 5–10 mins |
+| Sidecar not injected | Verify 2/2 Running |
 
 ---
 
-# Important Enterprise Learning
+# PHASE 8 — Enterprise Deliverables
 
-## Traditional Kubernetes
+After implementation customer receives:
 
-- One Datadog Agent per worker node
+| Capability |
+|---|
+| Kubernetes Monitoring |
+| Container Monitoring |
+| Logs Collection |
+| Process Monitoring |
+| Cluster Visibility |
+| Namespace Visibility |
+| Workload Monitoring |
+| Dashboards |
+| Alerts |
+| Observability Platform |
 
-## AWS EKS Fargate
+---
 
-- One Datadog Agent sidecar per application pod
+# Important Enterprise Knowledge
 
-> This is the MOST important architectural difference for EKS Fargate observability.
+## EC2-based Kubernetes
+
+- One Agent per node
+
+---
+
+# EKS Fargate
+
+- One Datadog sidecar per application pod
+
+> This is the MOST important architectural difference in EKS Fargate observability.
