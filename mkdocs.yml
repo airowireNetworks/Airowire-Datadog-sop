@@ -171,61 +171,47 @@ nav:
       - SLA:
           - AKS SLA Monitoring: azure/sla/sla.md
 
-      - DB Monitoring:
-          - Azure DB Monitoring Placeholder: azure/cost-management/cost.md
+      - DB Monitoring: []
 
   - AWS:
       - Overview: aws/index.md
 
-      - Logs:
-          - AWS Logs Placeholder: aws/index.md
+      - Logs: []
 
-      - APM:
-          - AWS APM Placeholder: aws/index.md
+      - APM: []
 
-      - Tracing:
-          - AWS Tracing Placeholder: aws/index.md
+      - Tracing: []
 
       - Cost Management:
           - AWS Cost Management: aws/cost-management/aws-ccm.md
 
-      - DB Monitoring:
-          - AWS DB Monitoring Placeholder: aws/index.md
+      - DB Monitoring: []
 
       - SIEM:
           - Infrastructure DevSecOps SOP: aws/sime/sime.md
+          - Infrastructure DevSecOps SOP: aws/sime/eks.md
+  
 
   - GCP:
-      - Overview: aws/index.md
+      - Logs: []
 
-      - Logs:
-          - GCP Logs Placeholder: aws/index.md
+      - APM: []
 
-      - APM:
-          - GCP APM Placeholder: aws/index.md
+      - Metrics: []
 
-      - Metrics:
-          - GCP Metrics Placeholder: aws/index.md
+      - Cost Management: []
 
-      - Cost Management:
-          - GCP Cost Placeholder: aws/index.md
+      - DB Monitoring: []
 
-      - DB Monitoring:
-          - GCP DB Monitoring Placeholder: aws/index.md
+  - Kubernetes: []
 
-  - Kubernetes:
-      - Kubernetes Overview: aws/index.md
-
-  - FinOps:
-      - FinOps Overview: aws/index.md
+  - FinOps: []
 
   - Observability:
-      - DB Monitoring:
-          - Observability Placeholder: aws/index.md
+      - DB Monitoring: []
 
   - SRE Practices:
-      - DB Runbooks:
-          - SRE Runbook Placeholder: aws/index.md
+      - DB Runbooks: []
 
   - Datadog:
       - Datadog Support Tickets: datadog/data/tickets.md
