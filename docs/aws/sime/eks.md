@@ -107,24 +107,9 @@ Application Pod
 
 # 5. Responsibilities
 
-# Client Responsibilities
+# Platform Team Responsibilities
 
-Client provides:
-
-| Item |
-|---|
-| AWS Account |
-| EKS Cluster |
-| Fargate Profiles |
-| Running Applications |
-| Namespace Details |
-| Security Policies |
-
----
-
-# Observability Team Responsibilities
-
-Our team provides:
+The platform/observability team provides:
 
 | Capability |
 |---|
@@ -159,7 +144,7 @@ Before implementation ensure:
 
 # PHASE 1 — Environment Assessment
 
-## Step 1 — Identify Client Environment
+## Step 1 — Identify Environment Details
 
 Gather:
 
@@ -176,7 +161,7 @@ Gather:
 
 ### Purpose
 
-Understand customer Kubernetes architecture.
+Understand Kubernetes architecture and monitoring requirements.
 
 ---
 
@@ -713,7 +698,7 @@ Monitoring still works.
 
 # PHASE 8 — Enterprise Deliverables
 
-After implementation customer receives:
+After implementation the platform supports:
 
 | Capability |
 |---|
