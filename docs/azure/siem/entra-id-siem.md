@@ -566,6 +566,6 @@ Upon successful completion:
 
 For more information about this document and its contents please contact Airowire Solutions:
 
-- Patrick Schmidt — patrick@airowire.com
-- Piyush Choudhary — piyush@airowire.com
 - Dr. Shivanand Poojara — shivanand@airowire.com
+- Anil Kumar - Anil@airowire.com
+- Mohammed Saqlain - Mohammed@airowire.com
