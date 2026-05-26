@@ -191,6 +191,7 @@ nav:
           - Infrastructure DevSecOps SOP: aws/sime/sime.md
           - Infrastructure DevSecOps SOP: aws/sime/eks.md
           - Infrastructure DevSecOps SOP: aws/sime/cw.md
+          - Infrastructure DevSecOps SOP: aws/sime/kfd.md
   
   
 
