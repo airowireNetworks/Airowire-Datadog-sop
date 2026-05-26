@@ -58,7 +58,6 @@ Ensure the following prerequisites are completed before implementation:
 | AWS Console Access | Required |
 | Datadog AWS Integration | Completed |
 | Existing CloudWatch Log Groups | Available |
-| Datadog Forwarder Lambda | Available |
 | IAM Permissions | Required |
 | Datadog API Key | Configured |
 | CloudWatch Logs Receiving Data | Verified |
@@ -156,9 +155,123 @@ Example:
 datadog-forwarder
 ```
 
-If Lambda is unavailable:
+---
 
-> Deploy Datadog Forwarder before proceeding.
+## Step 4A — Deploy Datadog Forwarder Lambda (If Not Available)
+
+If the `datadog-forwarder` Lambda function is not present in the AWS account,
+deploy the official Datadog Forwarder using AWS CloudShell.
+
+---
+
+### Open AWS CloudShell
+
+Click the CloudShell terminal icon from the AWS Console navigation bar.
+
+Navigation:
+
+```text
+AWS Console
+→ CloudShell
+```
+
+Wait for the terminal session to initialize.
+
+---
+
+### Deploy Datadog Forwarder Stack
+
+Run the following command.
+
+Replace:
+
+```text
+<YOUR_DATADOG_API_KEY>
+```
+
+with the actual Datadog API key.
+
+```bash
+aws cloudformation create-stack \
+  --stack-name Datadog-Log-Forwarder \
+  --template-url https://datadog-cloudformation-template.s3.amazonaws.com/aws/forwarder/latest.yaml \
+  --capabilities CAPABILITY_IAM CAPABILITY_NAMED_IAM CAPABILITY_AUTO_EXPAND \
+  --parameters ParameterKey=DdApiKey,ParameterValue=<YOUR_DATADOG_API_KEY> ParameterKey=DdSite,ParameterValue=datadoghq.com
+```
+
+---
+
+### Verify CloudFormation Deployment Status
+
+Run:
+
+```bash
+aws cloudformation describe-stacks \
+  --stack-name Datadog-Log-Forwarder \
+  --query "Stacks[0].StackStatus"
+```
+
+Wait until the status changes to:
+
+```text
+CREATE_COMPLETE
+```
+
+---
+
+## Step 4B — Verify Deployed Lambda Function
+
+Navigation:
+
+```text
+AWS Console
+→ Lambda
+→ Functions
+```
+
+Verify a Lambda function similar to the following exists:
+
+```text
+Datadog-Log-Forwarder-DatadogForwarder-XXXXXXXX
+```
+
+Copy the complete Lambda function name.
+
+---
+
+## Step 4C — Grant CloudWatch Permission to Invoke Lambda
+
+Because the Lambda was deployed manually using CloudFormation,
+CloudWatch Logs must be explicitly allowed to invoke the function.
+
+Open AWS CloudShell again and run:
+
+```bash
+aws lambda add-permission \
+  --function-name <DATADOG_FORWARDER_FUNCTION_NAME> \
+  --statement-id cloudwatch-logs \
+  --principal logs.amazonaws.com \
+  --action lambda:InvokeFunction
+```
+
+Replace:
+
+```text
+<DATADOG_FORWARDER_FUNCTION_NAME>
+```
+
+with the actual deployed Lambda function name.
+
+---
+
+### Purpose
+
+This permission allows:
+
+- CloudWatch Logs
+- Subscription Filters
+
+to invoke the Datadog Forwarder Lambda securely.
 
 ---
 
@@ -458,8 +571,18 @@ Aligned with approved SOW deliverables.
 
 # 13. References
 
-- AWS CloudWatch Documentation
-- Datadog Forwarder Documentation
-- Datadog AWS Integration Documentation
-- AWS Lambda Documentation
-- Datadog SIEM Documentation
+- [AWS CloudWatch Documentation](https://docs.aws.amazon.com/cloudwatch/)
+- [Datadog Forwarder Documentation](https://docs.datadoghq.com/logs/guide/forwarder/)
+- [Datadog AWS Integration Documentation](https://docs.datadoghq.com/integrations/amazon_web_services/)
+- [AWS Lambda Documentation](https://docs.aws.amazon.com/lambda/)
+- [Datadog SIEM Documentation](https://docs.datadoghq.com/security/cloud_siem/)
+
+---
+
+# Contact
+
+For more information about this document and its contents please contact Airowire Solutions:
+
+- Dr. Shivanand Poojara — shivanand@airowire.com
+- Anil Kumar - Anil@airowire.com
+- Mohammed Saqlain - Mohammed@airowire.com
