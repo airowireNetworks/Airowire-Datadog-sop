@@ -173,6 +173,10 @@ nav:
 
       - DB Monitoring: []
 
+      - Azure SIEM:
+          - Datadog Entra ID SIEM Log Push using ARM Template: azure/siem/entra-id-siem.md
+
+
   - AWS:
       - Overview: aws/index.md
 
