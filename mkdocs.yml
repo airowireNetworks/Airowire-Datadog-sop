@@ -190,6 +190,8 @@ nav:
       - SIEM:
           - Infrastructure DevSecOps SOP: aws/sime/sime.md
           - Infrastructure DevSecOps SOP: aws/sime/eks.md
+          - Infrastructure DevSecOps SOP: aws/sime/cw.md
+  
   
 
   - GCP:
