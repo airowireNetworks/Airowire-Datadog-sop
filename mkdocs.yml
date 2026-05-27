@@ -223,6 +223,7 @@ nav:
   - Datadog:
       - Datadog Support Tickets: datadog/data/tickets.md
       - Datadog DevSecOps: datadog/data/devsecops.md
-
+      - Java Observability:
+          - Datadog Java APM & RUM Setup: datadog/java/java-apm-rum.md
   - Network Devices:
       - Network Plan: network/net/plan.md
