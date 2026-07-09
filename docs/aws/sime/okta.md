@@ -167,11 +167,10 @@ Verify
 Status = Active
 ```
 
-> **Screenshot**
+<p align="center"><img src="/images/ot1.png" width="600"/></p>
 
-```
-/images/okta-install.png
-```
+
+
 
 ---
 
@@ -209,11 +208,8 @@ Read about system log entries
 
 This permission allows Datadog to retrieve Okta System Logs.
 
-> **Screenshot**
+<p align="center"><img src="/images/ot2.png" width="600"/></p>
 
-```
-/images/okta-api-scope.png
-```
 
 ---
 
@@ -239,11 +235,8 @@ Okta Domain
 https://trial-7214856.okta.com
 ```
 
-> **Screenshot**
+<p align="center"><img src="/images/ot3.png" width="600"/></p>
 
-```
-/images/okta-client-id.png
-```
 
 ---
 
@@ -283,11 +276,8 @@ Save
 
 Wait for the integration to be installed successfully.
 
-> **Screenshot**
+<p align="center"><img src="/images/ot4.png" width="600"/></p>
 
-```
-/images/datadog-okta-config.png
-```
 
 ---
 
@@ -363,13 +353,9 @@ user.account.lock
 user.mfa.factor.verify
 
 app.oauth2.token.grant.access_token
-```
 
-> **Screenshot**
+<p align="center"><img src="/images/ot5.png" width="600"/></p>
 
-```
-/images/live-tail.png
-```
 
 ---
 
@@ -400,11 +386,6 @@ Verify
 - IP Address
 - Event Outcome
 
-> **Screenshot**
-
-```
-/images/log-explorer.png
-```
 
 ---
 
@@ -430,11 +411,7 @@ Verify the following widgets.
 - Cloud SIEM
 - Security Signals
 
-> **Screenshot**
-
-```
-/images/okta-dashboard.png
-```
+<p align="center"><img src="/images/ot6.png" width="600"/></p>
 
 ---
 
