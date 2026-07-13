@@ -198,6 +198,7 @@ nav:
           - Infrastructure DevSecOps SOP: aws/sime/ec2.md
           - Infrastructure DevSecOps SOP: aws/sime/kfd.md
           - Infrastructure DevSecOps SOP: aws/sime/okta.md
+          - Infrastructure DevSecOps SOP: aws/sime/argo.md
 
   
   
