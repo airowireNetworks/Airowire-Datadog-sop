@@ -233,3 +233,4 @@ nav:
           - Datadog Java APM & RUM Setup: datadog/java/java-apm-rum.md
   - Network Devices:
       - Network Plan: network/net/plan.md
+      - Network Plan: network/net/Net.md  
