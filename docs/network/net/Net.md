@@ -332,12 +332,6 @@ Verify the following:
 - Network Throughput
 - Device Availability
 
-<p align="center"><img src="/images/network-device-1.png" width="700"/></p>
-
-<p align="center"><img src="/images/network-device-2.png" width="700"/></p>
-
-<p align="center"><img src="/images/network-device-3.png" width="700"/></p>
-
 <h2 style="color:#000000; font-weight:bold;">Operational Capabilities</h2>
 
 Once deployment is complete, Datadog provides:
