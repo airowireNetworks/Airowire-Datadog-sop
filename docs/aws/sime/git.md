@@ -286,9 +286,6 @@ Validate the deployment by confirming:
 - Branch metadata is visible
 - Commit metadata is visible
 
-<p align="center"><img src="/images/container1.png" width="600"/></p>
-
-<p align="center"><img src="/images/container2.png" width="600"/></p>
 
 ---
 
