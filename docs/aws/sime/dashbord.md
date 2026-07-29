@@ -83,7 +83,7 @@ New Dashboard
 Click **New Dashboard**.
 
 <p align="center">
-    <img src="/images/dashboard-step1.png" width="900"/>
+    <img src="/images/dash1.png" width="900"/>
 </p>
 
 ---
@@ -103,13 +103,7 @@ Click:
 Create Dashboard
 ```
 
-After the dashboard is created, the dashboard editor opens.
 
-<p align="center">
-    <img src="/images/dashboard-step2.png" width="900"/>
-</p>
-
----
 
 # Step 3 – Add Widgets
 
@@ -138,7 +132,7 @@ Common widgets include:
 - Service Map
 
 <p align="center">
-    <img src="/images/dashboard-step3.png" width="900"/>
+    <img src="/images/dash2.png" width="900"/>
 </p>
 
 ---
@@ -231,7 +225,7 @@ Available options include:
 - Delete Dashboard
 
 <p align="center">
-    <img src="/images/dashboard-step4.png" width="900"/>
+    <img src="/images/dash3.png" width="900"/>
 </p>
 
 ---
@@ -272,18 +266,7 @@ Verify the following:
 
 ---
 
-# Validation Checklist
 
-| Validation | Status |
-|------------|--------|
-| Dashboard Created | ☐ |
-| Widgets Added | ☐ |
-| Queries Configured | ☐ |
-| Dashboard Saved | ☐ |
-| Dashboard Shared | ☐ |
-| Dashboard Validated | ☐ |
-
----
 
 # Final Outcome
 
