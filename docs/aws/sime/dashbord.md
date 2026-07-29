@@ -82,9 +82,7 @@ New Dashboard
 
 Click **New Dashboard**.
 
-<p align="center">
-    <img src="/images/dash1.png" width="900"/>
-</p>
+<p align="center"><img src="/images/dash1.png" width="600"/></p>
 
 ---
 
@@ -131,9 +129,7 @@ Common widgets include:
 - Host Map
 - Service Map
 
-<p align="center">
-    <img src="/images/dash2.png" width="900"/>
-</p>
+<p align="center"><img src="/images/dash2.png" width="600"/></p>
 
 ---
 
@@ -224,9 +220,7 @@ Available options include:
 - Copy Kubernetes Manifest
 - Delete Dashboard
 
-<p align="center">
-    <img src="/images/dash3.png" width="900"/>
-</p>
+<p align="center"><img src="/images/dash3.png" width="600"/></p>
 
 ---
 
