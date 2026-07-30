@@ -87,10 +87,6 @@ Access the Datadog Portal.
 
 The Datadog home page is displayed.
 
-<p align="center">
-<img src="/images/monitor-step1.png" width="900"/>
-</p>
-
 ---
 
 # Step 2 – Navigate to Monitors
@@ -115,9 +111,8 @@ New Monitor
 
 The **Select Monitor Type** page appears.
 
-<p align="center">
-<img src="/images/monitor-step2.png" width="900"/>
-</p>
+<p align="center"><img src="/images/m1.png" width="600"/></p>
+
 
 ---
 
@@ -143,9 +138,8 @@ Datadog provides multiple monitor types:
 
 For this SOP, select **Metric**.
 
-<p align="center">
-<img src="/images/monitor-step3.png" width="900"/>
-</p>
+<p align="center"><img src="/images/m2.png" width="600"/></p>
+
 
 ---
 
@@ -176,9 +170,7 @@ avg(last_5m):avg:system.cpu.user{env:prod}
 
 If the metric is not visible, verify that the Datadog Agent is sending metrics.
 
-<p align="center">
-<img src="/images/monitor-step4.png" width="900"/>
-</p>
+
 
 ---
 
@@ -200,9 +192,6 @@ host:web01
 
 Using tags limits the monitor to specific resources.
 
-<p align="center">
-<img src="/images/monitor-step5.png" width="900"/>
-</p>
 
 ---
 
@@ -231,9 +220,6 @@ CPU > 90%
 
 Critical
 
-<p align="center">
-<img src="/images/monitor-step6.png" width="900"/>
-</p>
 
 ---
 
@@ -252,9 +238,6 @@ Recommended evaluation window
 Last 5 Minutes
 ```
 
-<p align="center">
-<img src="/images/monitor-step7.png" width="900"/>
-</p>
 
 ---
 
@@ -292,9 +275,7 @@ Configure notification recipients.
 - PagerDuty
 - Webhook
 
-<p align="center">
-<img src="/images/monitor-step8.png" width="900"/>
-</p>
+<p align="center"><img src="/images/m3.png" width="600"/></p>
 
 ---
 
@@ -310,9 +291,7 @@ Review the advanced settings.
 
 Enable only the options required for your environment.
 
-<p align="center">
-<img src="/images/monitor-step9.png" width="900"/>
-</p>
+
 
 ---
 
@@ -327,10 +306,6 @@ Review:
 
 Ensure there are no validation errors.
 
-<p align="center">
-<img src="/images/monitor-step10.png" width="900"/>
-</p>
-
 ---
 
 # Step 11 – Save Monitor
@@ -343,9 +318,6 @@ Save
 
 The monitor starts evaluating data immediately.
 
-<p align="center">
-<img src="/images/monitor-step11.png" width="900"/>
-</p>
 
 ---
 
@@ -368,9 +340,7 @@ Verify:
 - Trigger History
 - Notifications
 
-<p align="center">
-<img src="/images/monitor-step12.png" width="900"/>
-</p>
+<p align="center"><img src="/images/m4.png" width="600"/></p>
 
 ---
 
@@ -390,9 +360,6 @@ Verify:
 - Notification is received
 - Recovery notification is generated
 
-<p align="center">
-<img src="/images/monitor-step13.png" width="900"/>
-</p>
 
 ---
 
@@ -441,19 +408,6 @@ Verify:
 
 ---
 
-# Validation Checklist
-
-| Validation | Status |
-|------------|--------|
-| Metric Selected | ☐ |
-| Query Configured | ☐ |
-| Scope Applied | ☐ |
-| Thresholds Configured | ☐ |
-| Notifications Configured | ☐ |
-| Monitor Saved | ☐ |
-| Test Alert Successful | ☐ |
-| Validation Completed | ☐ |
-
 ---
 
 # Final Outcome
@@ -465,3 +419,13 @@ The Datadog Metric Monitor has been successfully configured and validated. The m
 # Contact
 
 For questions regarding this SOP, please contact the Observability Team.
+
+Dr. Shivanand Poojara
+
+shivanand@airowire.com
+
+
+Aakanksha
+
+Aakanksha@airowire.com
+
