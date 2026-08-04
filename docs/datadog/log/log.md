@@ -293,88 +293,654 @@ Filter logs before forwarding to Datadog.
 - OpenShift
 
 ---
+# Pipeline Processor Catalog
 
-## 6. Processing Pipelines
+Pipeline Processors are used to parse, enrich, normalize, categorize, and standardize logs after they are ingested into Datadog.
 
-### Purpose
-
-Parse and enrich logs.
-
-### Common Processors
-
-- Grok Parser
-- Date Remapper
-- Status Remapper
-- Attribute Remapper
-- Category Processor
-- Lookup Processor
-- URL Parser
-- User-Agent Parser
-- GeoIP Parser
+Each processor solves a different problem. Selecting the correct processor improves searchability, dashboard accuracy, and monitoring capabilities.
 
 ---
 
-## 7. Index Routing
+# Processor 01 — Grok Parser
 
-### Purpose
+## Objective
 
-Store different logs in different indexes.
-
-Examples:
-
-- Production Logs
-- Development Logs
-- Security Logs
+Convert unstructured log messages into searchable Datadog attributes.
 
 ---
 
-## 8. Exclusion Filters
+## Purpose
 
-### Purpose
+Many applications generate plain text logs that Datadog cannot automatically understand.
 
-Reduce indexed log volume.
-
-### Important
-
-Use only when earlier filtering is not possible.
+The Grok Parser extracts meaningful fields from plain text logs and converts them into searchable attributes.
 
 ---
 
-## 9. Sampling
+## When to Use
 
-### Purpose
+- Apache Access Logs
+- NGINX Access Logs
+- HAProxy Logs
+- Custom Application Logs
+- Legacy Java Applications
+- Syslog Messages
+- Linux Service Logs
 
-Store only a percentage of high-volume logs.
+---
+
+## When NOT to Use
+
+- JSON Logs
+- Structured Logs
+- Logs already containing searchable attributes
+
+---
+
+## Sample Log
+
+```text
+192.168.10.5 GET /login HTTP/1.1 200 145ms
+```
+
+---
+
+## Before Processing
+
+Datadog sees only:
+
+```text
+message
+```
+
+---
+
+## After Processing
+
+| Attribute | Value |
+|------------|------|
+| network.client.ip | 192.168.10.5 |
+| http.method | GET |
+| http.url | /login |
+| http.status_code | 200 |
+| duration | 145ms |
+
+---
+
+## Navigation
+
+Logs
+
+↓
+
+Configuration
+
+↓
+
+Pipelines
+
+↓
+
+Select Pipeline
+
+↓
+
+Add Processor
+
+↓
+
+Grok Parser
+
+---
+
+## Validation
+
+Search
+
+```
+@http.status_code:200
+```
+
+Expected Result
+
+Matching logs should be returned.
+
+---
+
+## Best Practices
+
+- Use Grok only for plain text logs.
+- Prefer JSON logging whenever possible.
+- Test patterns before production.
+
+---
+
+## Business Impact
+
+- Improves search capability
+- Enables dashboards
+- Enables monitors
+
+---
+
+## Cost Impact
+
+No reduction in ingestion cost.
+
+---
+
+# Processor 02 — Status Remapper
+
+## Objective
+
+Normalize custom application statuses into Datadog standard statuses.
+
+---
+
+## Purpose
+
+Different applications use different status values.
 
 Example
 
-100,000 logs
+```
+SUCCESS
 
-↓
+FAILED
 
-Store 10%
+WARNING
+```
 
-↓
+Datadog expects
 
-Discard 90%
+```
+INFO
+
+ERROR
+
+WARN
+```
+
+Status Remapper converts custom values into Datadog standard status values.
 
 ---
 
-## 10. Sensitive Data Scanner
+## When to Use
 
-### Purpose
+- Java Applications
+- Spring Boot
+- Python
+- Node.js
+- .NET
+
+---
+
+## When NOT to Use
+
+When applications already send
+
+```
+INFO
+
+WARN
+
+ERROR
+```
+
+---
+
+## Sample Log
+
+```json
+{
+  "status":"FAILED"
+}
+```
+
+---
+
+## Recommended Mapping
+
+| Source | Datadog |
+|---------|----------|
+| SUCCESS | INFO |
+| FAILED | ERROR |
+| WARNING | WARN |
+| CRITICAL | ERROR |
+
+---
+
+## Navigation
+
+Logs
+
+↓
+
+Configuration
+
+↓
+
+Pipelines
+
+↓
+
+Status Remapper
+
+---
+
+## Validation
+
+Verify
+
+```
+status:error
+```
+
+instead of
+
+```
+FAILED
+```
+
+---
+
+## Best Practices
+
+Normalize all applications to common status values.
+
+---
+
+## Business Impact
+
+Consistent dashboards and alerts.
+
+---
+
+# Processor 03 — Date Remapper
+
+## Objective
+
+Use the application timestamp instead of the Datadog ingestion timestamp.
+
+---
+
+## Purpose
+
+Applications sometimes write timestamps different from when Datadog receives the logs.
+
+Without Date Remapper, logs may appear out of order.
+
+---
+
+## When to Use
+
+- Legacy Applications
+- Java
+- Windows Logs
+- Custom Log Formats
+
+---
+
+## When NOT to Use
+
+ISO-8601 formatted logs already parsed correctly.
+
+---
+
+## Sample Log
+
+```
+05-Aug-2026 10:15:25 Login Successful
+```
+
+---
+
+## Navigation
+
+Logs
+
+↓
+
+Configuration
+
+↓
+
+Pipelines
+
+↓
+
+Date Remapper
+
+---
+
+## Validation
+
+Verify the event timestamp matches the application timestamp.
+
+---
+
+## Best Practices
+
+Always verify timezone.
+
+---
+
+## Business Impact
+
+Correct log timeline.
+
+---
+
+# Processor 04 — Attribute Remapper
+
+## Objective
+
+Rename attributes into standard Datadog naming.
+
+---
+
+## Example
+
+Application A
+
+```json
+{
+"client_ip":"10.10.10.5"
+}
+```
+
+Application B
+
+```json
+{
+"ip":"10.10.10.5"
+}
+```
+
+Application C
+
+```json
+{
+"source_ip":"10.10.10.5"
+}
+```
+
+Convert all to
+
+```
+network.client.ip
+```
+
+---
+
+## When to Use
+
+Multiple applications use different field names.
+
+---
+
+## Business Impact
+
+Standard dashboards across applications.
+
+---
+
+# Processor 05 — Category Processor
+
+## Objective
+
+Group similar values.
+
+---
+
+## Example
+
+| Value | Category |
+|--------|----------|
+| 200 | Success |
+| 201 | Success |
+| 204 | Success |
+| 400 | Client Error |
+| 404 | Client Error |
+| 500 | Server Error |
+| 503 | Server Error |
+
+---
+
+## Business Impact
+
+Simplified reporting.
+
+---
+
+# Processor 06 — Lookup Processor
+
+## Purpose
+
+Replace coded values with readable values.
+
+Example
+
+Before
+
+```
+country=91
+```
+
+After
+
+```
+India
+```
+
+---
+
+# Processor 07 — URL Parser
+
+Before
+
+```
+https://company.com/login?id=10
+```
+
+After
+
+| Field | Value |
+|--------|------|
+| Host | company.com |
+| Path | /login |
+| Query | id=10 |
+
+---
+
+# Processor 08 — User-Agent Parser
+
+Before
+
+```
+Mozilla/5.0 Chrome Windows
+```
+
+After
+
+| Browser | Chrome |
+|----------|--------|
+| OS | Windows |
+| Device | Desktop |
+
+---
+
+# Processor 09 — GeoIP Parser
+
+Before
+
+```
+103.xxx.xxx.xxx
+```
+
+After
+
+| Country | India |
+|----------|-------|
+| City | Bangalore |
+
+---
+
+# Processor 10 — Arithmetic Processor
+
+Purpose
+
+Perform numeric calculations.
+
+Example
+
+Before
+
+```
+duration=2500
+```
+
+After
+
+```
+2.5 Seconds
+```
+
+---
+
+# Processor 11 — String Builder
+
+Purpose
+
+Combine multiple attributes.
+
+Example
+
+```
+first_name
+
+last_name
+```
+
+↓
+
+```
+full_name
+```
+
+---
+
+# Processor 12 — Service Remapper
+
+Purpose
+
+Standardize service names.
+
+Example
+
+```
+app=payment
+```
+
+↓
+
+```
+service=payment
+```
+
+---
+
+# Processor 13 — Host Remapper
+
+Purpose
+
+Standardize host names.
+
+Example
+
+```
+hostname=node01
+```
+
+↓
+
+```
+host=node01
+```
+
+---
+
+# Processor 14 — Message Remapper
+
+Purpose
+
+Rename custom message fields.
+
+Example
+
+```
+log_text
+```
+
+↓
+
+```
+message
+```
+
+---
+
+# Processor 15 — Sensitive Data Scanner
+
+Purpose
 
 Mask confidential information.
 
-Supported Examples
+Supported Data
 
 - Password
 - JWT
 - API Keys
-- Credit Card
+- OAuth Tokens
+- Credit Cards
 - PAN
-- OAuth Token
+- SSN
+- Email Address
 
+Before
+
+```
+Password=Admin123
+```
+
+After
+
+```
+Password=********
+```
+
+---
+
+# Processor Selection Guide
+
+| Requirement | Processor |
+|-------------|-----------|
+| Plain Text | Grok Parser |
+| JSON | No Parser |
+| Timestamp | Date Remapper |
+| Status | Status Remapper |
+| Rename Fields | Attribute Remapper |
+| HTTP Status Group | Category Processor |
+| Country Code | Lookup Processor |
+| URL | URL Parser |
+| Browser | User-Agent Parser |
+| IP Location | GeoIP Parser |
+| Numeric Conversion | Arithmetic Processor |
+| Combine Fields | String Builder |
+| Rename Service | Service Remapper |
+| Rename Host | Host Remapper |
+| Rename Message | Message Remapper |
+| Mask Secrets | Sensitive Data Scanner |
 ---
 
 # Pipeline Processor Decision Matrix
