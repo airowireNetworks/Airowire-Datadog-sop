@@ -827,20 +827,8 @@ The recommended next step is to implement ingestion-drop monitoring and perform 
 
 **Airowire Networks Pvt. Ltd.**
 
-**Datadog Observability & Cloud SIEM Team**
+**Datadog Observability & Cloud SIEM Team**`
+Dr. Shivanand Poojara
 
----
+shivanand@airowire.com
 
-## Document Information
-
-| Field | Details |
-|---|---|
-| **Document** | Google Workspace Service & Cloud SIEM Analysis |
-| **Client** | Vivenu |
-| **Platform** | Datadog |
-| **Source** | Google Workspace |
-| **Analysis Period** | One Month |
-| **Status** | Final Review |
-| **Monitoring Scope** | Log Management & Cloud SIEM |
-| **Primary Log Filter** | `source:gsuite` |
-```
