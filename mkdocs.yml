@@ -176,7 +176,7 @@ nav:
 
       - Azure SIEM:
           - Datadog Entra ID SIEM Log Push using ARM Template: azure/siem/entra-id-siem.md
-          - Infrastructure DevSecOps Trilegal: azure/siem/initail-report.md
+          - Trilegal – Datadog Onboarding, Commitment & Optimization Assessment: azure/siem/initail-report.md
 
 
   - AWS:
