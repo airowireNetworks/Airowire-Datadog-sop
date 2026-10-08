@@ -156,6 +156,7 @@ nav:
           - Logs Enablement (Main): azure/logs/logs.md
           - Logs Enablement (LR): azure/logs/lr.md
           - Logs Enablement (LRR): azure/logs/lrr.md
+          - Infrastructure DevSecOps Trilegal: azure/logs/ir.md  
 
       - APM:
           - Azure APM Enablement: azure/apm/apm.md
