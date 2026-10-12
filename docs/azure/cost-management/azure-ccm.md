@@ -639,7 +639,7 @@ Airowire will guide the customer through the required Azure prerequisites and co
 
 ## 24. Contact
 
-<div align="center">
+
 
 **Airowire Networks Pvt. Ltd.**
 
@@ -652,6 +652,4 @@ Datadog Onboarding | Cloud Cost Management | Infrastructure Monitoring | Optimiz
 **Anoop Ravikumar Biradar** - Anoop@airowire.com
 **Anil Kumar** - Anil@airowire.com
 **Mohammed Saqlain** - Mohammed@airowire.com
-
-</div>
 
