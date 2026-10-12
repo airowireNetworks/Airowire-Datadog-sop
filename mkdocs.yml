@@ -168,7 +168,7 @@ nav:
 
       - Cost Optimization:
           - Azure Cost Optimization: azure/cost-management/cost.md
-
+          - Azure Cost Optimization: azure/cost-management/azure-ccm.md
       - SLA:
           - AKS SLA Monitoring: azure/sla/sla.md
 
