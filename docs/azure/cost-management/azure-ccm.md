@@ -1,655 +1,824 @@
 
-# Trilegal – Azure Cloud Cost Management (CCM) Integration with Datadog
-
-<div align="center">
-
-<img src="/images/airowire-logo.png" width="260">
-
-<img src="/images/datadog.png" width="180">
-
+<div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:40px;">
+  <img src="/images/airowire-logo.png" width="260">
+  <img src="/images/datadog.png" width="150">
 </div>
 
----
+# Azure Cloud Cost Management Integration with Datadog
 
-## 1. Purpose of the Document
+## Standard Operating Procedure (SOP)
 
-The purpose of this document is to provide a step-by-step implementation guide for configuring **Datadog Cloud Cost Management (CCM)** for the customer's Microsoft Azure environment.
-
-The existing Azure account integration with Datadog has been completed. The next phase is to configure Azure billing exports, grant Datadog access to the exported cost data, complete the CCM configuration, and validate cost data ingestion.
-
-This document has been prepared by **Airowire Networks Pvt. Ltd.**, acting as a **Datadog Advanced Partner**.
-
-The implementation covers:
-
-- Azure billing scope validation
-- Azure Cost Management exports
-- Actual cost export configuration
-- Amortized cost export configuration
-- Azure Blob Storage configuration
-- Datadog App Registration permissions
-- Datadog CCM account configuration
-- Cost data ingestion validation
-- Troubleshooting
-- Customer responsibilities
-- Airowire implementation responsibilities
-- Final validation and handover
-
-> **Note:** Azure integration and Cloud Cost Management are separate configurations. Completing the Azure integration does not automatically enable CCM cost data ingestion.
-
----
-
-## 2. Scope
-
-| Area | Scope |
+| Document Information | Details |
 |---|---|
-| Existing Azure Integration | Completed |
-| Azure Billing Scope Validation | Included |
-| Azure Cost Management Exports | Included |
-| Actual Cost Export | Included |
-| Amortized Cost Export | Included |
-| Azure Blob Storage | Included |
-| Datadog App Registration Permissions | Included |
-| Datadog CCM Configuration | Included |
-| Cost Data Validation | Included |
-| Troubleshooting | Included |
-| CCM Billing and Usage Analysis | Included |
-| Customer Knowledge Transfer | Included |
+| Client | Trilegal |
+| Cloud Provider | Microsoft Azure |
+| Monitoring Platform | Datadog |
+| Integration | Cloud Cost Management (CCM) |
+| Document Type | Client Implementation Guide |
+| Version | 3.0 |
+| Prepared By | Airowire Networks |
+| Purpose | Azure Billing and Cost Visibility |
 
 ---
 
-## 3. Executive Summary
+## 1. Introduction
 
-The customer's Azure environment is already integrated with Datadog.
+This document provides step-by-step instructions for integrating Microsoft Azure billing and cost data with Datadog Cloud Cost Management (CCM).
 
-The next step is to configure **Datadog Cloud Cost Management (CCM)** to collect and analyze Azure billing data.
+The integration will allow Trilegal to monitor, analyse, and understand Azure cloud expenditure through the Datadog platform.
 
-The implementation requires coordination between the customer Azure team and the Airowire implementation team.
+### Objectives
 
-### Implementation Approach
+- Enable Azure cost visibility within Datadog.
+- Monitor actual Azure expenditure.
+- Analyse amortized costs, including applicable reservation and savings plan benefits.
+- View cost breakdowns across subscriptions and resources.
+- Identify spending trends and potential cost optimisation opportunities.
+- Provide a centralised view of Azure cloud expenditure.
 
-**Customer Azure Setup → Cost Export Configuration → Storage Permissions → Datadog CCM Setup → Data Validation → Handover**
+## 2. Integration Architecture
 
-### Key Activities
+The integration uses Azure Cost Management exports and Azure Blob Storage to transfer billing information to Datadog.
 
-- Confirm the Azure billing agreement and billing scope.
-- Identify the Azure Billing Account ID.
-- Verify the required actual and amortized cost export types are supported.
-- Create or validate the Azure Blob Storage destination.
-- Configure the required cost exports.
-- Assign the necessary Azure permissions to the Datadog App Registration.
-- Share the billing and export details with Airowire.
-- Complete the manual CCM configuration in Datadog.
-- Validate actual and amortized cost data.
-
----
-
-## 4. Architecture and Data Flow
+### Architecture Flow
 
 ```text
-              Microsoft Azure Environment
-                         |
-                         v
-                Azure Cost Management
-                         |
-              +----------+----------+
-              |                     |
-              v                     v
-        Actual Cost Export    Amortized Cost Export
-              |                     |
-              +----------+----------+
-                         |
-                         v
-                 Azure Blob Storage
-                         |
-                         v
-              Datadog Azure App Access
-                         |
-                         v
-             Datadog Cloud Cost Management
-                         |
-                         v
-                Azure Cost Analysis
-                         |
-                         v
-               Datadog Dashboards
+Microsoft Azure
+       |
+       v
+Azure Cost Management
+       |
+       v
+Actual Cost and Amortized Cost Exports
+       |
+       v
+Azure Storage Account
+       |
+       v
+Azure Blob Container
+       |
+       v
+Datadog Azure Integration
+       |
+       v
+Datadog Cloud Cost Management
+       |
+       v
+Cost Dashboards and Analysis
 ```
 
-The Azure team configures the billing exports and storage permissions. The Airowire implementation team then completes the CCM setup in Datadog and validates the imported data.
+### 2.1 Why Is an Azure Storage Account Required?
+
+Azure Cost Management generates billing and usage information as export files.
+
+These files need to be stored in an accessible location so Datadog can retrieve and process the cost information.
+
+Azure Blob Storage provides this location.
+
+The integration works as follows:
+
+1. Azure Cost Management generates cost and usage export files.
+2. The exported files are stored in an Azure Blob Container.
+3. Datadog accesses the container using the configured Azure identity and required permissions.
+4. Datadog processes the exported billing information.
+5. The cost information becomes available in Datadog Cloud Cost Management.
+
+**Important: Creating a new Storage Account is not mandatory.**
+
+The existing Storage Account can be reused if it meets the required access, security, and configuration requirements.
+
+A new Storage Account is needed only when no suitable existing storage resource is available or when Trilegal's internal security policies require dedicated storage.
+
+## 3. Understanding Azure Cost Data
+
+The integration uses two cost datasets.
+
+### 3.1 Actual Cost
+
+Actual Cost represents the recorded Azure charges for resource usage and applicable purchases.
+
+It helps identify the actual expenditure recorded during a billing period.
+
+### 3.2 Amortized Cost
+
+Amortized Cost distributes applicable reservation and savings plan costs across their usage periods.
+
+It helps provide visibility into effective resource costs after accounting for applicable commitment benefits.
+
+**Both datasets must be available and configured according to Datadog's Azure CCM requirements.**
+
+The CSP billing agreement and selected export scope must support the required datasets.
+
+## 4. Existing Environment Information
+
+Based on the initial information shared for this integration:
+
+| Parameter | Current Information |
+|---|---|
+| Client | Trilegal |
+| Cloud Provider | Microsoft Azure |
+| Billing Agreement | CSP – confirmation required |
+| Billing Scope | Billing Account – confirmation required |
+| Azure Subscriptions | 3 subscriptions |
+| Currency | INR |
+| Azure Integration | Existing integration configured |
+| Azure App Registration | Existing application available – verify before reuse |
+| Storage Account | Not configured in the initial requirements |
+| Blob Container | Not configured in the initial requirements |
+| Actual Cost Export | Not configured |
+| Amortized Cost Export | Not configured |
+| Expected Export Frequency | Daily |
+| Validation Frequency | Monthly |
+
+**Note:** These details are based on the initial requirements. The Trilegal Azure Infra team must validate the current environment before implementation.
+
+## 5. Prerequisites
+
+Before starting the configuration, the following access and information are required.
+
+### 5.1 Azure Prerequisites
+
+- Access to the relevant Azure tenant.
+- Access to the required billing or subscription scope.
+- Appropriate Cost Management permissions.
+- Permission to configure Cost Management exports.
+- Access to an approved Storage Account.
+- Permission to create a Blob Container if required.
+- Permission to configure Azure role assignments.
+- Confirmation of Actual Cost and Amortized Cost export availability.
+
+### 5.2 Datadog Prerequisites
+
+- Access to the Trilegal Datadog organisation.
+- Existing Azure integration details.
+- Existing Azure App Registration details.
+- Azure Tenant ID.
+- Application (Client) ID.
+- Relevant billing or subscription scope identifiers.
+- Storage Account details.
+- Blob Container details.
+- Azure export names and paths.
+
+### 5.3 Existing Azure App Registration
+
+The existing Datadog Azure App Registration should be reused wherever possible.
+
+Before assigning permissions:
+
+1. Open Microsoft Entra ID.
+2. Navigate to App registrations.
+3. Identify the existing Datadog application.
+4. Verify the Application (Client) ID.
+5. Confirm that it matches the application configured in Datadog.
+
+Do not create a duplicate App Registration unless the existing integration cannot support the required configuration.
 
 ---
 
-## 5. Roles and Responsibilities
+# 6. Available Implementation Approaches
 
-| Activity | Customer Azure Team | Airowire Implementation Team |
-|---|---|---|
-| Confirm billing agreement | Responsible | Assist if required |
-| Confirm Billing Account ID | Responsible | Validate |
-| Identify billing scope | Responsible | Validate |
-| Create Azure Storage resources | Responsible | Guide if required |
-| Configure cost exports | Responsible | Guide if required |
-| Run and validate exports | Responsible | Verify configuration details |
-| Assign Azure permissions | Responsible | Provide required role details |
-| Share export information | Responsible | Receive and validate |
-| Configure CCM in Datadog | Provide required information | Responsible |
-| Validate cost ingestion | Assist with Azure-side checks | Responsible |
-| Troubleshoot missing data | Assist with Azure configuration | Investigate Datadog configuration |
-| Final handover | Participate | Responsible |
+Trilegal can select the appropriate implementation approach based on its existing Azure infrastructure and security requirements.
+
+### Approach 1: Reuse Existing Storage Account and Blob Container
+
+**Use this approach when both the Storage Account and suitable Blob Container already exist.**
+
+Implementation steps:
+
+1. Identify the existing Storage Account.
+2. Verify that Blob Storage is available.
+3. Identify an approved Blob Container.
+4. Confirm that the container can be used for Datadog cost exports.
+5. Configure Actual Cost and Amortized Cost exports.
+6. Grant the Datadog application the required read permission.
+7. Configure the export details in Datadog.
+
+**Benefit:** No new Azure storage resource is required.
+
+### Approach 2: Reuse Existing Storage Account and Create a New Blob Container
+
+**Use this approach when a Storage Account exists but there is no suitable container for Datadog exports.**
+
+Implementation steps:
+
+1. Open the existing Storage Account.
+2. Navigate to Data storage > Containers.
+3. Select + Container.
+4. Enter the container name:
+
+   `datadog-ccm`
+
+5. Set the anonymous access level to Private.
+6. Create the container.
+7. Configure the Actual Cost and Amortized Cost exports.
+8. Assign the Datadog application the required read permission.
+
+**Benefit:** Existing storage infrastructure can be reused while keeping cost exports organised separately.
+
+### Approach 3: Create a New Storage Account and Blob Container
+
+**Use this approach only when no suitable existing Storage Account is available or Trilegal requires dedicated storage.**
+
+Implementation steps:
+
+1. Open Azure Portal.
+2. Navigate to Storage Accounts.
+3. Select Create.
+4. Select the appropriate subscription.
+5. Select an approved resource group.
+6. Enter a globally unique Storage Account name.
+7. Select the approved Azure region.
+8. Configure performance and redundancy according to Trilegal's standards.
+9. Review and create the Storage Account.
+10. Open the newly created Storage Account.
+11. Navigate to Data storage > Containers.
+12. Select + Container.
+13. Enter the container name:
+
+    `datadog-ccm`
+
+14. Set anonymous access to Private.
+15. Create the container.
+16. Configure both cost exports.
+17. Assign the Datadog application the required read permission.
+
+**Benefit:** Dedicated storage for Datadog cost exports.
+
+**Note:** Storage Account creation requires approval from the Trilegal Azure Infra team.
+
+### Approach 4: CSP Partner-Managed Export Configuration
+
+**Use this approach when the CSP partner controls the billing account or required export permissions.**
+
+Implementation steps:
+
+1. Contact the CSP partner.
+2. Confirm the exact Azure billing agreement.
+3. Verify whether Actual Cost and Amortized Cost exports are available.
+4. Confirm the supported billing scope.
+5. Ask whether the CSP partner can configure the exports.
+6. Agree on the Storage Account and Blob Container location.
+7. Confirm how the Datadog application will securely access the exported files.
+8. Complete the Datadog CCM configuration.
+
+**Important:** Do not assume that every CSP customer can create billing-account-level exports. The CSP partner must confirm the supported scope and permissions.
+
+### Approach 5: Reuse Existing Azure Cost Exports
+
+**Use this approach when suitable Azure Cost Management exports are already configured.**
+
+Implementation steps:
+
+1. Identify existing Actual Cost exports.
+2. Identify existing Amortized Cost exports.
+3. Verify that both datasets are available.
+4. Confirm that the export scope is supported.
+5. Confirm that the destination is Azure Blob Storage.
+6. Verify the export format and file partitioning.
+7. Confirm that the export schedule meets Datadog requirements.
+8. Verify that the Datadog application can read the files.
+9. Configure Datadog using the existing export details.
+
+**Benefit:** Avoids duplicate exports and unnecessary Azure resource creation.
 
 ---
 
-# PART A — CUSTOMER AZURE CONFIGURATION
+# 7. CSP Billing Validation
 
-## 6. Step 1: Confirm the Azure Billing Account
+Since Trilegal uses a CSP billing arrangement, billing scope and export availability must be confirmed before implementation.
 
-**Responsible:** Customer Azure Administrator / FinOps Team
+### Step 1: Confirm the Billing Agreement
 
-### Procedure
+The Azure Infra team or CSP partner should confirm:
 
-1. Sign in to the Azure Portal.
+- Exact billing agreement type.
+- Whether the billing arrangement uses Microsoft Partner Agreement (MPA) or another agreement.
+- Available billing scope.
+- Whether Actual Cost exports are supported.
+- Whether Amortized Cost exports are supported.
+- Whether Trilegal or the CSP partner is responsible for configuring the exports.
+
+### Step 2: Confirm Cost Export Availability
+
+Confirm that both Actual Cost and Amortized Cost datasets can be exported at the selected scope.
+
+If either dataset is unavailable:
+
+1. Stop the export configuration.
+2. Contact the CSP partner.
+3. Confirm supported export options with Microsoft if required.
+4. Confirm the supported integration method with Datadog.
+
+Do not replace the required cost datasets with usage-only exports without Datadog confirmation.
+
+### Step 3: Confirm the Export Scope
+
+The selected scope must be supported by the billing agreement and the permissions available to the customer.
+
+Possible scopes include:
+
+- Billing Account.
+- Subscription.
+- Resource Group.
+
+The scope must also cover the subscriptions that Trilegal wants to monitor.
+
+---
+
+# 8. Azure Portal Configuration – Step by Step
+
+The following instructions describe the Azure Portal configuration.
+
+## Step 1: Log in to Azure Portal
+
+1. Open:
 
    https://portal.azure.com
 
-2. Navigate to **Cost Management + Billing**.
-3. Open the appropriate billing account.
-4. Identify the billing agreement type.
-5. Record the Billing Account ID.
-6. Confirm which subscriptions or resource groups should be included in CCM.
-7. Verify that the selected billing scope supports the required cost exports.
+2. Log in using an authorised Azure account.
+3. Verify that the correct Microsoft Entra tenant is selected.
+4. Select the appropriate billing account or subscription.
 
-### Billing Agreement Types
+## Step 2: Identify the Billing Scope
 
-| Agreement Type | Required Action |
-|---|---|
-| Microsoft Customer Agreement (MCA) | Verify support for the required export datasets at the selected billing scope |
-| Enterprise Agreement (EA) | Verify available export types and permissions |
-| Pay-As-You-Go (PAYG) | Confirm compatibility before proceeding; usage-details exports alone may not satisfy CCM requirements |
+1. Search for Cost Management + Billing.
+2. Open the relevant billing account or subscription.
+3. Confirm the billing scope.
+4. Verify that the three Trilegal subscriptions are covered by the selected scope.
 
-### Information Required
+If the required scope is not available, contact the CSP partner.
 
-| Information | Customer Response |
-|---|---|
-| Billing Account ID | To be provided |
-| Billing Agreement Type | To be provided |
-| CCM Scope | To be confirmed |
-| Subscription ID(s) | To be provided, where applicable |
-| Required Export Types Supported | Yes / No |
+## Step 3: Verify Existing Storage
 
-**Expected Result:** The billing account, scope, and export compatibility are confirmed.
+Navigate to:
 
-> **Important:** Do not proceed with the export configuration until the customer confirms that the required actual and amortized cost datasets are supported.
+Azure Portal > Storage Accounts
 
----
+1. Check whether an existing Storage Account is available.
+2. Open the Storage Account.
+3. Navigate to Data storage > Containers.
+4. Identify an approved container.
+5. Confirm that the storage resource meets the required security and access policies.
 
-## 7. Step 2: Verify Azure Storage Resources
+If a suitable Storage Account and container already exist, reuse them.
 
-**Responsible:** Customer Azure Administrator
+If a Storage Account exists but no suitable container is available, create a dedicated private container.
 
-Azure Blob Storage is used to store the billing export files that Datadog will read.
+If no suitable Storage Account exists, obtain approval to create one.
 
-### Procedure
+## Step 4: Create a Blob Container if Required
 
-1. Open the Azure Portal.
-2. Search for **Storage accounts**.
-3. Identify the Storage Account intended for CCM exports.
-4. Open the Storage Account.
-5. Navigate to **Data storage → Containers**.
-6. Check whether a container already exists for cost exports.
-7. Identify the container and directory intended for the actual and amortized exports.
-8. Confirm that the customer can use the existing resources or obtain approval to create new ones.
+Navigate to:
 
-If the required resources do not exist, the customer must create or approve their creation.
+Azure Portal > Storage Accounts > Select Storage Account > Data storage > Containers
 
-### Information Required
+1. Select + Container.
+2. Enter:
 
-| Field | Description |
-|---|---|
-| Storage Account Name | Name of the Azure Storage Account |
-| Storage Container Name | Container holding billing export files |
-| Storage Directory | Directory or export path |
-| Azure Subscription | Subscription containing the storage resources |
-| Resource Group | Resource group containing the storage resources |
+   `datadog-ccm`
 
-**Expected Result:** The Azure Storage destination is available and ready for cost export configuration.
+3. Set the anonymous access level to Private.
+4. Select Create.
 
----
+The container will be used to store the Azure cost export files.
 
-## 8. Step 3: Configure Azure Cost Management Exports
+## Step 5: Open Cost Management Exports
 
-**Responsible:** Customer Azure Administrator / FinOps Team
+Navigate to:
 
-The customer must configure the required cost exports before the Datadog CCM integration can be completed.
+Azure Portal > Cost Management + Billing > Cost Management > Exports
 
-### 8.1 Open the Exports Page
+The exact menu placement may vary depending on the billing scope and Azure Portal experience.
 
-1. Sign in to the Azure Portal.
-2. Open **Cost Management + Billing**.
-3. Navigate to **Cost Management → Exports**.
-4. Select the appropriate billing scope.
-5. Review the existing export configurations.
+1. Select the confirmed billing scope.
+2. Open Exports.
+3. Select Create or the equivalent export creation option.
 
-If suitable exports already exist, verify their settings rather than creating duplicate exports.
+## Step 6: Configure Actual Cost Export
 
-### 8.2 Configure the Required Export Datasets
+Create an Actual Cost export using the supported cost and usage dataset available at the selected scope.
 
-1. Select the option to create or schedule an export.
-2. Select the supported **Cost and usage (actual + amortized)** export template, if available at the selected billing scope.
-3. Configure the actual and amortized cost datasets required by Datadog.
-4. Set the export frequency to **Daily export of month-to-date costs**.
-5. Confirm that the export dataset version is supported by Datadog.
-6. Provide an appropriate export prefix if required.
-7. Configure Azure Blob Storage as the destination.
+Suggested export name:
 
-### 8.3 Configure the Export Destination
+`trilegal-actual-daily-mtd`
 
-For each required export:
-
-1. Select the destination Storage Account.
-2. Select the Storage Container.
-3. Enter the required export directory or path.
-4. Choose a supported file format.
-5. Choose a supported compression option.
-6. Enable **File partitioning**.
-7. Ensure **Overwrite data is disabled**.
-8. Review the export configuration.
-9. Save the export.
-
-### Recommended Export Settings
+Configure the following:
 
 | Setting | Configuration |
 |---|---|
-| Export Frequency | Daily |
-| Cost Period | Month-to-date |
-| Export Datasets | Actual and amortized, as supported |
+| Export Type | Actual Cost |
+| Frequency | Daily |
+| Dataset | Cost and usage – Actual |
 | Destination | Azure Blob Storage |
-| File Partitioning | Enabled |
-| Overwrite Data | Disabled |
-| File Format | Supported CSV or Parquet format |
-| Compression | Supported compression option |
+| Storage Account | Approved existing or new account |
+| Container | `datadog-ccm` or approved existing container |
+| Export Format | Supported CSV or Parquet |
+| File Partitioning | As required by Datadog |
+| Overwrite | As required by Datadog |
 
-For the supported export formats, compression settings, dataset versions, and other requirements, follow the current Datadog Azure CCM documentation.
+Select the appropriate month-to-date export period where supported by the Azure export configuration and Datadog requirements.
 
-**Expected Result:** The required cost exports are configured and ready to run.
+## Step 7: Configure Amortized Cost Export
 
----
+Create a separate Amortized Cost export.
 
-## 9. Step 4: Run and Validate the Cost Exports
+Suggested export name:
 
-**Responsible:** Customer Azure Administrator
+`trilegal-amortized-daily-mtd`
 
-Both required cost datasets must be available in Azure Blob Storage before the Datadog setup is finalized.
+Configure the following:
 
-### Procedure
-
-1. Return to **Cost Management → Exports**.
-2. Open the actual cost export.
-3. Select **Run now**, if available.
-4. Wait for the export job to finish.
-5. Confirm that the actual cost export completed successfully.
-6. Repeat the process for the amortized cost export.
-7. Open the relevant Azure Storage Account.
-8. Navigate to the configured container.
-9. Verify that the expected files are present in the configured directory.
-10. Record the exact export names and directory paths.
-
-### Validation Checklist
-
-| Validation Item | Status |
+| Setting | Configuration |
 |---|---|
-| Actual Cost Export Configured | Pending |
-| Actual Cost Export Executed | Pending |
-| Actual Cost Files Available | Pending |
-| Amortized Cost Export Configured | Pending |
-| Amortized Cost Export Executed | Pending |
-| Amortized Cost Files Available | Pending |
-| Export Names Recorded | Pending |
-| Directory Paths Recorded | Pending |
+| Export Type | Amortized Cost |
+| Frequency | Daily |
+| Dataset | Cost and usage – Amortized |
+| Destination | Azure Blob Storage |
+| Storage Account | Approved existing or new account |
+| Container | `datadog-ccm` or approved existing container |
+| Export Format | Supported CSV or Parquet |
+| File Partitioning | As required by Datadog |
+| Overwrite | As required by Datadog |
 
-**Expected Result:** Both exports have completed successfully and the expected billing files are available in Azure Blob Storage.
+Both exports can use the same Storage Account and Blob Container.
 
----
+Ensure that the export names and destination paths are unique and correctly configured.
 
-## 10. Step 5: Assign Datadog Storage Permissions
+**Important:** Dataset version, file format, compression, partitioning, and overwrite settings must follow the current Datadog Azure CCM documentation and the options available at the selected Azure scope. Do not assume every Azure export option is supported.
 
-**Responsible:** Customer Azure Administrator
+## Step 8: Review and Create Exports
 
-The Datadog Azure App Registration must have permission to read the billing export files.
+Before creating the exports:
 
-### 10.1 Identify the Datadog App Registration
+1. Verify the selected billing scope.
+2. Verify the Actual Cost export configuration.
+3. Verify the Amortized Cost export configuration.
+4. Confirm the Storage Account.
+5. Confirm the Blob Container.
+6. Verify the export frequency.
+7. Confirm the dataset and file settings.
 
-1. Open the Azure Portal.
-2. Navigate to **Microsoft Entra ID**.
-3. Open **App registrations**.
-4. Identify the application associated with the existing Datadog Azure integration.
-5. Confirm the correct application with the Datadog implementation team.
+Select Review + Create or the equivalent option.
 
-Do not create a new App Registration unless required by the implementation design.
+## Step 9: Run Initial Exports
 
-### 10.2 Assign Storage Blob Data Reader
+After the exports are created:
 
-1. Open the relevant Storage Account.
-2. Navigate to **Data storage → Containers**.
-3. Open the container containing the billing export files.
-4. Select **Access Control (IAM)**.
-5. Select **Add → Add role assignment**.
-6. Search for the role **Storage Blob Data Reader**.
-7. Select the role.
-8. Proceed to the member selection screen.
-9. Select the appropriate service principal or application member option.
-10. Search for the confirmed Datadog App Registration.
-11. Select the correct application.
-12. Select **Review + assign**.
-13. Verify that the role assignment is created successfully.
+1. Open the Actual Cost export.
+2. Select Run Now if available.
+3. Wait for the export job to complete.
+4. Open the Amortized Cost export.
+5. Select Run Now if available.
+6. Wait for the export job to complete.
 
-Repeat the assignment if the actual and amortized exports are stored in different containers.
+Verify that both exports have completed successfully.
 
-### 10.3 Assign Additional Cost Management Permissions Where Required
+## Step 10: Verify Export Files
 
-For subscription or resource-group scope, follow the current Datadog setup guide to determine whether **Cost Management Reader** must be assigned at the appropriate subscription scope.
+Navigate to:
 
-For billing-account scope, follow the billing-specific permissions documented by Datadog.
+Azure Portal > Storage Accounts > Select Storage Account > Data storage > Containers
 
-### Permission Summary
+1. Open the configured Blob Container.
+2. Verify that Actual Cost files are available.
+3. Verify that Amortized Cost files are available.
+4. Confirm that the files are stored under the expected export paths.
+5. Verify that both export jobs completed successfully.
 
-| Permission | Purpose | Required Action |
-|---|---|---|
-| Storage Blob Data Reader | Allows Datadog to read cost export files | Assign at the appropriate storage scope |
-| Cost Management Reader | Supports cost-management access where required | Assign at the documented scope when applicable |
+If the files are missing, review the export job status and configuration.
 
-**Expected Result:** The Datadog App Registration has the required access to the export files and any additional required cost-management scope.
+## Step 11: Assign Storage Permissions to Datadog
 
-> **Security Note:** Do not share client secrets, passwords, or other credentials through email or Teams. The required configuration should use the existing approved Datadog integration identity wherever possible.
+Datadog requires permission to read the exported billing files.
 
----
+Navigate to:
 
-## 11. Step 6: Share Azure CCM Details with Airowire
+Azure Portal > Storage Accounts > Select Storage Account > Access Control (IAM)
 
-**Responsible:** Customer Azure Administrator
+1. Select Add.
+2. Select Add role assignment.
+3. Search for:
 
-After completing the Azure-side configuration, share the following information with the Airowire implementation team.
+   `Storage Blob Data Reader`
 
-| No. | Required Information | Customer Response |
-|---:|---|---|
-| 1 | Billing Account ID | To be provided |
-| 2 | Billing Agreement Type | To be provided |
-| 3 | CCM Scope | To be confirmed |
-| 4 | Subscription ID(s), if applicable | To be provided |
-| 5 | Storage Account Name | To be provided |
-| 6 | Storage Container Name | To be provided |
-| 7 | Actual Export Directory | To be provided |
-| 8 | Actual Export Name | To be provided |
-| 9 | Amortized Export Directory | To be provided |
-| 10 | Amortized Export Name | To be provided |
-| 11 | Actual Export Status | Successful / Pending |
-| 12 | Amortized Export Status | Successful / Pending |
-| 13 | Storage Blob Data Reader Assignment | Completed / Pending |
-| 14 | Additional Required Permissions | Completed / Pending |
+4. Select the role.
+5. Select Next.
+6. Under Select members, search for the existing Datadog App Registration.
+7. Verify the Application (Client) ID.
+8. Select the correct application/service principal.
+9. Select Review + assign.
+10. Complete the role assignment.
 
-**Expected Result:** Airowire receives the information required to configure Azure CCM in Datadog.
+If the exports use separate containers or storage accounts, assign the required permissions to each relevant destination.
 
----
+**Security:** Assign the role at the narrowest scope that supports the integration, preferably the dedicated container where possible.
 
-# PART B — DATADOG CCM CONFIGURATION
+## Step 12: Configure Cost Management Reader Where Required
 
-## 12. Step 7: Open the Azure CCM Setup in Datadog
+For subscription or resource-group scope, follow the current Datadog instructions to determine whether Cost Management Reader is required.
 
-**Responsible:** Airowire Implementation Team
+Where required:
 
-Once the customer confirms that the Azure exports and permissions are ready, proceed with the Datadog configuration.
+Navigate to:
 
-### Procedure
+Azure Portal > Subscriptions > Select Subscription > Access Control (IAM)
 
-1. Sign in to the correct Datadog organization.
-2. Navigate to the Cloud Cost Management setup.
-3. Open the Azure account configuration.
-4. Select the option to add an Azure account for CCM.
-5. Select **Manually**, following the configuration workflow shown in the Datadog screenshots.
-6. Select the appropriate **Scope Type**.
-7. Use **Billing Account** if that is the agreed and validated billing scope.
+1. Select Add.
+2. Select Add role assignment.
+3. Search for:
 
-**Expected Result:** The manual Azure CCM configuration form is ready for the customer's billing and storage details.
+   `Cost Management Reader`
+
+4. Select the role.
+5. Select Next.
+6. Select the existing Datadog App Registration.
+7. Review the assignment.
+8. Select Review + assign.
+
+Repeat for the relevant subscriptions or resource groups.
+
+**Note:** Do not assign unnecessary permissions. Follow the current Datadog requirements for the selected scope.
 
 ---
 
-## 13. Step 8: Configure Billing Account Details
+# 9. Configure Azure Cloud Cost Management in Datadog
 
-**Responsible:** Airowire Implementation Team
+After completing the Azure configuration, proceed with Datadog setup.
 
-1. Obtain the confirmed Billing Account ID from the customer.
-2. Enter the Billing Account ID in the Datadog form.
-3. Verify that the ID corresponds to the correct customer billing account.
-4. Confirm that the selected scope matches the customer's agreed configuration.
+## Step 1: Log in to Datadog
 
-**Expected Result:** The correct billing account is selected for CCM.
+1. Open the Trilegal Datadog organisation.
+2. Navigate to Cloud Cost Management.
+3. Open the Azure configuration or setup section.
 
----
+The exact menu names may vary depending on the Datadog interface and account configuration.
 
-## 14. Step 9: Configure Actual Bill Details
+## Step 2: Verify the Existing Azure Integration
 
-**Responsible:** Airowire Implementation Team
+1. Identify the existing Azure integration.
+2. Verify the Tenant ID.
+3. Verify the Application (Client) ID.
+4. Confirm that the correct App Registration is being used.
+5. Avoid creating a duplicate integration.
 
-In the **ACTUAL BILL** section, enter the details provided by the customer.
+## Step 3: Configure Billing Scope
 
-| Datadog Field | Value |
-|---|---|
-| Storage Account | Customer's Azure Storage Account name |
-| Storage Container | Container containing actual cost files |
-| Storage Directory | Actual export directory or path |
-| Export Name | Exact actual cost export name |
+Provide the required billing or subscription scope details.
 
-### Procedure
+Depending on the selected integration scope, this may include:
 
-1. Enter the Storage Account name.
-2. Enter the Storage Container name.
-3. Enter the actual cost export directory.
-4. Enter the exact actual cost export name.
-5. Verify each value against the customer-provided details.
+- Billing Account ID.
+- Azure Subscription ID.
+- Resource Group details.
 
-**Expected Result:** Datadog is configured with the location of the actual cost export.
+Use the exact identifiers from Azure.
 
----
+## Step 4: Configure Storage and Export Details
 
-## 15. Step 10: Configure Amortized Bill Details
+Provide the details requested by the Datadog configuration:
 
-**Responsible:** Airowire Implementation Team
+- Storage Account name.
+- Blob Container name.
+- Actual Cost export name.
+- Actual Cost export path.
+- Amortized Cost export name.
+- Amortized Cost export path.
 
-In the **AMORTIZED BILL** section, enter the amortized export details.
+The export paths must match the actual Azure export configuration.
 
-| Datadog Field | Value |
-|---|---|
-| Storage Account | Storage Account containing amortized cost files |
-| Storage Container | Container containing amortized cost files |
-| Storage Directory | Amortized export directory or path |
-| Export Name | Exact amortized cost export name |
+Do not guess or manually construct the paths.
 
-### Procedure
+## Step 5: Complete Configuration
 
-1. Enter the Storage Account name.
-2. Enter the Storage Container name.
-3. Enter the amortized export directory.
-4. Enter the exact amortized cost export name.
-5. Verify each value against the customer-provided details.
-
-If both exports use the same Storage Account and container, enter the same values in both sections while preserving the correct export paths and names.
-
-**Expected Result:** Datadog is configured with the location of the amortized cost export.
+1. Review the Azure identity.
+2. Verify the billing scope.
+3. Verify the Storage Account.
+4. Verify the Blob Container.
+5. Verify both export names and paths.
+6. Complete the configuration using the Datadog setup instructions.
+7. Check the configuration status and any reported errors.
 
 ---
 
-## 16. Step 11: Submit the Datadog CCM Configuration
+# 10. Optional Automation Using Terraform
 
-**Responsible:** Airowire Implementation Team
+For organisations that prefer Infrastructure as Code, parts of the Azure CCM configuration can be managed using Terraform.
 
-1. Review the Billing Account ID.
-2. Verify the actual cost export details.
-3. Verify the amortized cost export details.
-4. Confirm that the required Azure permissions have been assigned.
-5. Review the configuration for missing or incorrect values.
-6. Select **Add Account**.
-7. Review any validation messages returned by Datadog.
-8. Resolve errors before proceeding.
+This approach should be considered only after the manual integration requirements are confirmed.
 
-If the form reports an access or permission error, coordinate with the customer Azure administrator to verify the application identity and role assignments.
+Possible Terraform-managed components include:
 
-**Expected Result:** The Azure CCM account configuration is accepted by Datadog.
+- Azure Storage Account.
+- Azure Blob Container.
+- Azure role assignments.
+- Datadog Azure Usage Cost configuration.
 
----
+The Datadog Terraform resource is:
 
-## 17. Step 12: Validate Azure Cost Data in Datadog
+`datadog_azure_uc_config`
 
-**Responsible:** Airowire Implementation Team, with Customer Support
+Before using Terraform:
 
-After the configuration has been accepted:
+1. Verify the current Datadog Terraform provider version.
+2. Refer to the official resource schema.
+3. Confirm the required attributes and nested configuration blocks.
+4. Verify the export names and paths.
+5. Review the existing Datadog integration to avoid duplicate resources.
+6. Run `terraform plan`.
+7. Obtain approval before running `terraform apply`.
 
-1. Open Datadog Cloud Cost Management.
-2. Navigate to the available cost explorer or Azure cost views.
-3. Filter for the configured Azure billing account or subscriptions.
-4. Verify whether actual cost data is available.
-5. Verify whether amortized cost data is available.
-6. Review the reporting period and billing currency.
-7. Compare the imported cost data with the Azure export files.
-8. Investigate missing data, access errors, or unexpected cost differences.
-9. Record the validation results.
+Official Terraform reference:
 
-### Validation Checklist
+https://registry.terraform.io/providers/DataDog/datadog/latest/docs/resources/azure_uc_config
 
-| Validation Item | Status |
-|---|---|
-| Azure CCM Account Added | Pending |
-| Actual Cost Data Visible | Pending |
-| Amortized Cost Data Visible | Pending |
-| Billing Scope Correct | Pending |
-| Reporting Period Verified | Pending |
-| Currency Verified | Pending |
-| Export Data Compared | Pending |
-| Errors Investigated | Pending |
-
-**Expected Result:** Azure cost data is available in Datadog and is consistent with the configured billing exports, allowing for documented ingestion delays and billing adjustments.
-
-> **Note:** Initial cost data ingestion and stabilization may take time. Follow the current Datadog documentation for expected processing times before treating a delay as a failure.
+**Note:** Terraform configuration should be prepared using the actual Trilegal environment details. No placeholder configuration should be applied directly to production.
 
 ---
 
-## 18. Troubleshooting Guide
+# 11. Validation and Testing
 
-| Issue | Possible Cause | Recommended Action |
-|---|---|---|
-| Billing account is not accepted | Incorrect ID or unsupported scope | Verify the billing ID and supported scope |
-| Required export type is unavailable | Billing agreement or scope limitation | Confirm compatibility with the Azure FinOps team |
-| Actual cost data is missing | Export failed or incorrect path | Verify export status, files, and actual export details |
-| Amortized cost data is missing | Export failed or incorrect configuration | Verify the amortized export and directory |
-| Datadog cannot read the files | Missing or incorrect permissions | Verify Storage Blob Data Reader and application identity |
-| CCM configuration fails | Incorrect storage or export details | Validate all values against Azure |
-| Cost data is delayed | Export or ingestion processing delay | Check Azure execution status and allow the documented processing time |
-| Cost values differ | Different reporting periods, currencies, or cost definitions | Compare matching periods and actual versus amortized cost data |
+After completing the configuration, perform the following checks.
 
----
+## 11.1 Azure Validation Checklist
 
-## 19. Final Implementation Checklist
-
-### Customer / Azure Team
-
-- [ ] Billing agreement and scope confirmed.
-- [ ] Billing Account ID shared.
-- [ ] Subscription IDs shared where applicable.
-- [ ] Storage Account and container confirmed.
-- [ ] Actual cost export configured.
-- [ ] Amortized cost export configured.
-- [ ] Both exports executed successfully.
-- [ ] Export files verified in Azure Blob Storage.
-- [ ] Storage Blob Data Reader role assigned.
-- [ ] Additional required permissions assigned.
-- [ ] Export names and paths shared with Airowire.
-
-### Airowire / Datadog Team
-
-- [ ] Azure CCM setup opened in Datadog.
+- [ ] Correct Azure tenant selected.
 - [ ] Correct billing scope selected.
-- [ ] Billing Account ID entered.
-- [ ] Actual Bill details configured.
-- [ ] Amortized Bill details configured.
-- [ ] CCM account submitted successfully.
-- [ ] Actual cost data validated.
-- [ ] Amortized cost data validated.
-- [ ] Any errors investigated.
-- [ ] Customer informed of completion status.
-- [ ] Final configuration documented.
+- [ ] Actual Cost export created.
+- [ ] Amortized Cost export created.
+- [ ] Both exports completed successfully.
+- [ ] Export schedule configured.
+- [ ] Correct Storage Account selected.
+- [ ] Correct Blob Container selected.
+- [ ] Actual Cost files available in Blob Storage.
+- [ ] Amortized Cost files available in Blob Storage.
+- [ ] Datadog App Registration has the required storage permission.
+- [ ] Additional Cost Management permissions assigned where required.
+
+## 11.2 Datadog Validation Checklist
+
+- [ ] Existing Azure integration verified.
+- [ ] Correct Tenant ID configured.
+- [ ] Correct Application (Client) ID configured.
+- [ ] Correct billing scope configured.
+- [ ] Storage Account details verified.
+- [ ] Blob Container details verified.
+- [ ] Actual Cost export configured.
+- [ ] Amortized Cost export configured.
+- [ ] Export paths verified.
+- [ ] No permission errors.
+- [ ] Azure cost data visible in Datadog CCM.
+
+## 11.3 Cost Data Comparison
+
+Compare Azure Cost Management with Datadog CCM.
+
+Validate using the same:
+
+1. Billing scope.
+2. Subscription selection.
+3. Date range.
+4. Currency (INR).
+5. Cost dataset.
+6. Applicable filters.
+
+Allow for Azure export generation and Datadog processing delays before determining whether there is a data mismatch.
 
 ---
 
-## 20. Customer Communication Template
+# 12. Troubleshooting
 
-**Subject: Azure Cloud Cost Management (CCM) – Configuration Prerequisites**
-
-Hi Anil and Anoop,
-
-As the Azure account integration with Datadog has been completed, we are proceeding with the next phase: configuring Cloud Cost Management (CCM).
-
-To complete the configuration, we request your support with the following Azure-side activities:
-
-1. Confirm the Azure billing agreement type and Billing Account ID.
-2. Verify the availability of the required actual and amortized cost export types.
-3. Create or validate the required cost exports.
-4. Configure the Azure Blob Storage destination.
-5. Run both exports and confirm that the files are available.
-6. Assign the required permissions to the Datadog Azure App Registration.
-7. Share the billing scope, storage details, export names, directory paths, and permission confirmation with us.
-
-Once these activities are completed, the Airowire team will configure CCM in Datadog and validate the Azure cost data ingestion.
-
-Please refer to the attached step-by-step implementation guide for detailed instructions.
-
-Thank you.
+| Issue | Possible Reason | Recommended Action |
+|---|---|---|
+| Export creation fails | Insufficient billing permissions | Contact Azure billing administrator or CSP partner |
+| Actual Cost export unavailable | Dataset not supported at selected scope | Confirm availability with CSP partner |
+| Amortized Cost export unavailable | Billing agreement or scope limitation | Confirm supported options |
+| Storage access denied | Missing Blob permissions | Verify Storage Blob Data Reader assignment |
+| Datadog cannot read files | Incorrect application identity or storage permission | Verify Client ID and role assignment |
+| Export files missing | Export has not completed or destination is incorrect | Check export job status and destination |
+| Cost data not visible | Processing delay or incorrect configuration | Verify exports, paths, scope and Datadog status |
+| Cost mismatch | Different date range, scope or cost dataset | Compare matching Azure and Datadog filters |
+| Permission error | Missing role or network restriction | Verify Azure RBAC and network access requirements |
 
 ---
 
-## 21. Official Documentation
+# 13. Security and Access Considerations
 
-- [Datadog Azure Cloud Cost Management Setup](https://docs.datadoghq.com/cloud_cost_management/setup/azure/)
-- [Microsoft Azure Cost Management Exports](https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/tutorial-improved-exports)
+The following security practices must be followed:
 
----
-
-## 22. Implementation Status
-
-| Activity | Current Status |
-|---|---|
-| Existing Azure Integration | Completed |
-| Billing Scope Confirmation | Pending |
-| Azure Cost Exports | Pending Validation |
-| Azure Storage Permissions | Pending Validation |
-| Datadog CCM Configuration | Pending |
-| Cost Data Validation | Pending |
-| Final Handover | Pending |
+1. Reuse the existing approved Datadog App Registration wherever possible.
+2. Assign only the permissions required for the integration.
+3. Keep Blob Containers private.
+4. Do not enable anonymous public access.
+5. Do not share Azure credentials, Client Secrets, Storage Account keys, or SAS tokens through email.
+6. Follow Trilegal's Azure security and governance policies.
+7. Use approved Storage Account locations and configurations.
+8. Review access permissions periodically.
 
 ---
 
-## 23. Conclusion
+# 14. Roles and Responsibilities
 
-The existing Azure integration provides the foundation for Datadog's Azure monitoring. Cloud Cost Management requires a separate configuration to ingest and analyze Azure billing data.
-
-The implementation will be completed through coordinated activities between the customer Azure team and Airowire.
-
-The recommended approach is:
-
-**Confirm Billing Scope → Configure Exports → Grant Access → Configure Datadog CCM → Validate Cost Data → Document and Handover**
-
-Airowire will guide the customer through the required Azure prerequisites and complete the Datadog-side configuration once the required information and permissions are available.
+| Activity | Trilegal Azure Infra Team | CSP Partner | Airowire / Datadog Team |
+|---|---|---|---|
+| Confirm billing agreement | Support | Responsible | Consulted |
+| Confirm billing scope | Support | Responsible | Consulted |
+| Confirm export availability | Support | Responsible | Consulted |
+| Identify existing Storage Account | Responsible | Consulted | Guide |
+| Create Storage Account if required | Responsible | Support | Guide |
+| Create Blob Container if required | Responsible | Support | Guide |
+| Configure Azure cost exports | Responsible / as authorised | Support / as authorised | Guide |
+| Assign Azure permissions | Responsible | Support | Guide |
+| Configure Datadog CCM | Support | Consulted | Responsible |
+| Validate cost data | Support | Support | Responsible |
 
 ---
 
-## 24. Contact
+# 15. Information Required from Trilegal
 
+Before proceeding with implementation, the Trilegal Azure Infra team is requested to confirm the following:
 
+| No. | Confirmation Required | Response |
+|---|---|---|
+| 1 | What is the exact Azure CSP billing agreement type? | Pending |
+| 2 | Is the billing scope accessible to Trilegal or managed by the CSP partner? | Pending |
+| 3 | Are Actual Cost exports available? | Pending |
+| 4 | Are Amortized Cost exports available? | Pending |
+| 5 | Can the three Azure subscriptions be covered by the selected export scope? | Pending |
+| 6 | Is there an existing Storage Account that can be reused? | Pending |
+| 7 | Is there an existing Blob Container suitable for cost exports? | Pending |
+| 8 | If no suitable storage exists, can a dedicated Storage Account and container be created? | Pending |
+| 9 | Can the existing Datadog App Registration be granted the required storage access? | Pending |
+| 10 | Who will configure the exports: Trilegal Infra team or CSP partner? | Pending |
 
-**Airowire Networks Pvt. Ltd.**
+These confirmations will help determine the correct implementation approach and avoid unnecessary Azure resource creation.
 
-**Datadog Advanced Partner**
+---
 
-Datadog Onboarding | Cloud Cost Management | Infrastructure Monitoring | Optimization | Implementation | Support
+# 16. Implementation Completion Criteria
 
+The integration will be considered successfully completed when:
 
-**Dr. Shivanand Poojara** — shivanand@airowire.com
-**Anoop Ravikumar Biradar** - Anoop@airowire.com
-**Anil Kumar** - Anil@airowire.com
-**Mohammed Saqlain** - Mohammed@airowire.com
+1. The Azure billing agreement and export scope are confirmed.
+2. Actual Cost and Amortized Cost export availability is confirmed.
+3. Both exports are configured successfully.
+4. Export files are generated in Azure Blob Storage.
+5. The Datadog application has the required permissions.
+6. The Azure CCM configuration is completed in Datadog.
+7. Cost data is visible in Datadog CCM.
+8. Azure and Datadog cost values are validated using matching filters.
+
+---
+
+# 17. Official Documentation
+
+### Datadog Documentation
+
+Azure Cloud Cost Management Setup:
+
+https://docs.datadoghq.com/cloud_cost_management/setup/azure/
+
+Datadog Cloud Cost Management:
+
+https://docs.datadoghq.com/cloud_cost_management/
+
+Datadog Terraform Provider:
+
+https://registry.terraform.io/providers/DataDog/datadog/latest/docs/resources/azure_uc_config
+
+### Microsoft Documentation
+
+Azure Cost Management Exports:
+
+https://learn.microsoft.com/en-in/azure/cost-management-billing/costs/tutorial-improved-exports
+
+Microsoft Partner Billing:
+
+https://learn.microsoft.com/en-us/azure/cost-management-billing/costs/get-started-partners
+
+Azure Role-Based Access Control:
+
+https://learn.microsoft.com/en-us/azure/role-based-access-control/overview
+
+---
+
+# 18. Conclusion and Next Steps
+
+The Azure Cloud Cost Management integration will provide Trilegal with centralised visibility into Azure cloud expenditure through Datadog.
+
+Before starting the implementation, the Trilegal Azure Infra team should:
+
+1. Confirm the CSP billing agreement and supported billing scope.
+2. Verify the availability of Actual Cost and Amortized Cost exports.
+3. Identify whether an existing Storage Account and Blob Container can be reused.
+4. Confirm the required permissions for the existing Datadog App Registration.
+5. Select the appropriate implementation approach.
+
+Once these prerequisites are confirmed, the Azure cost exports can be configured and connected to Datadog.
+
+**Expected Outcome:** Successful integration of Azure billing and cost data with Datadog Cloud Cost Management, providing visibility into Actual Cost, Amortized Cost, and Azure cloud expenditure.
+
+---
+
+**Document Prepared By: Airowire Networks**  
+**For: Trilegal – Azure Cloud Cost Management Integration**
 
