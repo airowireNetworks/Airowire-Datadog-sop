@@ -1,301 +1,351 @@
-<div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:40px;">
-  <img src="/images/airowire-logo.png" width="260">
-  <img src="/images/datadog.png" width="150">
+
+<div style="display:flex; justify-content:space-between; align-items:center; width:100%; margin-bottom:25px;">
+  <img src="/images/airowire-logo.png" width="220">
+  <img src="/images/datadog.png" width="130">
 </div>
 
-# Datadog Account – Current Environment Understanding & Usage Assessment
+# Datadog APM Integration Guide – Go Application on GKE
 
 ---
 
-## Account Overview
+## 1. Document Information
 
 | Field | Details |
 |---|---|
-| **Monitoring Platform** | Datadog |
-| **Account / Environment** | StyliFZE |
-| **Review Date** | 04 November 2026 |
-| **Primary Scope** | Subscription, Infrastructure, Kubernetes, Monitoring, Dashboards and Log Management |
-| **Assessment Type** | Current Environment Understanding |
+| Client | Landmark |
+| Prepared By | Airowire Networks Pvt. Ltd. |
+| Application | Go |
+| Go Runtime | 1.27.2 |
+| Platform | Google Kubernetes Engine (GKE) |
+| Monitoring | Datadog APM |
+| Method | Manual Instrumentation |
 
----
+## 2. Overview
 
-# 1. Executive Summary
+This guide explains how to enable Datadog APM for a Go application running on GKE.
 
-This report documents our current understanding of the Datadog environment, including the existing subscription, infrastructure utilization, Kubernetes resources, monitoring configuration, dashboards and log-management activity.
+Follow these steps to complete the integration:
 
-The key observations are:
+1. Verify the Datadog Agent.
+2. Enable APM in the Agent.
+3. Install the Datadog Go Tracer.
+4. Instrument the Go application.
+5. Configure Kubernetes.
+6. Deploy and verify traces.
 
-- Existing Infra Enterprise commitment: **50 hosts**.
-- Existing APM Enterprise commitment: **18 hosts**.
-- Current reported Infra Host usage: **18 hosts**.
-- Containers Explorer inventory: **583 containers**.
-- Kubernetes Overview: **1 cluster, 20 nodes, 399 pods and 613 containers**.
-- November container usage: **23.1K container-hours**.
-- Total monitors: **21**.
-- Total dashboards: **10**.
-- Log Management dashboard: **5.1G ingested and 5.1G indexed logs**.
-- Overall exclusion ratio: **0.00%**.
+**Architecture:**
 
-The differences in container and node counts require further validation. The relationship between the 50-host commitment and container entitlement also needs confirmation.
+```text
+Go Application (GKE Pod)
+          |
+          v
+   Datadog Go Tracer
+          |
+          v
+ Datadog Agent (GKE)
+      TCP 8126
+          |
+          v
+     Datadog Cloud
+          |
+          v
+       Datadog APM
+```
 
----
+## 3. Step 1 – Verify GKE and Datadog Agent
 
-# 2. Existing Subscription Commitments
+Connect to the GKE cluster:
 
-| Service / Feature | Committed Quantity |
-|---|---:|
-| Infra Enterprise | 50 hosts |
-| APM Enterprise | 18 hosts |
-| Ingested Logs | 12,750 GB |
-| Flex Logs Stored (Starter) | 6,600 M |
+```bash
+gcloud container clusters get-credentials <CLUSTER_NAME> \
+  --region <REGION> \
+  --project <PROJECT_ID>
+```
 
----
+Verify cluster connectivity:
 
-# 3. Infrastructure and Container Utilization
+```bash
+kubectl get nodes
+```
 
-## 3.1 Infrastructure Usage
+Identify the Datadog namespace:
 
-| Metric | Quantity |
-|---|---:|
-| Committed Infra Enterprise Hosts | 50 |
-| Current Infra Hosts | 18 |
-| Difference | 32 |
+```bash
+kubectl get pods -A | grep datadog
+```
 
-Current reported infrastructure usage represents **36% of the 50-host commitment**.
+Check Agent health:
 
-The remaining 32 hosts represent the difference between committed quantity and reported usage. This does not automatically establish additional available container entitlement.
+```bash
+kubectl get daemonset -n <DATADOG_NAMESPACE>
+kubectl get pods -n <DATADOG_NAMESPACE>
+```
 
-## 3.2 Container Inventory
+**Expected result:** Datadog Agent Pods should be running.
 
-| Resource | Count |
-|---|---:|
-| Containers Explorer | 583 |
-| Kubernetes Overview | 613 |
+## 4. Step 2 – Enable APM in Datadog Agent
 
-The two views currently report different container counts. This requires validation using a consistent time range and resource scope.
+Back up the existing Helm configuration:
 
-## 3.3 Points Requiring Clarification
+```bash
+helm get values <RELEASE_NAME> \
+  -n <DATADOG_NAMESPACE> -a > datadog-backup.yaml
+```
 
-1. Do we have additional hosts running containers beyond the 18 reported Infra Hosts?
-2. Are there other environments or Kubernetes clusters contributing to container usage?
-3. Is the container entitlement calculated against all 50 committed hosts or actual hosts in use?
-4. Are the reported containers within the existing subscription entitlement?
+Open the existing Helm values file and add:
 
----
+```yaml
+datadog:
+  apm:
+    portEnabled: true
+    port: 8126
+```
 
-# 4. November 2026 Usage Overview
+Apply the updated configuration using the existing Helm release and chart:
 
-| Billing Dimension | Current Usage |
-|---|---:|
-| AI Credits | 68 AI credits |
-| Containers | 23.1K container-hours |
-| Custom Metrics | 4 |
-| Flex Logs Stored (Starter) | 10.5B logs |
-| Infra Hosts | 18 |
-| Ingested Logs | 878 GB |
+```bash
+helm upgrade <RELEASE_NAME> <CHART_REFERENCE> \
+  -n <DATADOG_NAMESPACE> \
+  -f <VALUES_FILE>
+```
 
----
+Verify:
 
-# 5. Kubernetes Environment Overview
+```bash
+kubectl get pods -n <DATADOG_NAMESPACE>
+```
 
-| Kubernetes Resource | Quantity |
-|---|---:|
-| Clusters | 1 |
-| Namespaces | 48 |
-| Nodes | 20 |
-| Deployments | 88 |
-| Pods | 399 |
-| Containers | 613 |
-| Replica Sets | 155 |
-| Services | 174 |
+Check Agent status:
 
-## 5.1 Cluster Inventory
+```bash
+kubectl exec -n <DATADOG_NAMESPACE> <AGENT_POD> -- agent status
+```
 
-**Cluster Name:** `stylishopprod`
+**Expected result:** APM trace intake should be enabled on TCP port `8126`.
 
-The cluster inventory reports 19 nodes, whereas the Kubernetes Overview reports 20 nodes.
+## 5. Step 3 – Install Datadog Go Tracer
 
-This difference requires validation.
+Navigate to the Go application source directory:
 
-## 5.2 Recommended Actions
+```bash
+cd <APPLICATION_DIRECTORY>
+```
 
-- Validate the current Kubernetes node count.
-- Review node readiness and workload health.
-- Review failed or unhealthy pods.
-- Reconcile Kubernetes and Containers Explorer counts.
-- Confirm whether additional clusters exist.
+Install the Datadog Go Tracer v2 and HTTP integration using compatible, approved versions:
 
----
+```bash
+go get github.com/DataDog/dd-trace-go/v2@<TRACER_VERSION>
 
-# 6. Monitoring and Alerting
+go get github.com/DataDog/dd-trace-go/contrib/net/http/v2@<INTEGRATION_VERSION>
+```
 
-The monitor inventory includes:
+Update dependencies:
 
-| Monitor Pack | Count |
-|---|---:|
-| Kubernetes Monitors | 8 |
-| Host Monitors | 7 |
-| Custom Monitors | 6 |
-| **Total** | **21** |
+```bash
+go mod tidy
+```
 
-## 6.1 Monitor Status
+Verify:
 
-| Status | Count |
-|---|---:|
-| Triggered | 5 |
-| OK | 16 |
-| Warn | 0 |
-| No Data | 0 |
+```bash
+go test ./...
+go build ./...
+```
 
-## 6.2 Muted Monitor Status
+**Expected result:** Dependencies should install and the application should build successfully.
 
-| Status | Count |
-|---|---:|
-| Muted | 15 |
-| Not Muted | 6 |
+Check Go compatibility before selecting tracer versions:
 
-## 6.3 Recommendations
+https://docs.datadoghq.com/tracing/trace_collection/compatibility/go/
 
-- Review the five triggered alerts.
-- Validate notification recipients and escalation paths.
-- Review the 15 muted monitors.
-- Confirm monitor ownership.
-- Ensure critical monitors have appropriate notification configurations.
+## 6. Step 4 – Instrument the Go Application
 
----
+Import the Datadog packages:
 
-# 7. Dashboard Inventory
+```go
+import (
+    "net/http"
 
-The Datadog account currently displays 10 dashboards.
+    httptrace "github.com/DataDog/dd-trace-go/contrib/net/http/v2"
+    "github.com/DataDog/dd-trace-go/v2/ddtrace/tracer"
+)
+```
 
-| Dashboard | Owner |
+Initialize the tracer:
+
+```go
+tracer.Start()
+defer tracer.Stop()
+```
+
+Instrument the HTTP handler:
+
+```go
+mux := http.NewServeMux()
+
+mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
+    w.WriteHeader(http.StatusOK)
+    w.Write([]byte("OK"))
+})
+
+handler := httptrace.WrapHandler(
+    mux,
+    "go-application",
+    "/",
+)
+
+http.ListenAndServe(":8080", handler)
+```
+
+Integrate this into the application's existing server lifecycle, preserving its current routing and graceful shutdown.
+
+**Expected result:** Incoming HTTP requests should generate Datadog traces.
+
+## 7. Step 5 – Configure Kubernetes Deployment
+
+Open the existing application Deployment YAML.
+
+Add the following environment variables under the application container:
+
+```yaml
+env:
+  - name: DD_SERVICE
+    value: "go-application"
+
+  - name: DD_ENV
+    value: "staging"
+
+  - name: DD_VERSION
+    value: "1.0.0"
+
+  - name: DD_AGENT_HOST
+    valueFrom:
+      fieldRef:
+        fieldPath: status.hostIP
+
+  - name: DD_TRACE_AGENT_PORT
+    value: "8126"
+```
+
+Update the service name, environment and application version according to the Landmark application.
+
+**Important:** Ensure the Agent is reachable through the node IP on TCP port `8126`. Preserve all existing Deployment settings.
+
+## 8. Step 6 – Deploy the Application
+
+Build and publish the updated application image using the existing CI/CD pipeline.
+
+Apply the updated Deployment:
+
+```bash
+kubectl apply -f deployment.yaml -n <APP_NAMESPACE>
+```
+
+Check the rollout:
+
+```bash
+kubectl rollout status deployment/<DEPLOYMENT_NAME> \
+  -n <APP_NAMESPACE>
+```
+
+Check application Pods:
+
+```bash
+kubectl get pods -n <APP_NAMESPACE>
+```
+
+Check application logs:
+
+```bash
+kubectl logs deployment/<DEPLOYMENT_NAME> \
+  -n <APP_NAMESPACE> --tail=100
+```
+
+**Expected result:** Application Pods should be running without unexpected errors.
+
+## 9. Step 7 – Verify Datadog APM
+
+Generate requests against an existing application endpoint:
+
+```bash
+curl -i https://<APPLICATION_URL>/<ENDPOINT>
+```
+
+Check Agent status:
+
+```bash
+kubectl exec -n <DATADOG_NAMESPACE> <AGENT_POD> -- agent status
+```
+
+Open the Datadog dashboard:
+
+**Datadog → APM → Services**
+
+Search for the configured service name.
+
+Verify:
+
+- Service name
+- Environment
+- Application version
+- Request traces
+- Request latency
+- Error information
+
+<badge color="success">Success criteria</badge>
+
+The integration is complete when actual application requests generate traces that are visible in Datadog APM.
+
+## 10. Troubleshooting
+
+| Issue | Action |
 |---|---|
-| Log Management – Estimated Usage | Richa Sharma |
-| Kubernetes Restarts Dashboard | Styli Infra Admin |
-| [Saurabh] logs | Saurabh |
-| stylishop.com – Total Traffic and Failures | Styli Infra Admin |
-| Datadog Usage vs Commitments | Styli Infra Admin |
-| Log Ingestion Bytes – Service Breakdown | Richa Sharma |
-| Log Analytics – Volume, Severity and Optimization | Prabhupad Nayak |
-| Kubernetes Resource Utilization | Styli Infra Admin |
-| Styli's Dashboard | Styli Infra Admin |
-| Microservices Health – Production (Logs) | Styli Infra Admin |
+| Service not visible | Verify tracer initialization and service name |
+| No traces | Generate requests and check instrumentation |
+| Connection refused | Verify Agent APM port `8126` |
+| Connection timeout | Check firewall and NetworkPolicies |
+| Application startup failure | Check Go dependencies and application logs |
+| Incorrect environment | Verify `DD_ENV` |
 
-## 7.1 Recommendations
+## 11. Rollback
 
-- Review dashboard ownership.
-- Validate team access and sharing.
-- Review usage and commitment dashboards.
-- Identify outdated or duplicate dashboards.
-- Ensure operational dashboards are accessible to relevant teams.
+If the application deployment causes issues:
 
----
+```bash
+kubectl rollout undo deployment/<DEPLOYMENT_NAME> \
+  -n <APP_NAMESPACE>
+```
 
-# 8. Log Management Analysis
+If the Agent configuration needs rollback, identify the previous Helm revision:
 
-The Log Management – Estimated Usage dashboard reports:
+```bash
+helm history <RELEASE_NAME> -n <DATADOG_NAMESPACE>
+```
 
-| Metric | Value |
-|---|---:|
-| Ingested Logs | 5.1G |
-| Indexed Logs | 5.1G |
-| Overall Exclusion Ratio | 0.00% |
+Then restore the approved previous revision:
 
-## 8.1 Observations
+```bash
+helm rollback <RELEASE_NAME> <REVISION> \
+  -n <DATADOG_NAMESPACE>
+```
 
-- Log ingestion and indexing are displayed at 5.1G.
-- The displayed exclusion ratio is 0.00%.
-- Service-level log distribution is available.
-- Further analysis is required to identify high-volume services.
+## 12. Official References
 
-## 8.2 Usage Reconciliation
-
-The Log Management dashboard reports 5.1G, while the Usage Overview reports 878 GB of ingested logs.
-
-These figures should be reconciled after confirming the metric definitions, units and reporting periods.
-
-## 8.3 Recommendations
-
-- Validate log ingestion and indexing measurements.
-- Review high-volume services.
-- Validate exclusion and filtering configurations.
-- Review log retention settings.
-- Reconcile dashboard values with billing usage.
+- Go APM: https://docs.datadoghq.com/tracing/trace_collection/dd_libraries/go/
+- Go Compatibility: https://docs.datadoghq.com/tracing/trace_collection/compatibility/go/
+- Kubernetes APM: https://docs.datadoghq.com/containers/kubernetes/apm/
 
 ---
 
-# 9. Key Findings
-
-| Area | Current Understanding | Follow-up |
-|---|---|---|
-| Infra Enterprise | 50 committed; 18 reported | Validate host utilization |
-| APM Enterprise | 18 committed | Validate APM usage |
-| Containers | 583 / 613 reported | Reconcile counts |
-| Container-hours | 23.1K | Validate billing entitlement |
-| Kubernetes | 1 cluster, 20 nodes | Reconcile node inventory |
-| Monitors | 21 total, 5 triggered | Review active alerts |
-| Muted Monitors | 15 muted | Validate mute status |
-| Dashboards | 10 available | Review ownership |
-| Log Management | 5.1G ingested and indexed | Reconcile with billing |
-| Ingested Logs | 878 GB | Validate monthly utilization |
-
----
-
-# 10. Recommended Action Plan
-
-| Priority | Action | Expected Outcome |
-|---|---|---|
-| High | Validate 50-host Infra Enterprise commitment | Understand subscription utilization |
-| High | Confirm container entitlement | Clarify container billing |
-| High | Reconcile 583 and 613 container counts | Accurate inventory |
-| High | Review triggered monitors | Improve alert visibility |
-| High | Review muted monitors | Validate monitoring coverage |
-| Medium | Reconcile Kubernetes node count | Accurate cluster inventory |
-| Medium | Validate APM utilization | Understand APM commitment |
-| Medium | Reconcile log usage | Accurate billing visibility |
-| Medium | Review dashboard access | Improve operational visibility |
-
----
-
-# 11. Items Requiring Confirmation
-
-1. Are additional hosts running containers beyond the 18 reported Infra Hosts?
-2. Does the remaining 32 committed host capacity include additional container entitlement?
-3. How is container usage calculated under the existing subscription?
-4. Why do the Datadog views report 583 and 613 containers?
-5. Why do the Kubernetes views report 19 and 20 nodes?
-6. What is the current APM Enterprise host utilization?
-7. How do the 5.1G dashboard figures reconcile with 878 GB of ingested logs?
-8. What is the exact billing unit and period for Flex Logs Stored (Starter)?
-
----
-
-# 12. Conclusion
-
-The current Datadog environment provides visibility into infrastructure, Kubernetes resources, monitoring, dashboards and log-management activity.
-
-The existing subscription includes **50 Infra Enterprise hosts and 18 APM Enterprise hosts**.
-
-The November 2026 Usage Overview reports **18 Infra Hosts, 23.1K container-hours and 878 GB of ingested logs**.
-
-The primary areas requiring further validation are:
-
-- Infrastructure host commitment and utilization.
-- Container entitlement and billing.
-- Kubernetes resource inventory.
-- Monitoring and alert configuration.
-- Log ingestion and indexing utilization.
-
-The next step is to validate these findings with the relevant account owner and Datadog team and use this assessment as the baseline for ongoing environment reviews.
-
----
-
-# 13. Review Ownership
+**Prepared By**
+# 28. Contact
 
 **Airowire Networks Pvt. Ltd.**
 
-**Datadog Observability Team**
+**Datadog Observability & Cloud SIEM Team**`
+Dr. Shivanand Poojara
 
-*Document Classification: Current Environment Understanding & Usage Assessment*
+shivanand@airowire.com
 
-*Review Date: 04 November 2026*
+
+
