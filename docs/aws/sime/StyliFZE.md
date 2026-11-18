@@ -4,7 +4,7 @@
   <img src="/images/datadog.png" width="130">
 </div>
 
-# Datadog APM Integration Guide – Go Application on GKE
+# Datadog Custom Role Configuration & Google Workspace SAML SSO
 
 ---
 
@@ -14,338 +14,394 @@
 |---|---|
 | Client | Landmark |
 | Prepared By | Airowire Networks Pvt. Ltd. |
-| Application | Go |
-| Go Runtime | 1.27.2 |
-| Platform | Google Kubernetes Engine (GKE) |
-| Monitoring | Datadog APM |
-| Method | Manual Instrumentation |
+| Platform | Datadog |
+| Features | Custom Roles and Role-Based Access Control (RBAC) |
+| Authentication | Google Workspace SAML SSO |
+| Implementation | Proposed Use Cases and Access Model |
+| Document Status | Proposed for Client Review and Approval |
 
 ## 2. Overview
 
-This guide explains how to enable Datadog APM for a Go application running on GKE.
+This document outlines Airowire's proposed approach for implementing Datadog Custom Roles and Google Workspace SAML SSO for Landmark.
 
-Follow these steps to complete the integration:
+The objective is to establish structured access management across different teams by assigning appropriate Datadog permissions based on user responsibilities.
 
-1. Verify the Datadog Agent.
-2. Enable APM in the Agent.
-3. Install the Datadog Go Tracer.
-4. Instrument the Go application.
-5. Configure Kubernetes.
-6. Deploy and verify traces.
+Airowire has identified five proposed Custom Role use cases for Landmark.
+
+The proposed implementation includes:
+
+1. Review proposed Custom Role use cases.
+2. Define the required permissions.
+3. Create approved Custom Roles in Datadog.
+4. Configure Google Workspace SAML SSO.
+5. Configure SAML Group Mappings.
+6. Validate authentication and role assignments.
 
 **Architecture:**
 
 ```text
-Go Application (GKE Pod)
-          |
-          v
-   Datadog Go Tracer
-          |
-          v
- Datadog Agent (GKE)
-      TCP 8126
-          |
-          v
-     Datadog Cloud
-          |
-          v
-       Datadog APM
+       Google Workspace
+              |
+              v
+      SAML Authentication
+              |
+              v
+           Datadog
+              |
+              v
+       SAML Group Mapping
+              |
+              v
+      Custom Role Assignment
+              |
+       +------+------+------+
+       |      |      |      |
+       v      v      v      v
+     Infra   Dev    NOC  Security
+              |
+              v
+         Management
 ```
 
-## 3. Step 1 – Verify GKE and Datadog Agent
+## 3. Airowire – Proposed Custom Role Use Cases
 
-Connect to the GKE cluster:
+Airowire recommends the following five Custom Role use cases based on Landmark's monitoring and operational requirements.
 
-```bash
-gcloud container clusters get-credentials <CLUSTER_NAME> \
-  --region <REGION> \
-  --project <PROJECT_ID>
-```
+### 3.1 Use Case 1 – Infrastructure Monitoring Engineer
 
-Verify cluster connectivity:
+**Proposed by Airowire**
 
-```bash
-kubectl get nodes
-```
+**Purpose:** Enable infrastructure engineers to monitor infrastructure resources, Kubernetes clusters, containers and system performance.
 
-Identify the Datadog namespace:
+**Recommended Access:**
 
-```bash
-kubectl get pods -A | grep datadog
-```
+- Infrastructure and host monitoring.
+- Kubernetes and container metrics.
+- Infrastructure dashboards.
+- Metrics and events.
+- Monitor viewing and approved monitor management.
+- Network Monitoring visibility.
 
-Check Agent health:
+**Access Restrictions:**
 
-```bash
-kubectl get daemonset -n <DATADOG_NAMESPACE>
-kubectl get pods -n <DATADOG_NAMESPACE>
-```
+- No user management access.
+- No billing administration.
+- No unrestricted organization settings access.
 
-**Expected result:** Datadog Agent Pods should be running.
+### 3.2 Use Case 2 – Application Developer
 
-## 4. Step 2 – Enable APM in Datadog Agent
+**Proposed by Airowire**
 
-Back up the existing Helm configuration:
+**Purpose:** Enable application developers to investigate application performance and troubleshoot application-related issues.
 
-```bash
-helm get values <RELEASE_NAME> \
-  -n <DATADOG_NAMESPACE> -a > datadog-backup.yaml
-```
+**Recommended Access:**
 
-Open the existing Helm values file and add:
+- APM services and distributed traces.
+- Application performance metrics.
+- Application logs.
+- Service dashboards.
+- Application monitors.
 
-```yaml
-datadog:
-  apm:
-    portEnabled: true
-    port: 8126
-```
+**Access Restrictions:**
 
-Apply the updated configuration using the existing Helm release and chart:
+- No user administration.
+- No billing access.
+- No unrestricted organization administration.
 
-```bash
-helm upgrade <RELEASE_NAME> <CHART_REFERENCE> \
-  -n <DATADOG_NAMESPACE> \
-  -f <VALUES_FILE>
-```
+### 3.3 Use Case 3 – NOC / Operations Engineer
 
-Verify:
+**Proposed by Airowire**
 
-```bash
-kubectl get pods -n <DATADOG_NAMESPACE>
-```
+**Purpose:** Enable NOC and operations teams to monitor infrastructure health, investigate alerts and respond to operational incidents.
 
-Check Agent status:
+**Recommended Access:**
 
-```bash
-kubectl exec -n <DATADOG_NAMESPACE> <AGENT_POD> -- agent status
-```
+- Infrastructure dashboards.
+- Monitors and alerts.
+- Logs and events.
+- Network Monitoring.
+- Incident management.
+- Approved monitor configuration.
 
-**Expected result:** APM trace intake should be enabled on TCP port `8126`.
+**Access Restrictions:**
 
-## 5. Step 3 – Install Datadog Go Tracer
+- No billing administration.
+- No user management.
+- No unrestricted organization administration.
 
-Navigate to the Go application source directory:
+### 3.4 Use Case 4 – Security Analyst
 
-```bash
-cd <APPLICATION_DIRECTORY>
-```
+**Proposed by Airowire**
 
-Install the Datadog Go Tracer v2 and HTTP integration using compatible, approved versions:
+**Purpose:** Enable security teams to investigate security events and monitor security-related activities through Datadog Cloud SIEM.
 
-```bash
-go get github.com/DataDog/dd-trace-go/v2@<TRACER_VERSION>
+**Recommended Access:**
 
-go get github.com/DataDog/dd-trace-go/contrib/net/http/v2@<INTEGRATION_VERSION>
-```
+- Cloud SIEM security signals.
+- Security dashboards.
+- Security events.
+- Relevant security findings.
+- Approved security monitoring resources.
 
-Update dependencies:
+**Access Restrictions:**
 
-```bash
-go mod tidy
-```
+- No unrestricted organization administration.
+- No billing administration.
+- No unnecessary infrastructure configuration permissions.
 
-Verify:
+### 3.5 Use Case 5 – Management / Executive Viewer
 
-```bash
-go test ./...
-go build ./...
-```
+**Proposed by Airowire**
 
-**Expected result:** Dependencies should install and the application should build successfully.
+**Purpose:** Provide management and stakeholders with visibility into infrastructure health, application performance and monitoring reports without allowing configuration changes.
 
-Check Go compatibility before selecting tracer versions:
+**Recommended Access:**
 
-https://docs.datadoghq.com/tracing/trace_collection/compatibility/go/
+- Infrastructure dashboards.
+- APM dashboards.
+- Monitor and SLO visibility.
+- Approved logs and monitoring reports.
 
-## 6. Step 4 – Instrument the Go Application
+**Access Restrictions:**
 
-Import the Datadog packages:
+- No dashboard modifications.
+- No monitor modifications.
+- No user management.
+- No billing administration.
 
-```go
-import (
-    "net/http"
+## 4. Airowire – Proposed Role and Permission Matrix
 
-    httptrace "github.com/DataDog/dd-trace-go/contrib/net/http/v2"
-    "github.com/DataDog/dd-trace-go/v2/ddtrace/tracer"
-)
-```
+| Proposed Custom Role | Recommended Access | Permission Level |
+|---|---|---|
+| Infrastructure Monitoring Engineer | Hosts, Kubernetes, Containers, Metrics | View + Selected Management |
+| Application Developer | APM, Traces, Application Logs | View |
+| NOC / Operations Engineer | Infrastructure, Monitors, Events | View + Selected Management |
+| Security Analyst | Cloud SIEM, Security Events | View |
+| Management / Executive Viewer | Dashboards, SLOs, Reports | Read Only |
 
-Initialize the tracer:
+**Note:** The above use cases and permission levels are recommendations from Airowire and are subject to Landmark's review and approval.
 
-```go
-tracer.Start()
-defer tracer.Stop()
-```
+## 5. Prerequisites
 
-Instrument the HTTP handler:
+Before starting the implementation, ensure the following requirements are met:
 
-```go
-mux := http.NewServeMux()
+- Datadog Administrator access.
+- Google Workspace Super Administrator access.
+- SAML SSO enabled in the Datadog organization.
+- Access to Google Admin Console.
+- Required Google Workspace user groups created.
+- Proposed Custom Roles reviewed and approved by Landmark.
 
-mux.HandleFunc("/health", func(w http.ResponseWriter, r *http.Request) {
-    w.WriteHeader(http.StatusOK)
-    w.Write([]byte("OK"))
-})
+## 6. Step 1 – Create Custom Roles in Datadog
 
-handler := httptrace.WrapHandler(
-    mux,
-    "go-application",
-    "/",
-)
+1. Log in to the Datadog organization.
+2. Navigate to **Organization Settings**.
+3. Open **Roles**.
+4. Click **New Role**.
+5. Enter the required Custom Role name.
+6. Add a description explaining the role's purpose.
+7. Select permissions based on the approved use case.
+8. Review the selected permissions.
+9. Click **Save**.
 
-http.ListenAndServe(":8080", handler)
-```
+**Example – Infrastructure Monitoring Engineer**
 
-Integrate this into the application's existing server lifecycle, preserving its current routing and graceful shutdown.
-
-**Expected result:** Incoming HTTP requests should generate Datadog traces.
-
-## 7. Step 5 – Configure Kubernetes Deployment
-
-Open the existing application Deployment YAML.
-
-Add the following environment variables under the application container:
-
-```yaml
-env:
-  - name: DD_SERVICE
-    value: "go-application"
-
-  - name: DD_ENV
-    value: "staging"
-
-  - name: DD_VERSION
-    value: "1.0.0"
-
-  - name: DD_AGENT_HOST
-    valueFrom:
-      fieldRef:
-        fieldPath: status.hostIP
-
-  - name: DD_TRACE_AGENT_PORT
-    value: "8126"
-```
-
-Update the service name, environment and application version according to the Landmark application.
-
-**Important:** Ensure the Agent is reachable through the node IP on TCP port `8126`. Preserve all existing Deployment settings.
-
-## 8. Step 6 – Deploy the Application
-
-Build and publish the updated application image using the existing CI/CD pipeline.
-
-Apply the updated Deployment:
-
-```bash
-kubectl apply -f deployment.yaml -n <APP_NAMESPACE>
-```
-
-Check the rollout:
-
-```bash
-kubectl rollout status deployment/<DEPLOYMENT_NAME> \
-  -n <APP_NAMESPACE>
-```
-
-Check application Pods:
-
-```bash
-kubectl get pods -n <APP_NAMESPACE>
-```
-
-Check application logs:
-
-```bash
-kubectl logs deployment/<DEPLOYMENT_NAME> \
-  -n <APP_NAMESPACE> --tail=100
-```
-
-**Expected result:** Application Pods should be running without unexpected errors.
-
-## 9. Step 7 – Verify Datadog APM
-
-Generate requests against an existing application endpoint:
-
-```bash
-curl -i https://<APPLICATION_URL>/<ENDPOINT>
-```
-
-Check Agent status:
-
-```bash
-kubectl exec -n <DATADOG_NAMESPACE> <AGENT_POD> -- agent status
-```
-
-Open the Datadog dashboard:
-
-**Datadog → APM → Services**
-
-Search for the configured service name.
-
-Verify:
-
-- Service name
-- Environment
-- Application version
-- Request traces
-- Request latency
-- Error information
-
-<badge color="success">Success criteria</badge>
-
-The integration is complete when actual application requests generate traces that are visible in Datadog APM.
-
-## 10. Troubleshooting
-
-| Issue | Action |
+| Permission Area | Proposed Access |
 |---|---|
-| Service not visible | Verify tracer initialization and service name |
-| No traces | Generate requests and check instrumentation |
-| Connection refused | Verify Agent APM port `8126` |
-| Connection timeout | Check firewall and NetworkPolicies |
-| Application startup failure | Check Go dependencies and application logs |
-| Incorrect environment | Verify `DD_ENV` |
+| Infrastructure | View |
+| Kubernetes / Containers | View |
+| Dashboards | View |
+| Metrics | View |
+| Monitors | View + Approved Management |
+| User Management | No Access |
+| Billing | No Access |
 
-## 11. Rollback
+Repeat the process for the other approved Custom Roles.
 
-If the application deployment causes issues:
+**Expected Result:** Custom Roles should be created with permissions according to the approved access model.
 
-```bash
-kubectl rollout undo deployment/<DEPLOYMENT_NAME> \
-  -n <APP_NAMESPACE>
-```
+## 7. Step 2 – Configure SAML on Datadog
 
-If the Agent configuration needs rollback, identify the previous Helm revision:
+1. Navigate to **Organization Settings → SAML**.
+2. Verify whether SAML authentication is enabled.
+3. If SAML is not enabled, contact Datadog Support.
+4. Enable IdP-Initiated SSO if required.
+5. Collect the following Service Provider details:
 
-```bash
-helm history <RELEASE_NAME> -n <DATADOG_NAMESPACE>
-```
+   - Assertion Consumer Service (ACS) URL.
+   - Entity ID.
+   - Single Sign-On login URL.
 
-Then restore the approved previous revision:
+6. Download the latest Datadog Service Provider metadata.
 
-```bash
-helm rollback <RELEASE_NAME> <REVISION> \
-  -n <DATADOG_NAMESPACE>
-```
+Keep these details available for Google Workspace configuration.
 
-## 12. Official References
+## 8. Step 3 – Create a SAML Application in Google Workspace
 
-- Go APM: https://docs.datadoghq.com/tracing/trace_collection/dd_libraries/go/
-- Go Compatibility: https://docs.datadoghq.com/tracing/trace_collection/compatibility/go/
-- Kubernetes APM: https://docs.datadoghq.com/containers/kubernetes/apm/
+1. Log in to Google Admin Console.
+2. Navigate to **Apps → Web and mobile apps**.
+3. Click **Add App**.
+4. Select **Add custom SAML app**.
+5. Enter the application name as **Datadog**.
+6. Configure the Service Provider details.
+
+| Google SAML Field | Configuration |
+|---|---|
+| ACS URL | Datadog ACS URL |
+| Entity ID | Datadog Entity ID |
+| Name ID Format | EMAIL |
+| Name ID | Basic Information → Primary Email |
+| Signed Response | Configure according to Datadog integration requirements |
+
+Configure the required user attribute mappings:
+
+| Google Directory Attribute | Application Attribute |
+|---|---|
+| Primary Email | email |
+| First Name | firstName |
+| Last Name | lastName |
+
+7. Configure the required group membership attribute.
+8. Save the application configuration.
+9. Download Google Identity Provider metadata.
+
+**Important:** SAML assertions must be signed. Verify the signing configuration against Datadog's integration requirements. Google Workspace group membership attributes must be explicitly configured and validated.
+
+## 9. Step 4 – Configure Google Workspace SAML in Datadog
+
+1. Return to the Datadog SAML configuration page.
+2. Upload Google Workspace IdP metadata.
+3. Save the configuration.
+4. Verify that the metadata is accepted.
+5. Confirm that the latest Datadog Service Provider metadata is configured in Google Workspace.
+
+**Expected Result:** Google Workspace should be configured as the Identity Provider for Datadog SAML authentication.
+
+## 10. Step 5 – Configure SAML Group Mappings
+
+Navigate to:
+
+**Organization Settings → SAML Group Mappings**
+
+1. Capture and validate an actual SAML assertion.
+2. Confirm the group membership attribute and values.
+3. Enable Group Mappings after successful validation.
+4. Click **New Mapping**.
+5. Configure the SAML attribute key and value.
+6. Select the corresponding Datadog Custom Role.
+7. Save the mapping.
+
+**Proposed Google Workspace Group Mapping:**
+
+| Google Workspace Group | Proposed Datadog Custom Role |
+|---|---|
+| DD-Infrastructure | Infrastructure Monitoring Engineer |
+| DD-Developers | Application Developer |
+| DD-NOC | NOC / Operations Engineer |
+| DD-Security | Security Analyst |
+| DD-Management | Management / Executive Viewer |
+
+**Note:** Group names and SAML attribute values are examples. Final mappings must match Landmark's Google Workspace configuration and actual SAML assertions.
+
+## 11. Step 6 – Testing and Validation
+
+After implementation, perform the following validation using representative user accounts.
+
+| Test Case | Expected Result |
+|---|---|
+| Infrastructure user login | Infrastructure role assigned |
+| Developer user login | Developer role assigned |
+| NOC user login | NOC role assigned |
+| Security user login | Security role assigned |
+| Management user login | Read-only role assigned |
+| Incorrect group attribute | Expected role is not assigned |
+| Restricted feature access | Unauthorized actions are denied |
+
+Verify:
+
+- Successful Google Workspace SAML authentication.
+- Correct user email and identity attributes.
+- Correct group membership attribute.
+- Appropriate Datadog role assignment.
+- Access restrictions for each role.
+
+**Expected Result:** Users should receive the appropriate Datadog permissions according to their assigned Google Workspace group.
+
+## 12. Important Considerations
+
+- Enable SAML Group Mappings only after validating SAML assertions.
+- Just-in-time provisioning can create users during their first SSO login.
+- Role mappings take priority over the JIT default role.
+- Unmatched users may lose their assigned roles and SAML login access.
+- Team mappings are provisioning-only and do not determine login authorization.
+- SAML strict mode can disable password and Google OAuth login.
+- Review external user access before enabling strict mode.
+- Maintain an appropriate administrator recovery path.
+- Datadog combines permissions from multiple assigned roles.
+- Test all proposed roles before production rollout.
+
+## 13. Airowire – Proposed Implementation Approach
+
+Following Landmark's approval, Airowire proposes the following implementation activities:
+
+1. Review and finalize the proposed Custom Role use cases with Landmark.
+2. Confirm the required permissions for each team.
+3. Create the approved Custom Roles in Datadog.
+4. Configure permissions based on the approved access matrix.
+5. Configure Google Workspace SAML SSO.
+6. Configure group-based role mapping.
+7. Assign the appropriate roles to users.
+8. Perform SSO authentication and access validation.
+9. Document the final implemented configuration.
+
+## 14. Client Review and Approval
+
+Airowire is sharing the proposed Custom Role use cases, recommended permission model and Google Workspace SAML SSO implementation approach for Landmark's review.
+
+Landmark is requested to:
+
+- Review and approve the proposed Custom Role use cases.
+- Validate the recommended permissions.
+- Confirm the required Google Workspace groups.
+- Provide the necessary administrative access and configuration details.
+- Identify any additional access requirements.
+- Approve the proposed implementation approach before configuration begins.
+
+## 15. Expected Outcome
+
+Upon approval and implementation:
+
+- Google Workspace users can authenticate into Datadog using SAML SSO.
+- Custom Roles provide access according to team responsibilities.
+- Google Workspace groups can map users to the appropriate Datadog roles.
+- Infrastructure, APM, Logs, Monitors and Cloud SIEM access can be managed according to approved permissions.
+- Unnecessary administrative privileges are minimized.
+- Access management is standardized and aligned with Landmark's requirements.
+
+## 16. Official References
+
+- Datadog RBAC: https://docs.datadoghq.com/account_management/rbac/
+- Datadog Google Workspace SAML: https://docs.datadoghq.com/account_management/saml/google/
+- Datadog SAML Authentication: https://docs.datadoghq.com/account_management/saml/
+- Datadog SAML Group Mapping: https://docs.datadoghq.com/account_management/saml/mapping/
+- Google Workspace SAML Setup: https://support.google.com/a/answer/7553768
 
 ---
 
-**Prepared By**
-# 28. Contact
+## 17. Contact
 
 **Airowire Networks Pvt. Ltd.**
 
-**Datadog Observability & Cloud SIEM Team**`
-Dr. Shivanand Poojara
+**Datadog Observability & Cloud SIEM Team**
 
-shivanand@airowire.com
+**Dr. Shivanand Poojara**
 
+Email: shivanand@airowire.com
 
+---
+
+**Prepared By:** Airowire Networks Pvt. Ltd.  
+**Prepared For:** Landmark  
+**Document Status:** Proposed for Client Review and Approval  
+**Proposed Solution:** Datadog Custom Roles with Google Workspace SAML SSO
 
